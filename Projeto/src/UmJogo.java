@@ -65,7 +65,7 @@ public class UmJogo extends Equipa implements ProbJogos {
         int a = 0;
         if (ataquecasa() == 1) {goloC += 1; a =1;
         } else {
-            if (problateralcasa() > problateralvisita()) {
+            if (problateral(this.casa.hablateral())> problateral(this.visita.hablateral())) {
                 if (ataquecasa() == 1) goloC += 1; a=1;
             }
         }
@@ -75,7 +75,7 @@ public class UmJogo extends Equipa implements ProbJogos {
         int a = 0;
         if (ataquevisita() == 1) {goloF += 1; a = 1;
         } else {
-            if (problateralvisita() > problateralcasa()) {
+            if (problateral(this.visita.hablateral())> problateral(this.casa.hablateral())) {
                 if (ataquevisita() == 1) goloF += 1;a=1;
             }
         }
@@ -83,7 +83,7 @@ public class UmJogo extends Equipa implements ProbJogos {
     }
 
     public void simulasegundaparte() throws ExcecaoPos, InterruptedException{
-        if (probmediovisita() > probmediocasa()) { // primeiro ataque da equipa da casa, que começa com a bola
+        if (probmeio(this.visita.habmedio()) > probmeio(this.casa.habmedio())) { // primeiro ataque da equipa da casa, que começa com a bola
             Thread.sleep(500);
             System.out.println("Equipa da casa esta a fazer um ataque");
             if (simulaataquevisita() == 1) {
@@ -93,7 +93,7 @@ public class UmJogo extends Equipa implements ProbJogos {
     }
 
     public void simulaprimeiraparte() throws ExcecaoPos, InterruptedException{
-        if (probmediocasa() > probmediovisita()) { // primeiro ataque da equipa da casa, que começa com a bola
+        if (probmeio(this.casa.habmedio()) > probmeio(this.visita.habmedio())) { // primeiro ataque da equipa da casa, que começa com a bola
             Thread.sleep(500);
             System.out.println("Equipa visitante esta a fazer um ataque");
             if (simulaataquecasa() == 1) {
@@ -112,7 +112,7 @@ public class UmJogo extends Equipa implements ProbJogos {
                 System.out.println("\nO jogo esta a decorrer \nMinuto: "+i);
                 simulaprimeiraparte();
                     Thread.sleep(500);
-                    i+=3;
+                    i+=5;
                 if(i==45){
                     System.out.println("\nSegunda parte:");
                     simulasegundaparte();
@@ -137,53 +137,13 @@ public class UmJogo extends Equipa implements ProbJogos {
 
     private int ataquevisita() {
         int marca = 0;
-        if (probataquevisita() > probdefesacasa()) {
-            if (probataquevisita() > probredescasa()) {
+        if (probmarcar(this.visita.habfrente()) > probdefender(this.casa.habdefesa())) {
+            if (probmarcar(this.visita.habfrente()) >probredes(this.casa.habredes())) {
                 System.out.println("A equipa da casa marca golo");
                 marca = 1;
             } else {System.out.println("Grande defesa");}
         } else {
             System.out.println("Bem tirada pelos defesas da casa");}
         return marca;
-    }
-
-    public double problateralvisita(){
-        return(problateral(this.visita.hablateral()));
-    }
-
-    public double problateralcasa(){
-        return(problateral(this.casa.hablateral()));
-    }
-
-    public double probdefesasvisita(){
-        return(probdefender(this.visita.habdefesa()));
-    }
-
-    public double probdefesacasa(){
-        return(probdefender(this.casa.habdefesa()));
-    }
-
-    public double probmediovisita(){
-        return(probmeio(this.visita.habmedio()));
-    }
-
-    public double probmediocasa(){
-        return(probmeio(this.casa.habmedio()));
-    }
-
-    public double probataquevisita(){
-        return(probmarcar(this.visita.habfrente()));
-    }
-
-    public double probataquecasa(){
-        return(probmarcar(this.casa.habfrente()));
-    }
-
-    public double probredesvisita(){
-        return(probredes(this.visita.habredes()));
-    }
-
-    public double probredescasa(){
-        return(probredes(this.casa.habredes()));
     }
 }

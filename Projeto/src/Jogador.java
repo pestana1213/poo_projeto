@@ -11,11 +11,10 @@ public class Jogador extends Geral implements Habilidades{
     this.habilidade = 0;
     }
 
-    public Jogador(String id, String nome, String pos, int hab) throws ExcecaoPos {
-    super(nome,id);
-    Posicao poos = new Posicao(pos);
-    this.posicao = poos;
-    this.habilidade = hab;
+    public Jogador(String id,String nome, String pos, int hab) throws ExcecaoPos{
+        super(nome,id);
+        this.posicao = new Posicao(pos);
+        this.habilidade = hab;
     }
 
     public Jogador(String id, String nome, Posicao pos, int hab){
@@ -26,8 +25,8 @@ public class Jogador extends Geral implements Habilidades{
 
     public Jogador (Jogador a){
         super(a);
-        this.posicao = getPosicao();
-        this.habilidade = getHabilidade();
+        this.posicao = a.getPosicao();
+        this.habilidade = a.getHabilidade();
     }
 
     public String getId() {
@@ -38,8 +37,8 @@ public class Jogador extends Geral implements Habilidades{
         return super.getNome();
     }
 
-    public Posicao getPosicao() {
-        return this.posicao;
+    public Posicao getPosicao(){
+        return this.posicao.clone();
     }
 
     public String getposicaostr(){
@@ -69,10 +68,10 @@ public class Jogador extends Geral implements Habilidades{
 
     @Override
     public void velocidade(int x) {
-        if(posicao.equals(AVANCADO) && x>=0 && x <=100){
+        if(posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
             this.habilidade += (0.15 * x);
         }
-        if(posicao.equals(DEFESA)&& x>=0 && x <=100){
+        if(posicao.getpos().equals(DEFESA)&& x>=0 && x <=100){
             this.habilidade += (0.15 * x);
         }
         if(posicao.getpos().equals(MEDIO)&& x>=0 && x <=100){

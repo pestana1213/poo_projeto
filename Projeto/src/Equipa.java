@@ -2,6 +2,7 @@
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Equipa extends Geral {
 
@@ -35,20 +36,11 @@ public class Equipa extends Geral {
     }
 
     public ArrayList<Jogador> getEquipatitular(){
-        ArrayList<Jogador> res = new ArrayList<>();
-
-        for(Jogador j : this.equipatitular){
-            res.add(j);
-        }
-        return res;
+       return this.equipatitular.stream().map(Jogador::clone).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public ArrayList<Jogador> getJogadores () {
-        ArrayList<Jogador> res = new ArrayList<>();
-            for (Jogador a : this.jogadores){
-                res.add(a);
-            }
-        return res;
+        return this.jogadores.stream().map(Jogador::clone).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public void setJogadores(ArrayList<Jogador> a){
@@ -64,7 +56,7 @@ public class Equipa extends Geral {
         if(titular.size() == 11){
                 for(Jogador f : titular){
                     if(this.jogadores.contains(f)){
-                        res.add(f);}
+                        res.add(f.clone());}
                     else {throw new ExcecaoPos("Jogador nao pertence a equipa");}
                 }
 
@@ -77,21 +69,23 @@ public class Equipa extends Geral {
     }
 
     public void addJogador (Jogador a) throws ExcecaoPos{
-        for(Jogador e : this.jogadores){
-            if (e.equals(a)){
+
+        boolean b = this.jogadores.stream().anyMatch(j ->j.equals(a));
+
+            if (b){
                 throw new ExcecaoPos("Jogador ja na equipa");
             }
-        }
-        this.jogadores.add(a);
+        this.jogadores.add(a.clone());
         }
 
     public void removeJogador (Jogador a) throws ExcecaoPos{
 
-        for (Jogador player : this.jogadores) {
-            if (!player.equals(a)){
+        boolean b = this.jogadores.stream().anyMatch(j ->j.equals(a));
+
+            if (!b){
                 throw new ExcecaoPos("Jogador nao esta na equipa");
             }
-        }
+
         this.jogadores.remove(a);
     }
 
@@ -113,7 +107,7 @@ public class Equipa extends Geral {
                 throw new ExcecaoPos("Jogador ja esta na equipa titular");
             }
         }
-        this.equipatitular.add(a);
+        this.equipatitular.add(a.clone());
     }
 
     public void substitui(Jogador entra, Jogador sai) throws ExcecaoPos {
@@ -121,7 +115,7 @@ public class Equipa extends Geral {
         for (Jogador y : this.equipatitular) {
             for (Jogador x : this.jogadores) {
                 if (y.equals(sai) && x.equals(entra)) {
-                    addjogequipatitular(entra);
+                    addjogequipatitular(entra.clone());
                     this.equipatitular.remove(sai);
                     i = 1;
                 }
