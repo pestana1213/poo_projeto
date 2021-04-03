@@ -1,32 +1,53 @@
 import java.util.*;
+import java.util.stream.Collectors;
+
 
 public class Jogador extends Geral implements Habilidades{
 
     private Posicao posicao;
     private int habilidade;
+    private Map<String,Equipa> historico;
 
     public Jogador(){
     super();
     this.posicao = new Posicao();
     this.habilidade = 0;
+    this.historico = new LinkedHashMap<>();
+    }
+
+    public Jogador(String id,String nome, String pos, int hab, Map<String,Equipa> a) throws ExcecaoPos{
+        super(nome,id);
+        this.posicao = new Posicao(pos);
+        this.habilidade = hab;
+        this.historico = new LinkedHashMap<>(a);
     }
 
     public Jogador(String id,String nome, String pos, int hab) throws ExcecaoPos{
         super(nome,id);
         this.posicao = new Posicao(pos);
         this.habilidade = hab;
+        this.historico = new LinkedHashMap<>();
     }
 
     public Jogador(String id, String nome, Posicao pos, int hab){
-    super(nome,id);
-    this.posicao = pos;
-    this.habilidade = hab;
+        super(nome,id);
+        this.posicao = pos;
+        this.habilidade = hab;
+        this.historico = new LinkedHashMap<>();
+    }
+
+    public Jogador(String id, String nome, Posicao pos, int hab,HashMap<String,Equipa>a){
+        super(nome,id);
+        this.posicao = pos;
+        this.habilidade = hab;
+        this.historico = new LinkedHashMap<>(a);
     }
 
     public Jogador (Jogador a){
         super(a);
         this.posicao = a.getPosicao();
         this.habilidade = a.getHabilidade();
+        this.historico = a.getHistorico();
     }
 
     public String getId() {
@@ -49,12 +70,20 @@ public class Jogador extends Geral implements Habilidades{
         return this.habilidade;
     }
 
+    public Map<String, Equipa> getHistorico() {
+        return this.historico.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
     public void setId(String id) {
         super.setId(id);
     }
 
     public void setNome(String nome) throws ExcecaoPos {
         super.setNome(nome);
+    }
+
+    public void setHistorico(Map<String,Equipa> a){
+        this.historico = new LinkedHashMap<>(a);
     }
 
     public void setPosicao(Posicao pos) {
@@ -65,6 +94,9 @@ public class Jogador extends Geral implements Habilidades{
         this.habilidade = habilidade;
     }
 
+    public void addhist (Equipa a){
+        this.historico.put(a.getId(), a);
+    }
 
     @Override
     public void velocidade(int x) {
@@ -226,10 +258,25 @@ public class Jogador extends Geral implements Habilidades{
         sb.append("\nJogador: " + super.toString());
         sb.append(this.posicao.toString());
         sb.append("\nHabilidade geral: " + habilidade);
+        sb.append("\nHistorico: ");
+        for(Equipa a: this.historico.values()){
+            sb.append( a.getNome() + " " );
+        }
         return sb.toString();
     }
 
     public Jogador clone(){
         return new Jogador(this);
+    }
+
+    public Equipa primeiro(){
+
+        Equipa res = new Equipa();
+        if(this.historico.size()!=0) {
+            ArrayList<Equipa> hm = new ArrayList<>(this.historico.values());
+            res = hm.get(0);
+        }
+
+        return res;
     }
 }

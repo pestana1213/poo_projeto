@@ -5,9 +5,9 @@ public interface ProbJogos {
 
     default double probmarcar(double frente){
         int r = 0;
-        if(frente > 0){ if(frente > 80) {r = (rand.nextInt((int) frente-15));}}
+        if(frente > 0){ if(frente > 80) {r = (rand.nextInt((int) frente-15));}
         if(frente > 50 && frente <= 80) {r = (rand.nextInt((int) frente-20));}
-        if(frente > 30 && frente <= 50) {r = (rand.nextInt((int) frente-25));}
+        if(frente > 30 && frente <= 50) {r = (rand.nextInt((int) frente-25));}}
         else{r = (rand.nextInt((int) frente-4));}
         return r;
     }

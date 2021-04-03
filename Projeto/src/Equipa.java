@@ -1,6 +1,5 @@
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -13,18 +12,21 @@ public class Equipa extends Geral {
         super();
         this.jogadores = new ArrayList<>();
         this.equipatitular = new ArrayList<>();
+        hist();
     }
 
     public Equipa (String nome, String id,ArrayList<Jogador> a, ArrayList<Jogador> b){
         super(nome,id);
         this.jogadores = new ArrayList<>(a);
         this.equipatitular = new ArrayList<>(b);
-    }
+        hist();
+        }
 
     public Equipa (Equipa b){
         super(b);
         this.jogadores = b.getJogadores();
         this.equipatitular = b.getEquipatitular();
+        hist();
     }
 
     public String getId() {
@@ -45,6 +47,7 @@ public class Equipa extends Geral {
 
     public void setJogadores(ArrayList<Jogador> a){
         this.jogadores = new ArrayList<>(a);
+        hist();
     }
 
     public void setId(String id) {
@@ -56,33 +59,32 @@ public class Equipa extends Geral {
         if(titular.size() == 11){
                 for(Jogador f : titular){
                     if(this.jogadores.contains(f)){
-                        res.add(f.clone());}
+                        res.add(f);}
                     else {throw new ExcecaoPos("Jogador nao pertence a equipa");}
                 }
 
-        this.equipatitular = new ArrayList<>(res);}
+        this.equipatitular = new ArrayList<>(res);hist();}
         else {throw new ExcecaoPos("Equipa titular com demasiados elementos");}
     }
 
     public void setNome(String nome) throws ExcecaoPos{
         super.setNome(nome);
+        hist();
+
     }
 
     public void addJogador (Jogador a) throws ExcecaoPos{
 
-        boolean b = this.jogadores.stream().anyMatch(j ->j.equals(a));
-
-            if (b){
+            if (this.jogadores.stream().anyMatch(j ->j.equals(a))) {
                 throw new ExcecaoPos("Jogador ja na equipa");
             }
-        this.jogadores.add(a.clone());
+            this.jogadores.add(a);
+            a.addhist(this);
         }
 
     public void removeJogador (Jogador a) throws ExcecaoPos{
 
-        boolean b = this.jogadores.stream().anyMatch(j ->j.equals(a));
-
-            if (!b){
+            if (this.jogadores.stream().noneMatch(j ->j.equals(a))){
                 throw new ExcecaoPos("Jogador nao esta na equipa");
             }
 
@@ -90,15 +92,9 @@ public class Equipa extends Geral {
     }
 
     public int habfrente (){
-        int total = 0;
-        int x = 0;
-        for (Jogador player : this.jogadores){
-            if(player.getposicaostr().equals(AVANCADO)) {
-                x++;
-                total += player.getHabilidade();
-            }
-        }
-        return (total/x);
+
+        return (int) (this.jogadores.stream().filter(a->a.getposicaostr().equals(AVANCADO)).mapToDouble(Jogador::getHabilidade).sum()/
+                this.jogadores.stream().filter(a->a.getposicaostr().equals(AVANCADO)).count());
     }
 
     public void addjogequipatitular (Jogador a) throws ExcecaoPos{
@@ -107,7 +103,7 @@ public class Equipa extends Geral {
                 throw new ExcecaoPos("Jogador ja esta na equipa titular");
             }
         }
-        this.equipatitular.add(a.clone());
+        this.equipatitular.add(a);
     }
 
     public void substitui(Jogador entra, Jogador sai) throws ExcecaoPos {
@@ -127,51 +123,24 @@ public class Equipa extends Geral {
     }
 
     public int hablateral(){
-        int total = 0;
-        int x = 0;
-        for (Jogador player : this.jogadores){
-            if(player.getposicaostr().equals(LATERAL)) {
-                x++;
-                total += player.getHabilidade();
-            }
-        }
-        return (total/x);
+
+        return (int) (this.equipatitular.stream().filter(a->a.getposicaostr().equals(LATERAL)).mapToDouble(Jogador::getHabilidade).sum()/
+                this.equipatitular.stream().filter(a->a.getposicaostr().equals(LATERAL)).count());
     }
 
     public int habmedio(){
-        int total = 0;
-        int x = 0;
-        for (Jogador player : this.jogadores){
-            if(player.getposicaostr().equals(MEDIO)) {
-                x++;
-                total += player.getHabilidade();
-            }
-        }
-        return (total/x);
+        return (int) (this.equipatitular.stream().filter(a->a.getposicaostr().equals(MEDIO)).mapToDouble(Jogador::getHabilidade).sum()/
+                this.equipatitular.stream().filter(a->a.getposicaostr().equals(MEDIO)).count());
     }
 
     public int habdefesa(){
-        int total = 0;
-        int x = 0;
-        for (Jogador player : this.jogadores){
-            if(player.getposicaostr().equals(DEFESA)) {
-                x++;
-                total += player.getHabilidade();
-            }
-        }
-        return (total/x);
+        return (int) (this.equipatitular.stream().filter(a->a.getposicaostr().equals(DEFESA)).mapToDouble(Jogador::getHabilidade).sum()/
+                this.equipatitular.stream().filter(a->a.getposicaostr().equals(DEFESA)).count());
     }
 
     public int habredes(){
-        int total = 0;
-        int x = 0;
-        for (Jogador player : this.jogadores){
-            if(player.getposicaostr().equals(REDES)) {
-                x++;
-                total += player.getHabilidade();
-            }
-        }
-        return (total/x);
+        return (int) (this.equipatitular.stream().filter(a->a.getposicaostr().equals(REDES)).mapToDouble(Jogador::getHabilidade).sum()/
+                this.equipatitular.stream().filter(a->a.getposicaostr().equals(REDES)).count());
     }
 
     public int habgeral(){
@@ -195,7 +164,9 @@ public class Equipa extends Geral {
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        sb.append("Nomde da equipa: " + getNome());
+        sb.append("Nome da equipa: " + super.getNome());
+        sb.append("\nId: " + super.getId());
+        sb.append("\n Habilidade geral: " + habgeral());
         for (Jogador e : this.jogadores) {
             sb.append(e.toString());
         }
@@ -207,5 +178,21 @@ public class Equipa extends Geral {
         }
         return sb.toString();
     }
-}
 
+    public Equipa clone(){
+        return new Equipa(this);
+    }
+
+    private void hist(){
+        for (Jogador e : this.jogadores){
+            for(Jogador k : this.equipatitular){
+                if(!k.primeiro().equals(this)){
+                    k.addhist(this);
+                }
+            }
+            if(!e.primeiro().equals(this)){
+            e.addhist(this);
+            }
+        }
+    }
+}

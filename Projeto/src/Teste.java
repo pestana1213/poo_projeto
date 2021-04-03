@@ -1,5 +1,9 @@
+import java.awt.event.KeyEvent;
 import java.lang.reflect.Array;
+import java.security.Key;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Teste {
     public static void main(String[] args) throws ExcecaoPos, InterruptedException {
@@ -17,7 +21,7 @@ public class Teste {
         Jogador j = new Jogador("10", "braco", "avancado", 80);
         Jogador k = new Jogador("11", "perna", "defesa", 54);
 
-        System.out.println(a.getPosicao());
+
 
         ArrayList<Jogador> eqq = new ArrayList<>();
         eqq.add(a);
@@ -32,10 +36,6 @@ public class Teste {
         eqq.add(j);
         eqq.add(k);
 
-        Equipa equipa = new Equipa();
-        equipa.setJogadores(eqq);
-
-        equipa.setEquipatitular(eqq);
         Jogador aa = new Jogador("12","Joao", "defesa", 50);
         Jogador bb = new Jogador ("13", "Eduardo", "medio", 50);
         Jogador cc = new Jogador ("14", "Barbara", "medio", 50);
@@ -61,10 +61,30 @@ public class Teste {
         eq.add(jj);
         eq.add(kk);
 
+
+        Equipa equipa = new Equipa();
+        equipa.setJogadores(eqq);
+        equipa.setEquipatitular(eqq);
+        equipa.setId("2");
+        equipa.setNome("ola");
+
+
         Equipa equipavis = new Equipa();
         equipavis.setJogadores(eq);
+        equipavis.setId("3");
+        equipavis.setNome("k");
         equipavis.setEquipatitular(eq);
-        UmJogo jogo = new UmJogo(equipa,equipavis,0,0);
-        jogo.simulajogo();
+
+        System.out.println(a);
+
+        Map<String,Equipa> equipas = new LinkedHashMap<>();
+        equipas.put(equipavis.getId(),equipavis);
+        equipas.put(equipa.getId(),equipa);
+
+        Faztudo skrt = new Faztudo(equipas);
+        skrt.tranfere(a,equipa,equipavis);
+        System.out.println(a);
+
+
     }
 }

@@ -1,4 +1,3 @@
-import java.util.Map;
 
 public class UmJogo extends Equipa implements ProbJogos {
 
@@ -15,8 +14,8 @@ public class UmJogo extends Equipa implements ProbJogos {
     }
 
     public UmJogo(Equipa a, Equipa b, int gc, int gf) {
-        this.casa = new Equipa(a);
-        this.visita = new Equipa(b);
+        this.casa = a;
+        this.visita = b;
         this.goloC = gc;
         this.goloF = gf;
     }
@@ -46,11 +45,11 @@ public class UmJogo extends Equipa implements ProbJogos {
     }
 
     public void setCasa(Equipa a) {
-        this.casa = new Equipa(a);
+        this.casa = a;
     }
 
     public void setVisita(Equipa a) {
-        this.visita = new Equipa(a);
+        this.visita = a;
     }
 
     public void setGoloC(int gc) {
@@ -106,14 +105,13 @@ public class UmJogo extends Equipa implements ProbJogos {
 
     public void simulajogo() throws ExcecaoPos, InterruptedException {
         int time = 90;
-
+        
         if(this.casa.getEquipatitular().size() == 11 && this.visita.getEquipatitular().size() == 11) {
             for (int i = 0; i <= time; i++) {
-                System.out.println("\nO jogo esta a decorrer \nMinuto: "+i);
-                simulaprimeiraparte();
+                    System.out.println("\nO jogo esta a decorrer \nMinuto: "+i);
+                    simulaprimeiraparte();
                     Thread.sleep(500);
-                    i+=5;
-                if(i==45){
+                    if(i==45){
                     System.out.println("\nSegunda parte:");
                     simulasegundaparte();
                     Thread.sleep(500);
