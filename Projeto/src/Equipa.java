@@ -186,11 +186,11 @@ public class Equipa extends Geral {
     private void hist(){
         for (Jogador e : this.jogadores){
             for(Jogador k : this.equipatitular){
-                if(!k.primeiro().equals(this)){
+                if(!k.ultimo().equals(this)){
                     k.addhist(this);
                 }
             }
-            if(!e.primeiro().equals(this)){
+            if(!e.ultimo().equals(this)){
             e.addhist(this);
             }
         }

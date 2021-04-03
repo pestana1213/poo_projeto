@@ -83,7 +83,7 @@ public class Teste {
 
         Faztudo skrt = new Faztudo(equipas);
         skrt.tranfere(a,equipa,equipavis);
-        System.out.println(a);
+        System.out.println(a.ultimo());
 
 
     }

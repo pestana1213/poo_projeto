@@ -269,12 +269,12 @@ public class Jogador extends Geral implements Habilidades{
         return new Jogador(this);
     }
 
-    public Equipa primeiro(){
+    public Equipa ultimo(){
 
         Equipa res = new Equipa();
         if(this.historico.size()!=0) {
             ArrayList<Equipa> hm = new ArrayList<>(this.historico.values());
-            res = hm.get(0);
+            res = hm.get(this.historico.size()-1);
         }
 
         return res;
