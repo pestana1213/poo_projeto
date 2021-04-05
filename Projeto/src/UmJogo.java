@@ -1,3 +1,8 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 
 public class UmJogo extends Equipa implements ProbJogos {
 
@@ -60,88 +65,140 @@ public class UmJogo extends Equipa implements ProbJogos {
         this.goloF = gf;
     }
 
-    public int simulaataquecasa() throws ExcecaoPos{
-        int a = 0;
-        if (ataquecasa() == 1) {goloC += 1; a =1;
-        } else {
-            if (problateral(this.casa.hablateral())> problateral(this.visita.hablateral())) {
-                if (ataquecasa() == 1) goloC += 1; a=1;
-            }
-        }
-        return a;
-    }
-    public int simulaataquevisita() throws ExcecaoPos{
-        int a = 0;
-        if (ataquevisita() == 1) {goloF += 1; a = 1;
-        } else {
-            if (problateral(this.visita.hablateral())> problateral(this.casa.hablateral())) {
-                if (ataquevisita() == 1) goloF += 1;a=1;
-            }
-        }
-        return a;
-    }
-
-    public void simulasegundaparte() throws ExcecaoPos, InterruptedException{
-        if (probmeio(this.visita.habmedio()) > probmeio(this.casa.habmedio())) { // primeiro ataque da equipa da casa, que começa com a bola
-            Thread.sleep(500);
-            System.out.println("Equipa da casa esta a fazer um ataque");
-            if (simulaataquevisita() == 1) {
-                simulaprimeiraparte();
-            }
-        }
-    }
-
-    public void simulaprimeiraparte() throws ExcecaoPos, InterruptedException{
-        if (probmeio(this.casa.habmedio()) > probmeio(this.visita.habmedio())) { // primeiro ataque da equipa da casa, que começa com a bola
-            Thread.sleep(500);
-            System.out.println("Equipa visitante esta a fazer um ataque");
-            if (simulaataquecasa() == 1) {
-                simulasegundaparte();
-            }
-        }
-    }
-
-
-
     public void simulajogo() throws ExcecaoPos, InterruptedException {
-        int time = 90;
-        
+
         if(this.casa.getEquipatitular().size() == 11 && this.visita.getEquipatitular().size() == 11) {
-            for (int i = 0; i <= time; i++) {
-                    System.out.println("\nO jogo esta a decorrer \nMinuto: "+i);
-                    simulaprimeiraparte();
-                    Thread.sleep(500);
-                    if(i==45){
-                    System.out.println("\nSegunda parte:");
-                    simulasegundaparte();
-                    Thread.sleep(500);
+
+            for (int time=0; time<=90;time ++){
+
+                System.out.println("\nO jogo esta a decorrer \nMinuto: "+ time);
+                //Na primeira parte a bola vai começar na equipa da casa
+
+                if (time<45) {
+
+                    if (probmeio(this.casa.habmedio()) > probmeio(this.visita.habmedio())) {
+                        System.out.println("Equipa da casa esta a fazer um ataque");
+                        time += simulaataquecasa(time);
+                    } else {
+                        System.out.println("Equipa visitante esta a fazer um ataque");
+                        time += simulaataquevista(time);
+                    }
                 }
+                else {
+                    if(time == 45) {
+                        System.out.println("Inicio da segunda parte");
+                    }
+                    if (probmeio(this.visita.habmedio()) > probmeio(this.casa.habmedio())) {
+                        System.out.println("Equipa visitante esta a fazer um ataque");
+                        time += simulaataquevista(time);
+                    } else {
+                        System.out.println("Equipa da casa esta a fazer um ataque");
+                        time += simulaataquecasa(time);
+                    }
+                }
+                Thread.sleep(500);
             }
+
             System.out.println("Golos casa: " + this.goloC + "\nGolos visita: " + this.goloF);
-        } else throw new ExcecaoPos("Numero de jogadores titulares invalido");
-    }
+        }
+        else throw new ExcecaoPos("Numero de jogadores titulares invalido");
+        }
 
-    public int ataquecasa() {
-        int marca = 0;
+
+    public int simulaataquecasa(int time){
+        int minutos = 0;
+        Random rand = new Random();
+        boolean marca = false;
+
+        if (time>45){
+            time = time/2;
+        }
+
         if (probmarcar(this.casa.habfrente()) > probdefender(this.visita.habdefesa())) {
+            minutos += rand.nextInt(4);
+            System.out.println("Os avançados da casa conseguem passar pelos defesas");
             if (probmarcar(this.casa.habfrente()) > probredes(this.visita.habredes())) {
+                ArrayList<Jogador> jog = this.casa.getEquipatitular();
+                double remate = 0;
+                for (Jogador j : jog){
+                    if(j.getposicaostr().equals(AVANCADO)){
+                        remate = j.getremate();
+                    }
+                }
+                if(rand.nextInt((int)remate) < remate-5){
                 System.out.println("A equipa da casa marca golo");
-                marca = 1;
-            } else {System.out.println("Grande defesa");}
-        } else {
+                marca = true;
+                this.goloC ++;
+                minutos += rand.nextInt(6);}
+
+                else {System.out.println("A bola foi ao poste infelizmente, bela jogada da equipa da casa");
+                    minutos += rand.nextInt(6);
+                }
+
+            } else {System.out.println("Grande defesa");minutos += rand.nextInt(3); }
+        } else  {
+            minutos += rand.nextInt(3);
             System.out.println("Bem tirada pelos defesas da visita" );}
-        return marca;
+
+        if (time+minutos > 45){
+            int aux = 0;
+            aux = (time + minutos) - 46;
+            minutos = aux;
+        }
+
+        if (marca){
+            System.out.println("Bola ao meio para a equipa visitante");
+            minutos += simulaataquevista(time+minutos);
+        }
+        return minutos;
     }
 
-    private int ataquevisita() {
-        int marca = 0;
+
+    public int simulaataquevista (int time){
+        int minutos = 0;
+        Random rand = new Random();
+        boolean marca = false;
+
+        if (time==90){
+            time = time/2;
+        }
+
         if (probmarcar(this.visita.habfrente()) > probdefender(this.casa.habdefesa())) {
-            if (probmarcar(this.visita.habfrente()) >probredes(this.casa.habredes())) {
-                System.out.println("A equipa da casa marca golo");
-                marca = 1;
-            } else {System.out.println("Grande defesa");}
-        } else {
-            System.out.println("Bem tirada pelos defesas da casa");}
-        return marca;
+            System.out.println("Os avançados da visitante conseguem passar pelos defesas");
+            minutos += rand.nextInt(4);
+            if (probmarcar(this.visita.habfrente()) > probredes(this.casa.habredes())) {
+                ArrayList<Jogador> jog = this.visita.getEquipatitular();
+                double remate = 0;
+                for (Jogador j : jog){
+                    if(j.getposicaostr().equals(AVANCADO)){
+                        remate = j.getremate();
+                    }
+                }
+                if(rand.nextInt((int)remate) < remate-5){
+
+                System.out.println("A equipa visitante marca golo");
+                marca = true;
+                this.goloF ++;
+                minutos += rand.nextInt(6);}
+
+                else {System.out.println("A bola foi ao poste infelizmente, bela jogada da equipa visitante");
+                minutos += rand.nextInt(6);
+                }
+            } else {System.out.println("Grande defesa");minutos += rand.nextInt(3); }
+        } else  {
+            minutos += rand.nextInt(3);
+            System.out.println("Bem tirada pelos defesas da casa" );}
+
+        if (time+minutos > 45){
+            int aux = 0;
+            aux = (time + minutos) - 46;
+            minutos = aux;
+        }
+
+        if (marca){
+            System.out.println("Bola ao meio para a equipa da casa");
+            minutos += simulaataquecasa(time+minutos);
+        }
+        return minutos;
     }
 }

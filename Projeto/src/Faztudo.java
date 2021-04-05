@@ -52,4 +52,45 @@ public class Faztudo {
     private boolean contida (Equipa e) {
         return this.equipas.values().stream().anyMatch(a -> a.equals(e));
     }
+
+    public void simulaumjogo(Equipa casa, Equipa visita) throws ExcecaoPos, InterruptedException {
+
+        if (contida(casa) && contida(visita)) {
+            UmJogo jogo = new UmJogo(casa,visita,0,0);
+            jogo.simulajogo();
+        }
+        else throw new ExcecaoPos("Equipa nao registada");
+    }
+
+    public int newCodeNumberequipa(){
+        List<Integer> l = this.equipas.keySet().stream()
+                .map(Integer::valueOf)
+                .sorted()
+                .collect(Collectors.toList());
+        if (l.isEmpty()) return 1;
+        Integer i = l.get(0);
+        int aux = i+1;
+        while (l.contains(aux)) aux++;
+        return aux;
+    }
+
+    public int newCodeNumberjogador(){
+        ArrayList<Jogador> todosjogadores = new ArrayList<>();
+
+        for(Equipa e : this.equipas.values()){
+            ArrayList<Jogador> jequipa = e.getJogadores();
+            todosjogadores.addAll(jequipa);
+        }
+
+        Map<String, Jogador> mapjog = todosjogadores.stream().collect(Collectors.toMap(Jogador::getId, Jogador::new));
+        List<Integer> l = mapjog.keySet().stream()
+                .map(Integer::valueOf)
+                .sorted()
+                .collect(Collectors.toList());
+        if (l.isEmpty()) return 1;
+        Integer i = l.get(0);
+        int aux = i+1;
+        while (l.contains(aux)) aux++;
+        return aux;
+    }
 }

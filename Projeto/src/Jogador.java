@@ -117,6 +117,25 @@ public class Jogador extends Geral implements Habilidades{
         }
     }
 
+    public double getvelocidade(){
+        if(posicao.getpos().equals(AVANCADO)){
+            return this.habilidade/0.15;
+        }
+        if(posicao.getpos().equals(DEFESA)){
+            return this.habilidade/0.15 ;
+        }
+        if(posicao.getpos().equals(MEDIO)){
+            return this.habilidade /0.13 ;
+        }
+        if(posicao.getpos().equals(LATERAL)){
+            return this.habilidade /0.16 ;
+        }
+        if(posicao.getpos().equals(REDES)){
+            return this.habilidade / 0.12;
+        }
+        return 0;
+        }
+
     @Override
     public void resistencia(int x) {
         if(posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
@@ -134,6 +153,25 @@ public class Jogador extends Geral implements Habilidades{
         if(posicao.getpos().equals(REDES)&& x>=0 && x <=100){
             this.habilidade += (0.15 * x);
         }
+    }
+
+    public double getresistencia(){
+        if(posicao.getpos().equals(AVANCADO)){
+            return this.habilidade/0.12;
+        }
+        if(posicao.getpos().equals(DEFESA)){
+            return this.habilidade/0.15 ;
+        }
+        if(posicao.getpos().equals(MEDIO)){
+            return this.habilidade /0.15 ;
+        }
+        if(posicao.getpos().equals(LATERAL)){
+            return this.habilidade /0.18 ;
+        }
+        if(posicao.getpos().equals(REDES)){
+            return this.habilidade / 0.15;
+        }
+        return 0;
     }
 
     @Override
@@ -155,6 +193,25 @@ public class Jogador extends Geral implements Habilidades{
         }
     }
 
+    public double getdestreza(){
+        if(posicao.getpos().equals(AVANCADO)){
+            return this.habilidade/0.15;
+        }
+        if(posicao.getpos().equals(DEFESA)){
+            return this.habilidade/0.18 ;
+        }
+        if(posicao.getpos().equals(MEDIO)){
+            return this.habilidade /0.15;
+        }
+        if(posicao.getpos().equals(LATERAL)){
+            return this.habilidade /0.15;
+        }
+        if(posicao.getpos().equals(REDES)){
+            return this.habilidade / 0.15;
+        }
+        return 0;
+    }
+
     @Override
     public void impulsao(int x) {
         if(posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
@@ -172,6 +229,25 @@ public class Jogador extends Geral implements Habilidades{
         if(posicao.getpos().equals(REDES)&& x>=0 && x <=100){
             this.habilidade += (0.19 * x);
         }
+    }
+
+    public double getimpulsao(){
+        if(posicao.getpos().equals(AVANCADO)){
+            return this.habilidade/0.13;
+        }
+        if(posicao.getpos().equals(DEFESA)){
+            return this.habilidade/0.15 ;
+        }
+        if(posicao.getpos().equals(MEDIO)){
+            return this.habilidade /0.12 ;
+        }
+        if(posicao.getpos().equals(LATERAL)){
+            return this.habilidade /0.11 ;
+        }
+        if(posicao.getpos().equals(REDES)){
+            return this.habilidade / 0.19;
+        }
+        return 0;
     }
 
     @Override
@@ -193,6 +269,25 @@ public class Jogador extends Geral implements Habilidades{
         }
     }
 
+    public double getcabeca(){
+        if(posicao.getpos().equals(AVANCADO)){
+            return this.habilidade/0.15;
+        }
+        if(posicao.getpos().equals(DEFESA)){
+            return this.habilidade/0.14 ;
+        }
+        if(posicao.getpos().equals(MEDIO)){
+            return this.habilidade /0.12 ;
+        }
+        if(posicao.getpos().equals(LATERAL)){
+            return this.habilidade /0.10 ;
+        }
+        if(posicao.getpos().equals(REDES)){
+            return this.habilidade / 0.02;
+        }
+        return 0;
+    }
+
     @Override
     public void remate(int x) {
         if(posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
@@ -210,6 +305,25 @@ public class Jogador extends Geral implements Habilidades{
         if(posicao.getpos().equals(REDES)&& x>=0 && x <=100){
             this.habilidade += (0.03 * x);
         }
+    }
+
+    public double getremate(){
+        if(posicao.getpos().equals(AVANCADO)){
+            return this.habilidade/0.2;
+        }
+        if(posicao.getpos().equals(DEFESA)){
+            return this.habilidade/0.98 ;
+        }
+        if(posicao.getpos().equals(MEDIO)){
+            return this.habilidade /0.12 ;
+        }
+        if(posicao.getpos().equals(LATERAL)){
+            return this.habilidade /0.12 ;
+        }
+        if(posicao.getpos().equals(REDES)){
+            return this.habilidade / 0.03;
+        }
+        return 0;
     }
 
     @Override
@@ -231,11 +345,37 @@ public class Jogador extends Geral implements Habilidades{
         }
     }
 
+    public double getpasse(){
+        if(posicao.getpos().equals(AVANCADO)){
+            return this.habilidade/0.1;
+        }
+        if(posicao.getpos().equals(DEFESA)){
+            return this.habilidade/0.15 ;
+        }
+        if(posicao.getpos().equals(MEDIO)){
+            return this.habilidade /0.21 ;
+        }
+        if(posicao.getpos().equals(LATERAL)){
+            return this.habilidade /0.18 ;
+        }
+        if(posicao.getpos().equals(REDES)){
+            return this.habilidade / 0.14;
+        }
+        return 0;
+    }
+
     @Override
     public void elasticidade(int x ){
         if(posicao.getpos().equals(REDES)&& x>=0 && x <=100){
             this.habilidade += (0.20 * x);
         }
+    }
+
+    public double getelasticidade(){
+        if(posicao.getpos().equals(REDES)){
+            return this.habilidade/0.2;
+        }
+        return 0;
     }
 
     @Override

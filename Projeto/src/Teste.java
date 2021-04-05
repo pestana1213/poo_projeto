@@ -9,17 +9,17 @@ public class Teste {
     public static void main(String[] args) throws ExcecaoPos, InterruptedException {
         Posicao pos = new Posicao("defesa");
 
-        Jogador a = new Jogador("2", "Joao", "medio", 50);
-        Jogador b = new Jogador("4", "Eduardo", "medio", 50);
-        Jogador c = new Jogador("3", "Barbara", "defesa", 50);
-        Jogador d = new Jogador("1", "Ivone", "medio", 50);
-        Jogador e = new Jogador("5", "Caldas", "lateral", 50);
-        Jogador f = new Jogador("6", "Rodrigues", "lateral", 50);
-        Jogador g = new Jogador("7", "Nogueira", "guarda-redes", 50);
-        Jogador h = new Jogador("8", "Pereira", "lateral", 50);
-        Jogador i = new Jogador("9", "mao", "avancado", 50);
+        Jogador a = new Jogador("2", "Joao", "medio", 80);
+        Jogador b = new Jogador("4", "Eduardo", "medio", 80);
+        Jogador c = new Jogador("3", "Barbara", "defesa", 80);
+        Jogador d = new Jogador("1", "Ivone", "medio", 80);
+        Jogador e = new Jogador("5", "Caldas", "lateral", 80);
+        Jogador f = new Jogador("6", "Rodrigues", "lateral", 80);
+        Jogador g = new Jogador("7", "Nogueira", "guarda-redes", 80);
+        Jogador h = new Jogador("8", "Pereira", "lateral", 80);
+        Jogador i = new Jogador("9", "mao", "avancado", 80);
         Jogador j = new Jogador("10", "braco", "avancado", 80);
-        Jogador k = new Jogador("11", "perna", "defesa", 54);
+        Jogador k = new Jogador("11", "perna", "defesa", 84);
 
 
 
@@ -36,17 +36,17 @@ public class Teste {
         eqq.add(j);
         eqq.add(k);
 
-        Jogador aa = new Jogador("12","Joao", "defesa", 50);
-        Jogador bb = new Jogador ("13", "Eduardo", "medio", 50);
-        Jogador cc = new Jogador ("14", "Barbara", "medio", 50);
-        Jogador dd = new Jogador ("15", "Ivone", "medio", 50);
-        Jogador ee = new Jogador ("16", "Caldas", "lateral", 50);
-        Jogador ff = new Jogador ("17", "Rodrigues", "lateral", 50);
-        Jogador gg = new Jogador ("18","Nogueira", "guarda-redes", 50);
-        Jogador hh = new Jogador ("19", "Pereira","lateral",50);
-        Jogador ii = new Jogador ("20", "mao","avancado", 50);
-        Jogador jj = new Jogador ("21", "braco", "avancado", 80);
-        Jogador kk = new Jogador ("22", "perna", "defesa", 50);
+        Jogador aa = new Jogador("12","Joao", "defesa", 100);
+        Jogador bb = new Jogador ("13", "Eduardo", "medio", 100);
+        Jogador cc = new Jogador ("14", "Barbara", "medio", 100);
+        Jogador dd = new Jogador ("15", "Ivone", "medio", 100);
+        Jogador ee = new Jogador ("16", "Caldas", "lateral", 100);
+        Jogador ff = new Jogador ("17", "Rodrigues", "lateral", 100);
+        Jogador gg = new Jogador ("18","Nogueira", "guarda-redes", 100);
+        Jogador hh = new Jogador ("19", "Pereira","lateral",100);
+        Jogador ii = new Jogador ("20", "mao","avancado", 100);
+        Jogador jj = new Jogador ("21", "braco", "avancado", 100);
+        Jogador kk = new Jogador ("22", "perna", "defesa", 100);
 
         ArrayList<Jogador> eq = new ArrayList<>();
         eq.add(aa);
@@ -75,16 +75,17 @@ public class Teste {
         equipavis.setNome("k");
         equipavis.setEquipatitular(eq);
 
-        System.out.println(a);
-
         Map<String,Equipa> equipas = new LinkedHashMap<>();
         equipas.put(equipavis.getId(),equipavis);
         equipas.put(equipa.getId(),equipa);
 
         Faztudo skrt = new Faztudo(equipas);
         skrt.tranfere(a,equipa,equipavis);
-        System.out.println(a.ultimo());
 
+        Faztudo wq = new Faztudo();
+        wq.addEquipa(equipa);
+        wq.addEquipa(equipavis);
+        System.out.println(wq.newCodeNumberjogador());
 
     }
 }
