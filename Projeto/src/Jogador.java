@@ -6,41 +6,41 @@ public class Jogador extends Geral implements Habilidades{
 
     private Posicao posicao;
     private int habilidade;
-    private Map<String,Equipa> historico;
+    private List<Equipa> historico;
 
     public Jogador(){
     super();
     this.posicao = new Posicao();
     this.habilidade = 0;
-    this.historico = new LinkedHashMap<>();
+    this.historico = new ArrayList<>();
     }
 
-    public Jogador(String id,String nome, String pos, int hab, Map<String,Equipa> a) throws ExcecaoPos{
+    public Jogador(String id,String nome, String pos, int hab, List<Equipa> a) throws ExcecaoPos{
         super(nome,id);
         this.posicao = new Posicao(pos);
         this.habilidade = hab;
-        this.historico = new LinkedHashMap<>(a);
+        this.historico = new ArrayList<>(a);
     }
 
     public Jogador(String id,String nome, String pos, int hab) throws ExcecaoPos{
         super(nome,id);
         this.posicao = new Posicao(pos);
         this.habilidade = hab;
-        this.historico = new LinkedHashMap<>();
+        this.historico = new ArrayList<>();
     }
 
     public Jogador(String id, String nome, Posicao pos, int hab){
         super(nome,id);
         this.posicao = pos;
         this.habilidade = hab;
-        this.historico = new LinkedHashMap<>();
+        this.historico = new ArrayList<>();
     }
 
-    public Jogador(String id, String nome, Posicao pos, int hab,HashMap<String,Equipa>a){
+    public Jogador(String id, String nome, Posicao pos, int hab,List<Equipa>a){
         super(nome,id);
         this.posicao = pos;
         this.habilidade = hab;
-        this.historico = new LinkedHashMap<>(a);
+        this.historico = new ArrayList<>(a);
     }
 
     public Jogador (Jogador a){
@@ -70,8 +70,8 @@ public class Jogador extends Geral implements Habilidades{
         return this.habilidade;
     }
 
-    public Map<String, Equipa> getHistorico() {
-        return this.historico.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    public List<Equipa> getHistorico() {
+        return this.historico.stream().map(Equipa::clone).collect(Collectors.toList());
     }
 
     public void setId(String id) {
@@ -82,8 +82,8 @@ public class Jogador extends Geral implements Habilidades{
         super.setNome(nome);
     }
 
-    public void setHistorico(Map<String,Equipa> a){
-        this.historico = new LinkedHashMap<>(a);
+    public void setHistorico(List<Equipa> a){
+        this.historico = new ArrayList<>(a);
     }
 
     public void setPosicao(Posicao pos) {
@@ -95,7 +95,7 @@ public class Jogador extends Geral implements Habilidades{
     }
 
     public void addhist (Equipa a){
-        this.historico.put(a.getId(), a);
+        this.historico.add(a);
     }
 
     @Override
@@ -399,7 +399,7 @@ public class Jogador extends Geral implements Habilidades{
         sb.append(this.posicao.toString());
         sb.append("\nHabilidade geral: " + habilidade);
         sb.append("\nHistorico: ");
-        for(Equipa a: this.historico.values()){
+        for(Equipa a: this.historico){
             sb.append( a.getNome() + " " );
         }
         return sb.toString();
@@ -413,7 +413,7 @@ public class Jogador extends Geral implements Habilidades{
 
         Equipa res = new Equipa();
         if(this.historico.size()!=0) {
-            ArrayList<Equipa> hm = new ArrayList<>(this.historico.values());
+            ArrayList<Equipa> hm = new ArrayList<>(this.historico);
             res = hm.get(this.historico.size()-1);
         }
 
