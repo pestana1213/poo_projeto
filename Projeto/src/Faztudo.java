@@ -39,13 +39,22 @@ public class Faztudo {
 
     public void tranfere(Jogador jogador, Equipa sai, Equipa entra) throws ExcecaoPos{
 
-        if (contida(sai)) {
-            if (contida(entra)) {
+        for(Equipa a : this.equipas.values()){
+            if(sai.equals(a)){
+                sai.removeJogador(jogador);
+            }
+            if(entra.equals(a)){
                 entra.addJogador(jogador);
             }
-            sai.removeJogador(jogador);
         }
-        else {throw new ExcecaoPos("Equipa nao registada");}
+
+        //if (contida(sai)) {
+        //     sai.removeJogador(jogador);
+        //  if (contida(entra)) {
+        //      entra.addJogador(jogador);
+        //  }
+        //}
+        //else {throw new ExcecaoPos("Equipa nao registada");}
 
     }
 
@@ -148,13 +157,16 @@ public class Faztudo {
         return res;
     }
 
-    public Jogador identificaJogador(String nome){
-        Jogador res = new Jogador();
-        for(Equipa e : this.equipas.values()){
-            if(e.temjogador(nome)){
-                res = e.identificaJogador(nome);
+    public Jogador identificaJogador(String nome, Equipa e){
+       return e.identificaJogador(nome);
+    }
+
+    public void update(Equipa a){
+
+        for(Equipa e: this.equipas.values()){
+            if(e.getId().equals(a.getId())){
+                e.update(a);
             }
         }
-        return res;
     }
 }

@@ -55,15 +55,15 @@ public class Equipa extends Geral {
     }
 
     public void setEquipatitular(ArrayList<Jogador> titular) throws ExcecaoPos{
-        ArrayList<Jogador> res = new ArrayList<>();
         if(titular.size() <= 11){
                 for(Jogador f : titular){
                     if(this.jogadores.contains(f)){
-                        res.add(f);}
+                        this.equipatitular.add(f);
+                        }
                     else {throw new ExcecaoPos("Jogador nao pertence a equipa");}
                 }
 
-        this.equipatitular = new ArrayList<>(res);hist();}
+        hist();}
         else {throw new ExcecaoPos("Equipa titular com demasiados elementos");}
     }
 
@@ -78,17 +78,13 @@ public class Equipa extends Geral {
             if (this.jogadores.stream().anyMatch(j ->j.equals(a))) {
                 throw new ExcecaoPos("Jogador ja na equipa");
             }
-            this.jogadores.add(a);
-            a.addhist(this);
-        }
+        a.addhist(this);
+        this.jogadores.add(a.clone());
+    }
 
     public void removeJogador (Jogador a) throws ExcecaoPos{
-
-            if (this.jogadores.stream().noneMatch(j ->j.equals(a))){
-                throw new ExcecaoPos("Jogador nao esta na equipa");
-            }
-
         this.jogadores.remove(a);
+        this.equipatitular.remove(a);
     }
 
     public int habfrente (){
@@ -145,7 +141,7 @@ public class Equipa extends Geral {
 
     public int habgeral(){
         if(this.jogadores.size() > 0)
-        return (habdefesa() + habfrente() + hablateral() + habmedio() + habredes() ) / this.jogadores.size();
+        return (habdefesa() + habfrente() + hablateral() + habmedio() + habredes() ) / 5;
         else return 0;
     }
 
@@ -203,15 +199,22 @@ public class Equipa extends Geral {
     }
 
     public boolean temjogador(String nome){
-        return this.jogadores.stream().anyMatch(a->a.getNome().equals(nome));
+        return getJogadores().stream().anyMatch(a->a.getNome().equalsIgnoreCase(nome));
     }
 
     public Jogador identificaJogador(String nome){
+
         Jogador res = new Jogador();
         for(Jogador j : this.jogadores){
-            if(j.getNome().equals(nome))
-                res = j.clone();
+            if(j.getNome().equalsIgnoreCase(nome))
+               return j.clone();
         }
         return res;
+    }
+
+    public void update(Equipa a){
+        this.equipatitular = a.getEquipatitular();
+        this.jogadores = a.getJogadores();
+
     }
 }

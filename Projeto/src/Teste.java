@@ -79,14 +79,16 @@ public class Teste {
         equipas.put(equipavis.getId(),equipavis);
         equipas.put(equipa.getId(),equipa);
 
+
         Faztudo skrt = new Faztudo(equipas);
-        skrt.tranfere(a,equipa,equipavis);
 
         Faztudo wq = new Faztudo();
         wq.addEquipa(equipa);
         wq.addEquipa(equipavis);
 
         Menu.registarequipa(wq);
+        Menu.faztransferencia(wq);
         Menu.verequipas(wq);
+
     }
 }

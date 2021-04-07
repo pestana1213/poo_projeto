@@ -56,7 +56,7 @@ public class Menu {
         System.out.println(sb.toString());
     }
 
-    public static ArrayList<Jogador> adicionarjogadores(Faztudo a) throws ExcecaoPos {
+    private static ArrayList<Jogador> adicionarjogadores(Faztudo a) throws ExcecaoPos {
 
         ArrayList<Jogador> res = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
@@ -81,7 +81,7 @@ public class Menu {
     return res;
     }
 
-    public static Jogador registajogador(Faztudo a) throws ExcecaoPos {
+    private static Jogador registajogador(Faztudo a) throws ExcecaoPos {
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("\n Digite o nome do jogador: ");
@@ -108,6 +108,8 @@ public class Menu {
     public static void todosjogadores(Faztudo a){
         System.out.println(a.toStringjogadores());
     }
+
+
     public static void clearWindow() {
         for (int i = 0;i<100;i++){
             System.out.println();
@@ -116,25 +118,31 @@ public class Menu {
 
     public static void faztransferencia(Faztudo a) throws ExcecaoPos {
         Scanner scanner = new Scanner(System.in);
+
         System.out.println("\nA que equipa pertence o jogador a ser transferido");
         String nome = scanner.nextLine();
         Equipa sai = a.identificaEquipa(nome);
+
         System.out.println("\nPara que equipa e que o jogador vai");
         String outro = scanner.nextLine();
         Equipa entra = a.identificaEquipa(outro);
+
         System.out.println("\nNome do jogador: ");
         String nomejogador = scanner.nextLine();
-        Jogador jog = a.identificaJogador(nomejogador);
+        Jogador jog = a.identificaJogador(nomejogador,sai);
+
         a.tranfere(jog,sai,entra);
+
         ArrayList<Jogador> teste = new ArrayList<>();
-        teste.set(0,jog);
+        teste.add(jog);
         if(pertenceequipatitular(teste).contains(jog)){
             entra.addjogequipatitular(jog);
         }
-
+        a.update(entra);
+        a.update(sai);
     }
 
-    public static ArrayList<Jogador> pertenceequipatitular(ArrayList<Jogador> jog) throws ExcecaoPos {
+    private static ArrayList<Jogador> pertenceequipatitular(ArrayList<Jogador> jog) throws ExcecaoPos {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Jogador> titulares = new ArrayList<>();
 
@@ -160,4 +168,6 @@ public class Menu {
         }
         return titulares;
     }
+
+    
 }

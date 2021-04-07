@@ -383,7 +383,7 @@ public class Jogador extends Geral implements Habilidades{
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Jogador jogador = (Jogador) o;
-        return habilidade == jogador.habilidade && Objects.equals(posicao, jogador.posicao);
+        return habilidade == jogador.habilidade && posicao.equals(jogador.posicao) && historico.equals(jogador.historico);
     }
 
     @Override
