@@ -156,9 +156,7 @@ public class Menu {
                 pertenceequipatitular(jog);
                 throw new ExcecaoPos("Opcao desconhecida");
             }
-
         }
-
         }
         return titulares;
     }

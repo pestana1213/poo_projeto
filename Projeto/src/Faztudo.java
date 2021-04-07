@@ -95,7 +95,7 @@ public class Faztudo {
     }
 
     public boolean nomejaregistado(String nome){
-       return this.equipas.values().stream().anyMatch(e->e.getNome().equals(nome));
+       return this.equipas.values().stream().anyMatch(e-> e.getNome().equalsIgnoreCase(nome));
     }
 
     public String toString(){
@@ -131,17 +131,17 @@ public class Faztudo {
     }
 
     public boolean jaexistenome(String nome){
-        return this.equipas.values().stream().anyMatch(a->a.getNome().equals(nome));
+        return this.equipas.values().stream().anyMatch(a->a.getNome().equalsIgnoreCase(nome));
     }
 
     public boolean jaexitenomejogador(String nome){
-        return this.equipas.values().stream().anyMatch(a->a.getJogadores().stream().anyMatch(b->b.getNome().equals(nome)));
+        return this.equipas.values().stream().anyMatch(a->a.getJogadores().stream().anyMatch(b->b.getNome().equalsIgnoreCase(nome)));
     }
 
     public Equipa identificaEquipa(String nome) throws ExcecaoPos {
         Equipa res = new Equipa();
         for(Equipa e : this.equipas.values()){
-            if(e.getNome().equals(nome)){
+            if(e.getNome().equalsIgnoreCase(nome)){
                 res =  e.clone();
             }
         }
