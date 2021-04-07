@@ -85,7 +85,8 @@ public class Teste {
         Faztudo wq = new Faztudo();
         wq.addEquipa(equipa);
         wq.addEquipa(equipavis);
-        System.out.println(wq.newCodeNumberjogador());
 
+        Menu.registarequipa(wq);
+        Menu.verequipas(wq);
     }
 }

@@ -56,7 +56,7 @@ public class Equipa extends Geral {
 
     public void setEquipatitular(ArrayList<Jogador> titular) throws ExcecaoPos{
         ArrayList<Jogador> res = new ArrayList<>();
-        if(titular.size() == 11){
+        if(titular.size() <= 11){
                 for(Jogador f : titular){
                     if(this.jogadores.contains(f)){
                         res.add(f);}
@@ -111,7 +111,7 @@ public class Equipa extends Geral {
         for (Jogador y : this.equipatitular) {
             for (Jogador x : this.jogadores) {
                 if (y.equals(sai) && x.equals(entra)) {
-                    addjogequipatitular(entra.clone());
+                    addjogequipatitular(entra);
                     this.equipatitular.remove(sai);
                     i = 1;
                 }
@@ -124,27 +124,29 @@ public class Equipa extends Geral {
 
     public int hablateral(){
 
-        return (int) (this.equipatitular.stream().filter(a->a.getposicaostr().equals(LATERAL)).mapToDouble(Jogador::getHabilidade).sum()/
-                this.equipatitular.stream().filter(a->a.getposicaostr().equals(LATERAL)).count());
+        return (int) (this.jogadores.stream().filter(a->a.getposicaostr().equals(LATERAL)).mapToDouble(Jogador::getHabilidade).sum()/
+                this.jogadores.stream().filter(a->a.getposicaostr().equals(LATERAL)).count());
     }
 
     public int habmedio(){
-        return (int) (this.equipatitular.stream().filter(a->a.getposicaostr().equals(MEDIO)).mapToDouble(Jogador::getHabilidade).sum()/
-                this.equipatitular.stream().filter(a->a.getposicaostr().equals(MEDIO)).count());
+        return (int) (this.jogadores.stream().filter(a->a.getposicaostr().equals(MEDIO)).mapToDouble(Jogador::getHabilidade).sum()/
+                this.jogadores.stream().filter(a->a.getposicaostr().equals(MEDIO)).count());
     }
 
     public int habdefesa(){
-        return (int) (this.equipatitular.stream().filter(a->a.getposicaostr().equals(DEFESA)).mapToDouble(Jogador::getHabilidade).sum()/
-                this.equipatitular.stream().filter(a->a.getposicaostr().equals(DEFESA)).count());
+        return (int) (this.jogadores.stream().filter(a->a.getposicaostr().equals(DEFESA)).mapToDouble(Jogador::getHabilidade).sum()/
+                this.jogadores.stream().filter(a->a.getposicaostr().equals(DEFESA)).count());
     }
 
     public int habredes(){
-        return (int) (this.equipatitular.stream().filter(a->a.getposicaostr().equals(REDES)).mapToDouble(Jogador::getHabilidade).sum()/
-                this.equipatitular.stream().filter(a->a.getposicaostr().equals(REDES)).count());
+        return (int) (this.jogadores.stream().filter(a->a.getposicaostr().equals(REDES)).mapToDouble(Jogador::getHabilidade).sum()/
+                this.jogadores.stream().filter(a->a.getposicaostr().equals(REDES)).count());
     }
 
     public int habgeral(){
-        return (habdefesa() + habfrente() + hablateral() + habmedio() + habredes() ) / 5;
+        if(this.jogadores.size() > 0)
+        return (habdefesa() + habfrente() + hablateral() + habmedio() + habredes() ) / this.jogadores.size();
+        else return 0;
     }
 
     @Override
@@ -164,18 +166,22 @@ public class Equipa extends Geral {
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
+        sb.append("-----------Equipa-----------\n\n");
         sb.append("Nome da equipa: " + super.getNome());
         sb.append("\nId: " + super.getId());
-        sb.append("\n Habilidade geral: " + habgeral());
+        sb.append("\nHabilidade geral: " + habgeral());
+        sb.append("\n-----------Jogadores-----------\n\n");
         for (Jogador e : this.jogadores) {
             sb.append(e.toString());
         }
+        sb.append("\n-----------Jogadores titulares-----------\n\n");
         if(this.equipatitular.size() > 0) {
             sb.append("\nEquipa Titular: ");
             for (Jogador x : this.equipatitular) {
                 sb.append(x.toString());
             }
         }
+        sb.append("\n-------------------------\n\n");
         return sb.toString();
     }
 
@@ -196,6 +202,16 @@ public class Equipa extends Geral {
         }
     }
 
+    public boolean temjogador(String nome){
+        return this.jogadores.stream().anyMatch(a->a.getNome().equals(nome));
+    }
 
-
+    public Jogador identificaJogador(String nome){
+        Jogador res = new Jogador();
+        for(Jogador j : this.jogadores){
+            if(j.getNome().equals(nome))
+                res = j.clone();
+        }
+        return res;
+    }
 }

@@ -93,4 +93,68 @@ public class Faztudo {
         while (l.contains(aux)) aux++;
         return aux;
     }
+
+    public boolean nomejaregistado(String nome){
+       return this.equipas.values().stream().anyMatch(e->e.getNome().equals(nome));
+    }
+
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+
+        for(Equipa e : this.equipas.values()){
+            sb.append("\n" + e.toString());
+        }
+        return sb.toString();
+    }
+
+    public String toStringEquipa(Equipa a){
+        StringBuilder sb = new StringBuilder("---------------Equipa---------------\n\n");
+
+        if(this.equipas.containsValue(a)){
+            sb.append(a.toString());
+        }
+        else{sb.append("Equipa nao encontrada"); }
+        return sb.toString();
+    }
+
+    public String toStringjogadores(){
+        StringBuilder sb = new StringBuilder("---------------Jogadores---------------\n\n");
+        ArrayList<Jogador> jog = new ArrayList<>();
+        for(Equipa e : this.equipas.values()){
+            jog.addAll(e.getJogadores());
+            for(Jogador jo : jog){
+                sb.append(jo.toString());
+            }
+        }
+
+        return sb.toString();
+    }
+
+    public boolean jaexistenome(String nome){
+        return this.equipas.values().stream().anyMatch(a->a.getNome().equals(nome));
+    }
+
+    public boolean jaexitenomejogador(String nome){
+        return this.equipas.values().stream().anyMatch(a->a.getJogadores().stream().anyMatch(b->b.getNome().equals(nome)));
+    }
+
+    public Equipa identificaEquipa(String nome) throws ExcecaoPos {
+        Equipa res = new Equipa();
+        for(Equipa e : this.equipas.values()){
+            if(e.getNome().equals(nome)){
+                res =  e.clone();
+            }
+        }
+        return res;
+    }
+
+    public Jogador identificaJogador(String nome){
+        Jogador res = new Jogador();
+        for(Equipa e : this.equipas.values()){
+            if(e.temjogador(nome)){
+                res = e.identificaJogador(nome);
+            }
+        }
+        return res;
+    }
 }

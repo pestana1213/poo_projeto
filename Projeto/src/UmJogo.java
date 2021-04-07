@@ -66,11 +66,11 @@ public class UmJogo extends Equipa implements ProbJogos {
     }
 
     public void simulajogo() throws ExcecaoPos, InterruptedException {
+        int i = 0;
 
         if(this.casa.getEquipatitular().size() == 11 && this.visita.getEquipatitular().size() == 11) {
 
             for (int time=0; time<=90;time ++){
-
                 System.out.println("\nO jogo esta a decorrer \nMinuto: "+ time);
                 //Na primeira parte a bola vai começar na equipa da casa
 
@@ -78,10 +78,13 @@ public class UmJogo extends Equipa implements ProbJogos {
 
                     if (probmeio(this.casa.habmedio()) > probmeio(this.visita.habmedio())) {
                         System.out.println("Equipa da casa esta a fazer um ataque");
-                        time += simulaataquecasa(time);
+                        i = simulaataquecasa(time) + time;
+
                     } else {
                         System.out.println("Equipa visitante esta a fazer um ataque");
-                        time += simulaataquevista(time);
+                        i = simulaataquevista(time) + time;
+
+
                     }
                 }
                 else {
@@ -90,16 +93,32 @@ public class UmJogo extends Equipa implements ProbJogos {
                     }
                     if (probmeio(this.visita.habmedio()) > probmeio(this.casa.habmedio())) {
                         System.out.println("Equipa visitante esta a fazer um ataque");
-                        time += simulaataquevista(time);
+                        i = simulaataquevista(time) + time;
+
+                        while(time != i && time <90){
+                                time++;
+                                System.out.print("\nMinuto: " + time);
+                                Thread.sleep(500);
+
+                        }
                     } else {
                         System.out.println("Equipa da casa esta a fazer um ataque");
-                        time += simulaataquecasa(time);
+                        i = simulaataquecasa(time) + time;
+
+
                     }
                 }
                 Thread.sleep(500);
+
+                while(time != i && time <90){
+                    System.out.print("\nMinuto: " + time);
+                    Thread.sleep(500);
+                    time++;
+
+                }
             }
 
-            System.out.println("Golos casa: " + this.goloC + "\nGolos visita: " + this.goloF);
+            System.out.println("\nGolos casa: " + this.goloC + "\nGolos visita: " + this.goloF);
         }
         else throw new ExcecaoPos("Numero de jogadores titulares invalido");
         }

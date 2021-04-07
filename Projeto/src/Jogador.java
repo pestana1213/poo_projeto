@@ -1,12 +1,11 @@
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 public class Jogador extends Geral implements Habilidades{
 
     private Posicao posicao;
     private int habilidade;
-    private List<Equipa> historico;
+    private ArrayList<Equipa> historico;
 
     public Jogador(){
     super();
@@ -15,7 +14,7 @@ public class Jogador extends Geral implements Habilidades{
     this.historico = new ArrayList<>();
     }
 
-    public Jogador(String id,String nome, String pos, int hab, List<Equipa> a) throws ExcecaoPos{
+    public Jogador(String id,String nome, String pos, int hab, ArrayList<Equipa> a) throws ExcecaoPos{
         super(nome,id);
         this.posicao = new Posicao(pos);
         this.habilidade = hab;
@@ -36,7 +35,7 @@ public class Jogador extends Geral implements Habilidades{
         this.historico = new ArrayList<>();
     }
 
-    public Jogador(String id, String nome, Posicao pos, int hab,List<Equipa>a){
+    public Jogador(String id, String nome, Posicao pos, int hab,ArrayList<Equipa>a){
         super(nome,id);
         this.posicao = pos;
         this.habilidade = hab;
@@ -70,8 +69,8 @@ public class Jogador extends Geral implements Habilidades{
         return this.habilidade;
     }
 
-    public List<Equipa> getHistorico() {
-        return this.historico.stream().map(Equipa::clone).collect(Collectors.toList());
+    public ArrayList<Equipa> getHistorico() {
+        return new ArrayList<>(this.historico); //this.historico.stream().map(Equipa::clone).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public void setId(String id) {
@@ -82,7 +81,7 @@ public class Jogador extends Geral implements Habilidades{
         super.setNome(nome);
     }
 
-    public void setHistorico(List<Equipa> a){
+    public void setHistorico(ArrayList<Equipa> a){
         this.historico = new ArrayList<>(a);
     }
 
