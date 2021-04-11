@@ -58,7 +58,7 @@ public class Equipa extends Geral {
         if(titular.size() <= 11){
                 for(Jogador f : titular){
                     if(this.jogadores.contains(f)){
-                        this.equipatitular.add(f);
+                        this.equipatitular.add(f.clone());
                         }
                     else {throw new ExcecaoPos("Jogador nao pertence a equipa");}
                 }
@@ -87,6 +87,10 @@ public class Equipa extends Geral {
         this.equipatitular.remove(a);
     }
 
+    public void removeJogadorTitular (Jogador a){
+        this.equipatitular.remove(a);
+    }
+
     public int habfrente (){
 
         return (int) (this.jogadores.stream().filter(a->a.getposicaostr().equals(AVANCADO)).mapToDouble(Jogador::getHabilidade).sum()/
@@ -99,7 +103,7 @@ public class Equipa extends Geral {
                 throw new ExcecaoPos("Jogador ja esta na equipa titular");
             }
         }
-        this.equipatitular.add(a);
+        this.equipatitular.add(a.clone());
     }
 
     public void substitui(Jogador entra, Jogador sai) throws ExcecaoPos {
@@ -107,7 +111,7 @@ public class Equipa extends Geral {
         for (Jogador y : this.equipatitular) {
             for (Jogador x : this.jogadores) {
                 if (y.equals(sai) && x.equals(entra)) {
-                    addjogequipatitular(entra);
+                    addjogequipatitular(entra.clone());
                     this.equipatitular.remove(sai);
                     i = 1;
                 }
@@ -151,7 +155,7 @@ public class Equipa extends Geral {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Equipa equipa = (Equipa) o;
-        return Objects.equals(jogadores, equipa.jogadores) && Objects.equals(equipatitular, equipa.equipatitular);
+        return jogadores.equals(equipa.jogadores) && equipatitular.equals(equipa.equipatitular);
     }
 
     @Override
@@ -210,6 +214,10 @@ public class Equipa extends Geral {
                return j.clone();
         }
         return res;
+    }
+
+    public ArrayList<Jogador> jogadoresnome (String nome){
+       return this.jogadores.stream().filter(j -> j.getNome().equalsIgnoreCase(nome)).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public void update(Equipa a){

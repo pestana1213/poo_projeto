@@ -27,9 +27,9 @@ public class Faztudo {
 
     public void addEquipa(Equipa e) throws ExcecaoPos {
 
-        if (this.equipas.containsValue(e)) throw new ExcecaoPos("Equipa ja registada");
+        if (this.equipas.containsKey(e.getId())) throw new ExcecaoPos("Equipa ja registada");
         else
-            this.equipas.put(e.getId(), e);
+            this.equipas.putIfAbsent(e.getId(), e);
     }
 
     public void removeEquipa(Equipa e) throws ExcecaoPos {
@@ -59,7 +59,7 @@ public class Faztudo {
     }
 
     private boolean contida (Equipa e) {
-        return this.equipas.values().stream().anyMatch(a -> a.equals(e));
+        return this.equipas.keySet().stream().anyMatch(a -> a.equals(e.getId()));
     }
 
     public void simulaumjogo(Equipa casa, Equipa visita) throws ExcecaoPos, InterruptedException {
@@ -120,7 +120,7 @@ public class Faztudo {
         StringBuilder sb = new StringBuilder("---------------Equipa---------------\n\n");
 
         if(this.equipas.containsValue(a)){
-            sb.append(a.toString());
+            sb.append("\n" + a.toString());
         }
         else{sb.append("Equipa nao encontrada"); }
         return sb.toString();
@@ -132,7 +132,7 @@ public class Faztudo {
         for(Equipa e : this.equipas.values()){
             jog.addAll(e.getJogadores());
             for(Jogador jo : jog){
-                sb.append(jo.toString());
+                sb.append("\n" + jo.toString());
             }
         }
 
@@ -168,5 +168,15 @@ public class Faztudo {
                 e.update(a);
             }
         }
+    }
+
+    public ArrayList<Equipa> equipasmmnome(String nome){
+        return this.equipas.values().stream().filter(a->a.getNome().equalsIgnoreCase(nome)).map(Equipa::clone).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public ArrayList<Jogador> jogadoresmmnome(String nome){
+        ArrayList<Jogador> todos = new ArrayList<>();
+        this.equipas.values().stream().map(Equipa::getJogadores).forEach(todos::addAll);
+        return todos.stream().filter(a->a.getNome().equalsIgnoreCase(nome)).collect(Collectors.toCollection(ArrayList::new));
     }
 }

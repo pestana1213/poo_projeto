@@ -95,12 +95,6 @@ public class UmJogo extends Equipa implements ProbJogos {
                         System.out.println("Equipa visitante esta a fazer um ataque");
                         i = simulaataquevista(time) + time;
 
-                        while(time != i && time <90){
-                                time++;
-                                System.out.print("\nMinuto: " + time);
-                                Thread.sleep(500);
-
-                        }
                     } else {
                         System.out.println("Equipa da casa esta a fazer um ataque");
                         i = simulaataquecasa(time) + time;
@@ -111,7 +105,7 @@ public class UmJogo extends Equipa implements ProbJogos {
                 Thread.sleep(500);
 
                 while(time != i && time <90){
-                    System.out.print("\nMinuto: " + time);
+                    System.out.print("\nMinuto: " + (time+1));
                     Thread.sleep(500);
                     time++;
 

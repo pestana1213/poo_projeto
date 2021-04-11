@@ -86,9 +86,7 @@ public class Teste {
         wq.addEquipa(equipa);
         wq.addEquipa(equipavis);
 
-        Menu.registarequipa(wq);
-        Menu.faztransferencia(wq);
-        Menu.verequipas(wq);
+        Menu.menu(wq);
 
     }
 }
