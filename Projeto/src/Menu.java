@@ -334,10 +334,18 @@ public class Menu {
 
                 System.out.println("\nA que jogador se refere?\nIdentificar pelo id\n");
                 String id = scanner.nextLine();
+                int i =0;
                 for (Jogador jo : jogadoresmmnome) {
                     if (id.equalsIgnoreCase(jo.getId())) {
                         res = jo;
+                        i = 1;
                     }
+                }
+
+                if(i==0){
+                    System.out.println("Jogador desconhecido\n");
+                    volta(a);
+
                 }
             }
             else {
@@ -368,7 +376,13 @@ public class Menu {
                 for (Equipa eq : equipasmmnome) {
                     if (id.equalsIgnoreCase(eq.getId())) {
                         res = eq;
+                        i = 1;
                     }
+                }
+                if(i==0){
+                        System.out.println("Equipa desconhecida\n");
+                    volta(a);
+
                 }
             } else {
                 System.out.println("Equipa desconhecida\n");
