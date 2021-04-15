@@ -7,6 +7,7 @@ public class Menu {
 
         clearWindow();
         StringBuilder sb = new StringBuilder("-----------Futebol Manager-----------\n\n");
+        //load a partir de ficheiro
         sb.append("1) Registar Equipas.\n");
         sb.append("2) Ver todas as equipas.\n");
         sb.append("3) Ver todos os jogadores. \n");
@@ -229,7 +230,6 @@ public class Menu {
         jog.setId(codi);
 
         return jog;
-
     }
 
     private static Jogador registajogador(Faztudo a) throws ExcecaoPos {
@@ -305,7 +305,7 @@ public class Menu {
 
         System.out.println("\nNome do jogador: ");
         String nomejogador = scanner.nextLine();
-        Jogador jog = a.identificaJogador(nomejogador,sai);
+        Jogador jog = jogadormmnomenaequipa(a,nomejogador,sai);
 
         a.tranfere(jog,sai,entra);
 
@@ -319,6 +319,44 @@ public class Menu {
     }
 //^
 //|
+private static Jogador jogadormmnomenaequipa(Faztudo a, String nome,Equipa e) throws ExcecaoPos, InterruptedException{
+    Scanner scanner = new Scanner(System.in);
+    Jogador res = new Jogador();
+    ArrayList<Jogador> jogadoresmmnome = a.jogadoresmmnomenaequipa(nome,e);
+
+    if(jogadoresmmnome.size()==1){
+        res=jogadoresmmnome.get(0);
+    }
+    else{
+        if(jogadoresmmnome.size()>1){
+            System.out.println("Jogadores com o mesmo nome: ");
+            jogadoresmmnome.stream().map(Jogador::toStringcomid).forEach(System.out::println);
+
+            System.out.println("\nA que jogador se refere?\nIdentificar pelo id\n");
+            String id = scanner.nextLine();
+            int i =0;
+            for (Jogador jo : jogadoresmmnome) {
+                if (id.equalsIgnoreCase(jo.getId())) {
+                    res = jo;
+                    i = 1;
+                }
+            }
+
+            if(i==0){
+                System.out.println("Jogador desconhecido\n");
+                volta(a);
+
+            }
+        }
+        else {
+            System.out.println("Jogador desconhecido\n");
+            volta(a);
+        }
+    }
+    return res;
+}
+
+
     private static Jogador jogadormmnome(Faztudo a, String nome) throws ExcecaoPos, InterruptedException{
         Scanner scanner = new Scanner(System.in);
         Jogador res = new Jogador();
@@ -433,42 +471,6 @@ public class Menu {
 
     }
 
-    public static void menu(Faztudo a) throws ExcecaoPos, InterruptedException {
-        int op = menuinicial();
-
-        switch (op){
-            case(1):
-                registarequipa(a);
-                volta(a);
-                break;
-            case(2):
-                verequipas(a);
-                volta(a);
-            case(3):
-                todosjogadores(a);
-                volta(a);
-                break;
-            case(4):
-                adicionarjogequipa(a);
-                break;
-            case(5):
-                faztransferencia(a);
-                volta(a);
-                break;
-            case(6):
-                simulajogo(a);
-                volta(a);
-                break;
-            case(7):
-                System.out.println("\nAinda em desenvolvimento :)\n");
-                volta(a);
-                break;
-            default:
-                System.out.println("Opcao desconhecida :(");
-                volta(a);
-        }
-
-    }
 
     private static void volta(Faztudo a) throws ExcecaoPos, InterruptedException {
         Scanner scanner = new Scanner(System.in);
@@ -542,8 +544,41 @@ public class Menu {
             default:
                 break;
         }
-
-
     }
 
+    public static void menu(Faztudo a) throws ExcecaoPos, InterruptedException {
+        int op = menuinicial();
+
+        switch (op){
+            case(1):
+                registarequipa(a);
+                volta(a);
+                break;
+            case(2):
+                verequipas(a);
+                volta(a);
+            case(3):
+                todosjogadores(a);
+                volta(a);
+                break;
+            case(4):
+                adicionarjogequipa(a);
+                break;
+            case(5):
+                faztransferencia(a);
+                volta(a);
+                break;
+            case(6):
+                simulajogo(a);
+                volta(a);
+                break;
+            case(7):
+                System.out.println("\nAinda em desenvolvimento :)\n");
+                volta(a);
+                break;
+            default:
+                System.out.println("Opcao desconhecida :(");
+                volta(a);
+        }
+    }
 }

@@ -179,4 +179,14 @@ public class Faztudo {
         this.equipas.values().stream().map(Equipa::getJogadores).forEach(todos::addAll);
         return todos.stream().filter(a->a.getNome().equalsIgnoreCase(nome)).collect(Collectors.toCollection(ArrayList::new));
     }
+
+    public ArrayList<Jogador> jogadoresmmnomenaequipa(String nome, Equipa e){
+        ArrayList<Jogador> todos = new ArrayList<>();
+        for(Equipa k : this.equipas.values()){
+            if(e.equals(k)){
+                todos.addAll(e.getJogadores());
+            }
+        }
+        return todos.stream().filter(a->a.getNome().equalsIgnoreCase(nome)).collect(Collectors.toCollection(ArrayList::new));
+    }
 }

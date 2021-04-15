@@ -77,11 +77,11 @@ public class UmJogo extends Equipa implements ProbJogos {
                 if (time<45) {
 
                     if (probmeio(this.casa.habmedio()) > probmeio(this.visita.habmedio())) {
-                        System.out.println("Equipa da casa esta a fazer um ataque");
+                        System.out.println("A equipa " + this.casa.getNome() + " esta a fazer um ataque");
                         i = simulaataquecasa(time) + time;
 
                     } else {
-                        System.out.println("Equipa visitante esta a fazer um ataque");
+                        System.out.println("A equipa " + this.visita.getNome() + " esta a fazer um ataque");
                         i = simulaataquevista(time) + time;
 
 
@@ -92,11 +92,11 @@ public class UmJogo extends Equipa implements ProbJogos {
                         System.out.println("Inicio da segunda parte");
                     }
                     if (probmeio(this.visita.habmedio()) > probmeio(this.casa.habmedio())) {
-                        System.out.println("Equipa visitante esta a fazer um ataque");
+                        System.out.println("A equipa " + this.visita.getNome() + " esta a fazer um ataque");
                         i = simulaataquevista(time) + time;
 
                     } else {
-                        System.out.println("Equipa da casa esta a fazer um ataque");
+                        System.out.println("A equipa " + this.casa.getNome() + " esta a fazer um ataque");
                         i = simulaataquecasa(time) + time;
 
 
@@ -105,10 +105,9 @@ public class UmJogo extends Equipa implements ProbJogos {
                 Thread.sleep(500);
 
                 while(time != i && time <90){
-                    System.out.print("\nMinuto: " + (time+1));
                     Thread.sleep(500);
-                    time++;
-
+                    time ++;
+                    System.out.print("\nMinuto: " + (time));
                 }
             }
 
@@ -129,7 +128,7 @@ public class UmJogo extends Equipa implements ProbJogos {
 
         if (probmarcar(this.casa.habfrente()) > probdefender(this.visita.habdefesa())) {
             minutos += rand.nextInt(4);
-            System.out.println("Os avançados da casa conseguem passar pelos defesas");
+            System.out.println("Os avançados da equipa "+ this.casa.getNome() + " conseguem passar pelos defesas");
             if (probmarcar(this.casa.habfrente()) > probredes(this.visita.habredes())) {
                 ArrayList<Jogador> jog = this.casa.getEquipatitular();
                 double remate = 0;
@@ -139,19 +138,19 @@ public class UmJogo extends Equipa implements ProbJogos {
                     }
                 }
                 if(rand.nextInt((int)remate) < remate-5){
-                System.out.println("A equipa da casa marca golo");
+                System.out.println("A equipa: " + this.casa.getNome() +" marca golo");
                 marca = true;
                 this.goloC ++;
                 minutos += rand.nextInt(6);}
 
-                else {System.out.println("A bola foi ao poste infelizmente, bela jogada da equipa da casa");
+                else {System.out.println("A bola foi ao poste infelizmente, bela jogada da equipa: " + this.casa.getNome());
                     minutos += rand.nextInt(6);
                 }
 
             } else {System.out.println("Grande defesa");minutos += rand.nextInt(3); }
         } else  {
             minutos += rand.nextInt(3);
-            System.out.println("Bem tirada pelos defesas da visita" );}
+            System.out.println("Bem tirada pelos defesas da equipa: " + this.visita.getNome() );}
 
         if (time+minutos > 45){
             int aux = 0;
@@ -160,7 +159,7 @@ public class UmJogo extends Equipa implements ProbJogos {
         }
 
         if (marca){
-            System.out.println("Bola ao meio para a equipa visitante");
+            System.out.println("Bola ao meio para a equipa: " + this.visita.getNome());
             minutos += simulaataquevista(time+minutos);
         }
         return minutos;
@@ -177,7 +176,7 @@ public class UmJogo extends Equipa implements ProbJogos {
         }
 
         if (probmarcar(this.visita.habfrente()) > probdefender(this.casa.habdefesa())) {
-            System.out.println("Os avançados da visitante conseguem passar pelos defesas");
+            System.out.println("Os avançados da equipa  " + this.visita.getNome() +" conseguem passar pelos defesas");
             minutos += rand.nextInt(4);
             if (probmarcar(this.visita.habfrente()) > probredes(this.casa.habredes())) {
                 ArrayList<Jogador> jog = this.visita.getEquipatitular();
@@ -189,18 +188,18 @@ public class UmJogo extends Equipa implements ProbJogos {
                 }
                 if(rand.nextInt((int)remate) < remate-5){
 
-                System.out.println("A equipa visitante marca golo");
+                System.out.println("A equipa " + this.visita.getNome()+ " marca golo");
                 marca = true;
                 this.goloF ++;
                 minutos += rand.nextInt(6);}
 
-                else {System.out.println("A bola foi ao poste infelizmente, bela jogada da equipa visitante");
+                else {System.out.println("A bola foi ao poste infelizmente, bela jogada da equipa: " + this.visita.getNome());
                 minutos += rand.nextInt(6);
                 }
             } else {System.out.println("Grande defesa");minutos += rand.nextInt(3); }
         } else  {
             minutos += rand.nextInt(3);
-            System.out.println("Bem tirada pelos defesas da casa" );}
+            System.out.println("Bem tirada pelos defesas da equipa: "  + this.casa.getNome());}
 
         if (time+minutos > 45){
             int aux = 0;
@@ -209,7 +208,7 @@ public class UmJogo extends Equipa implements ProbJogos {
         }
 
         if (marca){
-            System.out.println("Bola ao meio para a equipa da casa");
+            System.out.println("Bola ao meio para a equipa: " + this.casa.getNome());
             minutos += simulaataquecasa(time+minutos);
         }
         return minutos;

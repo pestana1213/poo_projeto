@@ -70,7 +70,8 @@ public class Jogador extends Geral implements Habilidades{
     }
 
     public ArrayList<Equipa> getHistorico() {
-        return new ArrayList<>(this.historico); //this.historico.stream().map(Equipa::clone).collect(Collectors.toCollection(ArrayList::new));
+        return new ArrayList<>(this.historico);
+        // this.historico.stream().map(Equipa::clone).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public void setId(String id) {
@@ -97,7 +98,6 @@ public class Jogador extends Geral implements Habilidades{
         this.historico.add(a);
     }
 
-    @Override
     public void velocidade(int x) {
         if(posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
             this.habilidade += (0.15 * x);
@@ -403,6 +403,7 @@ public class Jogador extends Geral implements Habilidades{
         }
         return sb.toString();
     }
+
     public String toStringcomid(){
         StringBuffer sb = new StringBuffer();
 

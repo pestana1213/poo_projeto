@@ -223,6 +223,5 @@ public class Equipa extends Geral {
     public void update(Equipa a){
         this.equipatitular = a.getEquipatitular();
         this.jogadores = a.getJogadores();
-
     }
 }

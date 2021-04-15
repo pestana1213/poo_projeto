@@ -58,5 +58,4 @@ public class Posicao extends Geral{
     public Posicao clone(){
         return new Posicao(this);
     }
-
 }
