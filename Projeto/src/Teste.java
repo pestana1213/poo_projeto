@@ -9,17 +9,17 @@ public class Teste {
     public static void main(String[] args) throws ExcecaoPos, InterruptedException {
         Posicao pos = new Posicao("defesa");
 
-        Jogador a = new Jogador("2", "Joao", "medio", 80);
-        Jogador b = new Jogador("4", "Eduardo", "medio", 80);
-        Jogador c = new Jogador("3", "Barbara", "defesa", 80);
-        Jogador d = new Jogador("1", "Ivone", "medio", 80);
-        Jogador e = new Jogador("5", "Caldas", "lateral", 80);
-        Jogador f = new Jogador("6", "Rodrigues", "lateral", 80);
-        Jogador g = new Jogador("7", "Nogueira", "guarda-redes", 80);
-        Jogador h = new Jogador("8", "Pereira", "lateral", 80);
-        Jogador i = new Jogador("9", "mao", "avancado", 80);
-        Jogador j = new Jogador("10", "braco", "avancado", 80);
-        Jogador k = new Jogador("11", "perna", "defesa", 84);
+        Jogador a = new Jogador("2", "Joao", "medio", 100);
+        Jogador b = new Jogador("4", "Eduardo", "medio", 100);
+        Jogador c = new Jogador("3", "Barbara", "defesa", 100);
+        Jogador d = new Jogador("1", "Ivone", "medio", 100);
+        Jogador e = new Jogador("5", "Caldas", "lateral", 100);
+        Jogador f = new Jogador("6", "Rodrigues", "lateral", 100);
+        Jogador g = new Jogador("7", "Nogueira", "guarda-redes", 100);
+        Jogador h = new Jogador("8", "Pereira", "lateral", 100);
+        Jogador i = new Jogador("9", "mao", "avancado", 100);
+        Jogador j = new Jogador("10", "braco", "avancado", 100);
+        Jogador k = new Jogador("11", "perna", "defesa", 100);
 
 
 

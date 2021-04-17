@@ -12,7 +12,6 @@ public interface ProbJogos {
         return r;
     }
 
-
     default double probdefender(double defesa){
         int r = 0;
         if(defesa > 0){ r = (rand.nextInt((int) defesa));}
