@@ -139,6 +139,7 @@ public class UmJogo extends Equipa implements ProbJogos {
                 }
                 if(rand.nextInt((int)remate) < remate-5){
                 System.out.println("A equipa: " + this.casa.getNome() +" marca golo");
+                System.out.println("Golo marcado por: " + selecionaavancado(this.casa).getNome());
                 marca = true;
                 this.goloC ++;
                 minutos += rand.nextInt(6);}
@@ -147,7 +148,7 @@ public class UmJogo extends Equipa implements ProbJogos {
                     minutos += rand.nextInt(6);
                 }
 
-            } else {System.out.println("Grande defesa");minutos += rand.nextInt(3); }
+            } else {System.out.println("Grande defesa do guarda-redes: " + selecionaguardaredes(this.visita).getNome());minutos += rand.nextInt(3); }
         } else  {
             minutos += rand.nextInt(3);
             System.out.println("Bem tirada pelos defesas da equipa: " + this.visita.getNome() );}
@@ -189,6 +190,7 @@ public class UmJogo extends Equipa implements ProbJogos {
                 if(rand.nextInt((int)remate) < remate-5){
 
                 System.out.println("A equipa " + this.visita.getNome()+ " marca golo");
+                System.out.println("Golo marcado por: " + selecionaavancado(this.visita).getNome());
                 marca = true;
                 this.goloF ++;
                 minutos += rand.nextInt(6);}
@@ -196,7 +198,7 @@ public class UmJogo extends Equipa implements ProbJogos {
                 else {System.out.println("A bola foi ao poste infelizmente, bela jogada da equipa: " + this.visita.getNome());
                 minutos += rand.nextInt(6);
                 }
-            } else {System.out.println("Grande defesa");minutos += rand.nextInt(3); }
+            } else {System.out.println("Grande defesa do guarda-redes: " + selecionaguardaredes(this.casa).getNome());minutos += rand.nextInt(3); }
         } else  {
             minutos += rand.nextInt(3);
             System.out.println("Bem tirada pelos defesas da equipa: "  + this.casa.getNome());}
@@ -212,5 +214,23 @@ public class UmJogo extends Equipa implements ProbJogos {
             minutos += simulaataquecasa(time+minutos);
         }
         return minutos;
+    }
+
+    public Jogador selecionaguardaredes(Equipa e){
+        Jogador redes = new Jogador();
+        for (Jogador j:e.getEquipatitular()){
+            if(j.getposicaostr().equals(REDES)){
+                redes=j;
+            }
+        }
+        return redes;
+    }
+
+    public Jogador selecionaavancado(Equipa e){
+        Random rand = new Random();
+        int i = (int) e.getEquipatitular().stream().filter(k->k.getposicaostr().equals(AVANCADO)).count();
+        ArrayList<Jogador> avancados = e.getEquipatitular().stream().filter(k->k.getposicaostr().equals(AVANCADO)).collect(Collectors.toCollection(ArrayList::new));
+        int selecionado = rand.nextInt(i);
+        return avancados.get(selecionado);
     }
 }
