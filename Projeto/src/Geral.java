@@ -64,7 +64,4 @@ public class Geral {
         return this.id.compareTo(u.getId());
     }
 
-    public Geral clone(){
-        return new Geral(this);
-    }
 }

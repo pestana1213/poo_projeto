@@ -4,7 +4,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
-public class UmJogo extends Equipa implements ProbJogos {
+public class UmJogo implements ProbJogos {
 
     private Equipa casa;
     private Equipa visita;
@@ -273,7 +273,7 @@ public class UmJogo extends Equipa implements ProbJogos {
     public Jogador selecionaguardaredes(Equipa e){
         Jogador redes = new Jogador();
         for (Jogador j:e.getEquipatitular()){
-            if(j.getposicaostr().equals(REDES)){
+            if(j.getposicaostr().equals(Geral.REDES)){
                 redes=j;
             }
         }
@@ -282,8 +282,8 @@ public class UmJogo extends Equipa implements ProbJogos {
 
     public Jogador selecionaavancado(Equipa e){
         Random rand = new Random();
-        int i = (int) e.getEquipatitular().stream().filter(k->k.getposicaostr().equals(AVANCADO)).count();
-        ArrayList<Jogador> avancados = e.getEquipatitular().stream().filter(k->k.getposicaostr().equals(AVANCADO)).collect(Collectors.toCollection(ArrayList::new));
+        int i = (int) e.getEquipatitular().stream().filter(k->k.getposicaostr().equals(Geral.AVANCADO)).count();
+        ArrayList<Jogador> avancados = e.getEquipatitular().stream().filter(k->k.getposicaostr().equals(Geral.AVANCADO)).collect(Collectors.toCollection(ArrayList::new));
         int selecionado = rand.nextInt(i);
         return avancados.get(selecionado);
     }

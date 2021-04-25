@@ -1,8 +1,10 @@
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Array;
 import java.security.Key;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Teste {
@@ -16,10 +18,12 @@ public class Teste {
         Jogador e = new Jogador("5", "Caldas", "lateral", 100);
         Jogador f = new Jogador("6", "Rodrigues", "lateral", 100);
         Jogador g = new Jogador("7", "Nogueira", "guarda-redes", 100);
-        Jogador h = new Jogador("8", "Pereira", "lateral", 100);
+        Jogador h = new Jogador("8", "Pereira", "defesa", 100);
         Jogador i = new Jogador("9", "mao", "avancado", 100);
         Jogador j = new Jogador("10", "braco", "avancado", 100);
-        Jogador k = new Jogador("11", "perna", "defesa", 100);
+        Jogador k = new Jogador("11", "perna", "medio", 0);
+        
+
 
 
 
@@ -36,17 +40,17 @@ public class Teste {
         eqq.add(j);
         eqq.add(k);
 
-        Jogador aa = new Jogador("12","Joao", "defesa", 100);
-        Jogador bb = new Jogador ("13", "Eduardo", "medio", 100);
-        Jogador cc = new Jogador ("14", "Barbara", "medio", 100);
+        Jogador aa = new Jogador("12","Joao", "lateral", 100);
+        Jogador bb = new Jogador ("13", "Eduardo", "lateral", 100);
+        Jogador cc = new Jogador ("14", "Barbara", "defesa", 100);
         Jogador dd = new Jogador ("15", "Ivone", "medio", 100);
-        Jogador ee = new Jogador ("16", "Caldas", "lateral", 100);
-        Jogador ff = new Jogador ("17", "Rodrigues", "lateral", 100);
+        Jogador ee = new Jogador ("16", "Caldas", "defesa", 100);
+        Jogador ff = new Jogador ("17", "Rodrigues", "medio", 100);
         Jogador gg = new Jogador ("18","Nogueira", "guarda-redes", 100);
-        Jogador hh = new Jogador ("19", "Pereira","lateral",100);
-        Jogador ii = new Jogador ("20", "mao","avancado", 100);
+        Jogador hh = new Jogador ("19", "Pereira","medio",100);
+        Jogador ii = new Jogador ("20", "mao","medio", 100);
         Jogador jj = new Jogador ("21", "braco", "avancado", 100);
-        Jogador kk = new Jogador ("22", "perna", "defesa", 100);
+        Jogador kk = new Jogador ("22", "perna", "avancado", 100);
 
         ArrayList<Jogador> eq = new ArrayList<>();
         eq.add(aa);
@@ -64,7 +68,6 @@ public class Teste {
 
         Equipa equipa = new Equipa();
         equipa.setJogadores(eqq);
-        equipa.setEquipatitular(eqq);
         equipa.setId("2");
         equipa.setNome("ola");
 
@@ -81,11 +84,12 @@ public class Teste {
 
 
         Faztudo skrt = new Faztudo(equipas);
-
+        equipa.setequipatittat(4,4,2);
+        System.out.println(equipa);
         Faztudo wq = new Faztudo();
         wq.addEquipa(equipa);
         wq.addEquipa(equipavis);
-        Menu.menu(wq);
+
 
     }
 }

@@ -47,15 +47,6 @@ public class Faztudo {
                 entra.addJogador(jogador);
             }
         }
-
-        //if (contida(sai)) {
-        //     sai.removeJogador(jogador);
-        //  if (contida(entra)) {
-        //      entra.addJogador(jogador);
-        //  }
-        //}
-        //else {throw new ExcecaoPos("Equipa nao registada");}
-
     }
 
     private boolean contida (Equipa e) {
@@ -151,7 +142,7 @@ public class Faztudo {
         Equipa res = new Equipa();
         for(Equipa e : this.equipas.values()){
             if(e.getNome().equalsIgnoreCase(nome)){
-                res =  e.clone();
+                res = e.clone();
             }
         }
         return res;
@@ -189,4 +180,10 @@ public class Faztudo {
         }
         return todos.stream().filter(a->a.getNome().equalsIgnoreCase(nome)).collect(Collectors.toCollection(ArrayList::new));
     }
+
+    public List<Equipa> ordenaporhabilidade(){
+        Comparator<Equipa> comp = (e1,e2) -> (int) e2.habgeral()-e1.habgeral();
+        return this.equipas.values().stream().sorted(comp).collect(Collectors.toList());
+    }
+
 }

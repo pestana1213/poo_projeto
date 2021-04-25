@@ -1,6 +1,5 @@
 import java.util.*;
 
-
 public class Jogador extends Geral implements Habilidades{
 
     private Posicao posicao;
@@ -135,7 +134,6 @@ public class Jogador extends Geral implements Habilidades{
         return 0;
         }
 
-    @Override
     public void resistencia(int x) {
         if(posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
             this.habilidade += (0.12 * x);
@@ -173,7 +171,6 @@ public class Jogador extends Geral implements Habilidades{
         return 0;
     }
 
-    @Override
     public void destreza(int x) {
         if(posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
             this.habilidade += (0.15 * x);
@@ -211,7 +208,6 @@ public class Jogador extends Geral implements Habilidades{
         return 0;
     }
 
-    @Override
     public void impulsao(int x) {
         if(posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
             this.habilidade += (0.13 * x);
@@ -249,7 +245,6 @@ public class Jogador extends Geral implements Habilidades{
         return 0;
     }
 
-    @Override
     public void cabeca(int x) {
         if(posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
             this.habilidade += (0.15 * x);
@@ -287,7 +282,6 @@ public class Jogador extends Geral implements Habilidades{
         return 0;
     }
 
-    @Override
     public void remate(int x) {
         if(posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
             this.habilidade += (0.2 * x);
@@ -325,7 +319,6 @@ public class Jogador extends Geral implements Habilidades{
         return 0;
     }
 
-    @Override
     public void passe(int x) {
         if(posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
             this.habilidade += (0.1 * x);
@@ -363,7 +356,6 @@ public class Jogador extends Geral implements Habilidades{
         return 0;
     }
 
-    @Override
     public void elasticidade(int x ){
         if(posicao.getpos().equals(REDES)&& x>=0 && x <=100){
             this.habilidade += (0.20 * x);
@@ -377,7 +369,6 @@ public class Jogador extends Geral implements Habilidades{
         return 0;
     }
 
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -386,7 +377,6 @@ public class Jogador extends Geral implements Habilidades{
         return habilidade == jogador.habilidade && posicao.equals(jogador.posicao) && historico.equals(jogador.historico);
     }
 
-    @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), posicao, habilidade);
     }
@@ -455,4 +445,5 @@ public class Jogador extends Geral implements Habilidades{
 
         return res;
     }
+
 }
