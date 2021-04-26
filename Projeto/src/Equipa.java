@@ -240,6 +240,7 @@ public class Equipa extends Geral{
     }
 
     public void setequipatittat(int nrdefesas, int nrmedios, int nravancados) throws ExcecaoPos {
+        this.equipatitular = new ArrayList<>();
         ArrayList<Jogador> eqtitular = new ArrayList<>();
         List<Jogador> defesas = ordenajogpos(new Posicao(DEFESA));
         List<Jogador> laterais = ordenajogpos(new Posicao(LATERAL));
@@ -254,9 +255,19 @@ public class Equipa extends Geral{
         if (taticavalida(nrdefesas, nrmedios, nravancados)) {
             if (defs <= nrdefesas-2 && lats <=2) {
                 for (int n = 0; n < 2; n++) {
+                    List<Jogador> aux = new ArrayList<>();
+                    aux.add(laterais.get(n));
+                    for(Jogador j : aux){
+                        j.sethabtit(Geral.LATERAL);
+                    }
                     eqtitular.add(laterais.get(n));
                 }
                 for (int n = 0; n < nrdefesas - 2; n++) {
+                    List<Jogador> aux = new ArrayList<>();
+                    aux.add(defesas.get(n));
+                    for(Jogador j : aux){
+                        j.sethabtit(Geral.DEFESA);
+                    }
                     eqtitular.add(defesas.get(n));
                 }
             }
@@ -264,6 +275,16 @@ public class Equipa extends Geral{
                 if(defs == 0){
                     if(lats<=nrdefesas){
                         for (int n = 0; n < nrdefesas; n++) {
+                            int k=0;
+                            List<Jogador> aux = new ArrayList<>();
+                            aux.add(laterais.get(n));
+                            for(Jogador j : aux){
+                                if (k<2){
+                                    j.sethabtit(Geral.LATERAL);
+                                    k++;
+                                }
+                                j.sethabtit(Geral.DEFESA);
+                            }
                             eqtitular.add(laterais.get(n));
                             //tirar alguma habilidade por terem mudado de posicao menos em dois porque esses vao jogar na posicao que é suposto
                         }
@@ -280,14 +301,25 @@ public class Equipa extends Geral{
             }
             if (meds <= nrmedios) {
                 for (int n = 0; n < nrmedios; n++) {
+                    List<Jogador> aux = new ArrayList<>();
+                    aux.add(medios.get(n));
+                    for(Jogador j : aux){
+                        j.sethabtit(Geral.MEDIO);
+                    }
                     eqtitular.add(medios.get(n));
                 }
             }
             if (avn <= nravancados) {
                 for (int n = 0; n < nravancados; n++) {
+                    List<Jogador> aux = new ArrayList<>();
+                    aux.add(avancados.get(n));
+                    for(Jogador j : aux){
+                        j.sethabtit(Geral.AVANCADO);
+                    }
                     eqtitular.add(avancados.get(n));
                 }
             }
+            guardaredes.get(0).sethabtit(Geral.REDES);
             eqtitular.add(guardaredes.get(0));
             setEquipatitular(eqtitular);
         }

@@ -4,12 +4,14 @@ public class Jogador extends Geral implements Habilidades{
 
     private Posicao posicao;
     private int habilidade;
+    private int habilidadeTit;
     private ArrayList<Equipa> historico;
 
     public Jogador(){
     super();
     this.posicao = new Posicao();
     this.habilidade = 0;
+    this.habilidadeTit = 0;
     this.historico = new ArrayList<>();
     }
 
@@ -17,6 +19,7 @@ public class Jogador extends Geral implements Habilidades{
         super(nome,id);
         this.posicao = new Posicao(pos);
         this.habilidade = hab;
+        this.habilidadeTit = 0;
         this.historico = new ArrayList<>(a);
     }
 
@@ -24,6 +27,15 @@ public class Jogador extends Geral implements Habilidades{
         super(nome,id);
         this.posicao = new Posicao(pos);
         this.habilidade = hab;
+        this.habilidadeTit = 0;
+        this.historico = new ArrayList<>();
+    }
+
+    public Jogador(String id,String nome, String pos, int hab,int habtit) throws ExcecaoPos{
+        super(nome,id);
+        this.posicao = new Posicao(pos);
+        this.habilidade = hab;
+        this.habilidadeTit = habtit;
         this.historico = new ArrayList<>();
     }
 
@@ -31,6 +43,7 @@ public class Jogador extends Geral implements Habilidades{
         super(nome,id);
         this.posicao = pos;
         this.habilidade = hab;
+        this.habilidadeTit = 0;
         this.historico = new ArrayList<>();
     }
 
@@ -38,6 +51,15 @@ public class Jogador extends Geral implements Habilidades{
         super(nome,id);
         this.posicao = pos;
         this.habilidade = hab;
+        this.habilidadeTit = 0;
+        this.historico = new ArrayList<>(a);
+    }
+
+    public Jogador(String id, String nome, Posicao pos, int hab,int habtit, ArrayList<Equipa>a){
+        super(nome,id);
+        this.posicao = pos;
+        this.habilidade = hab;
+        this.habilidadeTit = habtit;
         this.historico = new ArrayList<>(a);
     }
 
@@ -45,6 +67,7 @@ public class Jogador extends Geral implements Habilidades{
         super(a);
         this.posicao = a.getPosicao();
         this.habilidade = a.getHabilidade();
+        this.habilidadeTit = a.getHabilidadeTit();
         this.historico = a.getHistorico();
     }
 
@@ -67,6 +90,8 @@ public class Jogador extends Geral implements Habilidades{
     public int getHabilidade() {
         return this.habilidade;
     }
+
+    public int getHabilidadeTit(){ return this.habilidadeTit;}
 
     public ArrayList<Equipa> getHistorico() {
         return new ArrayList<>(this.historico);
@@ -93,277 +118,279 @@ public class Jogador extends Geral implements Habilidades{
         this.habilidade = habilidade;
     }
 
+    public void setHabilidadeTit(int hab) { this.habilidade = hab;}
+
     public void addhist (Equipa a){
         this.historico.add(a);
     }
 
     public void velocidade(int x) {
-        if(posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
+        if(this.posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
             this.habilidade += (0.15 * x);
         }
-        if(posicao.getpos().equals(DEFESA)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(DEFESA)&& x>=0 && x <=100){
             this.habilidade += (0.15 * x);
         }
-        if(posicao.getpos().equals(MEDIO)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(MEDIO)&& x>=0 && x <=100){
             this.habilidade += (0.13 * x);
         }
-        if(posicao.getpos().equals(LATERAL)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(LATERAL)&& x>=0 && x <=100){
             this.habilidade += (0.16 * x);
         }
-        if(posicao.getpos().equals(REDES)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(REDES)&& x>=0 && x <=100){
             this.habilidade += (0.12 * x);
         }
     }
 
     public double getvelocidade(){
-        if(posicao.getpos().equals(AVANCADO)){
+        if(this.posicao.getpos().equals(AVANCADO)){
             return this.habilidade*0.15;
         }
-        if(posicao.getpos().equals(DEFESA)){
+        if(this.posicao.getpos().equals(DEFESA)){
             return this.habilidade*0.15 ;
         }
-        if(posicao.getpos().equals(MEDIO)){
+        if(this.posicao.getpos().equals(MEDIO)){
             return this.habilidade *0.13 ;
         }
-        if(posicao.getpos().equals(LATERAL)){
+        if(this.posicao.getpos().equals(LATERAL)){
             return this.habilidade *0.16 ;
         }
-        if(posicao.getpos().equals(REDES)){
+        if(this.posicao.getpos().equals(REDES)){
             return this.habilidade * 0.12;
         }
         return 0;
         }
 
     public void resistencia(int x) {
-        if(posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
+        if(this.posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
             this.habilidade += (0.12 * x);
         }
-        if(posicao.getpos().equals(DEFESA)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(DEFESA)&& x>=0 && x <=100){
             this.habilidade += (0.15 * x);
         }
-        if(posicao.getpos().equals(MEDIO)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(MEDIO)&& x>=0 && x <=100){
             this.habilidade += (0.15 * x);
         }
-        if(posicao.getpos().equals(LATERAL)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(LATERAL)&& x>=0 && x <=100){
             this.habilidade += (0.18 * x);
         }
-        if(posicao.getpos().equals(REDES)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(REDES)&& x>=0 && x <=100){
             this.habilidade += (0.15 * x);
         }
     }
 
     public double getresistencia(){
-        if(posicao.getpos().equals(AVANCADO)){
+        if(this.posicao.getpos().equals(AVANCADO)){
             return this.habilidade*0.12;
         }
-        if(posicao.getpos().equals(DEFESA)){
+        if(this.posicao.getpos().equals(DEFESA)){
             return this.habilidade*0.15 ;
         }
-        if(posicao.getpos().equals(MEDIO)){
+        if(this.posicao.getpos().equals(MEDIO)){
             return this.habilidade *0.15 ;
         }
-        if(posicao.getpos().equals(LATERAL)){
+        if(this.posicao.getpos().equals(LATERAL)){
             return this.habilidade *0.18 ;
         }
-        if(posicao.getpos().equals(REDES)){
+        if(this.posicao.getpos().equals(REDES)){
             return this.habilidade * 0.15;
         }
         return 0;
     }
 
     public void destreza(int x) {
-        if(posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
+        if(this.posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
             this.habilidade += (0.15 * x);
         }
-        if(posicao.getpos().equals(DEFESA)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(DEFESA)&& x>=0 && x <=100){
             this.habilidade += (0.18 * x);
         }
-        if(posicao.getpos().equals(MEDIO)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(MEDIO)&& x>=0 && x <=100){
             this.habilidade += (0.15 * x);
         }
-        if(posicao.getpos().equals(LATERAL)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(LATERAL)&& x>=0 && x <=100){
             this.habilidade += (0.15 * x);
         }
-        if(posicao.getpos().equals(REDES)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(REDES)&& x>=0 && x <=100){
             this.habilidade += (0.15 * x);
         }
     }
 
     public double getdestreza(){
-        if(posicao.getpos().equals(AVANCADO)){
+        if(this.posicao.getpos().equals(AVANCADO)){
             return this.habilidade*0.15;
         }
-        if(posicao.getpos().equals(DEFESA)){
+        if(this.posicao.getpos().equals(DEFESA)){
             return this.habilidade*0.18 ;
         }
-        if(posicao.getpos().equals(MEDIO)){
+        if(this.posicao.getpos().equals(MEDIO)){
             return this.habilidade *0.15;
         }
-        if(posicao.getpos().equals(LATERAL)){
+        if(this.posicao.getpos().equals(LATERAL)){
             return this.habilidade *0.15;
         }
-        if(posicao.getpos().equals(REDES)){
+        if(this.posicao.getpos().equals(REDES)){
             return this.habilidade * 0.15;
         }
         return 0;
     }
 
     public void impulsao(int x) {
-        if(posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
+        if(this.posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
             this.habilidade += (0.13 * x);
         }
-        if(posicao.getpos().equals(DEFESA)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(DEFESA)&& x>=0 && x <=100){
             this.habilidade += (0.15 * x);
         }
-        if(posicao.getpos().equals(MEDIO)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(MEDIO)&& x>=0 && x <=100){
             this.habilidade += (0.12 * x);
         }
-        if(posicao.getpos().equals(LATERAL)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(LATERAL)&& x>=0 && x <=100){
             this.habilidade += (0.11 * x);
         }
-        if(posicao.getpos().equals(REDES)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(REDES)&& x>=0 && x <=100){
             this.habilidade += (0.19 * x);
         }
     }
 
     public double getimpulsao(){
-        if(posicao.getpos().equals(AVANCADO)){
+        if(this.posicao.getpos().equals(AVANCADO)){
             return this.habilidade*0.13;
         }
-        if(posicao.getpos().equals(DEFESA)){
+        if(this.posicao.getpos().equals(DEFESA)){
             return this.habilidade*0.15 ;
         }
-        if(posicao.getpos().equals(MEDIO)){
+        if(this.posicao.getpos().equals(MEDIO)){
             return this.habilidade *0.12 ;
         }
-        if(posicao.getpos().equals(LATERAL)){
+        if(this.posicao.getpos().equals(LATERAL)){
             return this.habilidade *0.11 ;
         }
-        if(posicao.getpos().equals(REDES)){
+        if(this.posicao.getpos().equals(REDES)){
             return this.habilidade * 0.19;
         }
         return 0;
     }
 
     public void cabeca(int x) {
-        if(posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
+        if(this.posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
             this.habilidade += (0.15 * x);
         }
-        if(posicao.getpos().equals(DEFESA)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(DEFESA)&& x>=0 && x <=100){
             this.habilidade += (0.14 * x);
         }
-        if(posicao.getpos().equals(MEDIO)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(MEDIO)&& x>=0 && x <=100){
             this.habilidade += (0.12 * x);
         }
-        if(posicao.getpos().equals(LATERAL)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(LATERAL)&& x>=0 && x <=100){
             this.habilidade += (0.10 * x);
         }
-        if(posicao.getpos().equals(REDES)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(REDES)&& x>=0 && x <=100){
             this.habilidade += (0.02 * x);
         }
     }
 
     public double getcabeca(){
-        if(posicao.getpos().equals(AVANCADO)){
+        if(this.posicao.getpos().equals(AVANCADO)){
             return this.habilidade*0.15;
         }
-        if(posicao.getpos().equals(DEFESA)){
+        if(this.posicao.getpos().equals(DEFESA)){
             return this.habilidade*0.14 ;
         }
-        if(posicao.getpos().equals(MEDIO)){
+        if(this.posicao.getpos().equals(MEDIO)){
             return this.habilidade *0.12 ;
         }
-        if(posicao.getpos().equals(LATERAL)){
+        if(this.posicao.getpos().equals(LATERAL)){
             return this.habilidade *0.10 ;
         }
-        if(posicao.getpos().equals(REDES)){
+        if(this.posicao.getpos().equals(REDES)){
             return this.habilidade * 0.02;
         }
         return 0;
     }
 
     public void remate(int x) {
-        if(posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
+        if(this.posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
             this.habilidade += (0.2 * x);
         }
-        if(posicao.getpos().equals(DEFESA)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(DEFESA)&& x>=0 && x <=100){
             this.habilidade += (0.08 * x);
         }
-        if(posicao.getpos().equals(MEDIO)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(MEDIO)&& x>=0 && x <=100){
             this.habilidade += (0.12 * x);
         }
-        if(posicao.getpos().equals(LATERAL)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(LATERAL)&& x>=0 && x <=100){
             this.habilidade += (0.12 * x);
         }
-        if(posicao.getpos().equals(REDES)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(REDES)&& x>=0 && x <=100){
             this.habilidade += (0.03 * x);
         }
     }
 
     public double getremate(){
-        if(posicao.getpos().equals(AVANCADO)){
+        if(this.posicao.getpos().equals(AVANCADO)){
             return this.habilidade*0.2;
         }
-        if(posicao.getpos().equals(DEFESA)){
+        if(this.posicao.getpos().equals(DEFESA)){
             return this.habilidade*0.08 ;
         }
-        if(posicao.getpos().equals(MEDIO)){
+        if(this.posicao.getpos().equals(MEDIO)){
             return this.habilidade*0.12 ;
         }
-        if(posicao.getpos().equals(LATERAL)){
+        if(this.posicao.getpos().equals(LATERAL)){
             return this.habilidade*0.12 ;
         }
-        if(posicao.getpos().equals(REDES)){
+        if(this.posicao.getpos().equals(REDES)){
             return this.habilidade*0.03;
         }
         return 0;
     }
 
     public void passe(int x) {
-        if(posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
+        if(this.posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
             this.habilidade += (0.1 * x);
         }
-        if(posicao.getpos().equals(DEFESA)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(DEFESA)&& x>=0 && x <=100){
             this.habilidade += (0.15 * x);
         }
-        if(posicao.getpos().equals(MEDIO)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(MEDIO)&& x>=0 && x <=100){
             this.habilidade += (0.21 * x);
         }
-        if(posicao.getpos().equals(LATERAL)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(LATERAL)&& x>=0 && x <=100){
             this.habilidade += (0.18 * x);
         }
-        if(posicao.getpos().equals(REDES)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(REDES)&& x>=0 && x <=100){
             this.habilidade += (0.14 * x);
         }
     }
 
     public double getpasse(){
-        if(posicao.getpos().equals(AVANCADO)){
+        if(this.posicao.getpos().equals(AVANCADO)){
             return this.habilidade*0.1;
         }
-        if(posicao.getpos().equals(DEFESA)){
+        if(this.posicao.getpos().equals(DEFESA)){
             return this.habilidade*0.15 ;
         }
-        if(posicao.getpos().equals(MEDIO)){
+        if(this.posicao.getpos().equals(MEDIO)){
             return this.habilidade *0.21 ;
         }
-        if(posicao.getpos().equals(LATERAL)){
+        if(this.posicao.getpos().equals(LATERAL)){
             return this.habilidade *0.18 ;
         }
-        if(posicao.getpos().equals(REDES)){
+        if(this.posicao.getpos().equals(REDES)){
             return this.habilidade * 0.14;
         }
         return 0;
     }
 
     public void elasticidade(int x ){
-        if(posicao.getpos().equals(REDES)&& x>=0 && x <=100){
+        if(this.posicao.getpos().equals(REDES)&& x>=0 && x <=100){
             this.habilidade += (0.20 * x);
         }
     }
 
     public double getelasticidade(){
-        if(posicao.getpos().equals(REDES)){
+        if(this.posicao.getpos().equals(REDES)){
             return this.habilidade*0.2;
         }
         return 0;
@@ -387,6 +414,7 @@ public class Jogador extends Geral implements Habilidades{
         sb.append("\nJogador: " + super.toString());
         sb.append(this.posicao.toString());
         sb.append("\nHabilidade geral: " + habilidade);
+        sb.append("\nHabilidade na posicao titular: " + this.habilidadeTit);
         sb.append("\nHistorico: ");
         for(Equipa a: this.historico){
             sb.append( a.getNome() + " " );
@@ -400,7 +428,8 @@ public class Jogador extends Geral implements Habilidades{
         sb.append("\nJogador: " + super.toString());
         sb.append("\nId: " + super.getId());
         sb.append(this.posicao.toString());
-        sb.append("\nHabilidade geral: " + habilidade);
+        sb.append("\nHabilidade geral: " + this.habilidade);
+        sb.append("\nHabilidade na posicao titular: " + this.habilidadeTit);
         sb.append("\nHistorico: ");
         for(Equipa a: this.historico){
             sb.append( a.getNome() + " " );
@@ -413,7 +442,8 @@ public class Jogador extends Geral implements Habilidades{
         sb.append("\nJogador: " + super.toString());
         sb.append("\nId: " + super.getId());
         sb.append(this.posicao.toString());
-        sb.append("\nHabilidade geral: " + habilidade);
+        sb.append("\nHabilidade geral: " + this.habilidade);
+        sb.append("\nHabilidade na posicao titular: " + this.habilidadeTit);
         sb.append("\nRemate: " + getremate());
         sb.append("\nDestreza: " + getdestreza());
         sb.append("\nCabeceamento: " + getcabeca());
@@ -444,6 +474,62 @@ public class Jogador extends Geral implements Habilidades{
         }
 
         return res;
+    }
+
+    public void sethabtit(String pos) throws ExcecaoPos {
+        this.posicao.setposTit(pos);
+        String posicao = this.posicao.getpos();
+
+        if (pos.equals(posicao)){
+            this.habilidadeTit = this.getHabilidade();
+        }
+
+        switch (pos) {
+            case (DEFESA) -> {
+                if (posicao.equals(MEDIO)) {
+                    this.habilidadeTit = getHabilidade() - (int) (0.40 * getHabilidade());
+                }
+                if (posicao.equals(LATERAL)) {
+                    this.habilidadeTit = getHabilidade() - (int) (0.20 * getHabilidade());
+                }
+                if (posicao.equals(AVANCADO)) {
+                    this.habilidadeTit = getHabilidade() - (int) (0.60 * getHabilidade());
+                }
+            }
+            case (MEDIO) -> {
+                if (posicao.equals(DEFESA)) {
+                    this.habilidadeTit = getHabilidade() - (int) (0.60 * getHabilidade());
+                }
+                if (posicao.equals(LATERAL)) {
+                    this.habilidadeTit = getHabilidade() - (int) (0.40 * getHabilidade());
+                }
+                if (posicao.equals(AVANCADO)) {
+                    this.habilidadeTit = getHabilidade() - (int) (0.40 * getHabilidade());
+                }
+            }
+            case (AVANCADO) -> {
+                if (posicao.equals(MEDIO)) {
+                    this.habilidadeTit = getHabilidade() - (int) (0.30 * getHabilidade());
+                }
+                if (posicao.equals(LATERAL)) {
+                    this.habilidadeTit = getHabilidade() - (int) (0.40 * getHabilidade());
+                }
+                if (posicao.equals(DEFESA)) {
+                    this.habilidadeTit = getHabilidade() - (int) (0.60 * getHabilidade());
+                }
+            }
+            case (LATERAL) -> {
+                if (posicao.equals(MEDIO)) {
+                    this.habilidadeTit = getHabilidade() - (int) (0.30 * getHabilidade());
+                }
+                if (posicao.equals(DEFESA)) {
+                    this.habilidadeTit = getHabilidade() - (int) (0.00 * getHabilidade());
+                }
+                if (posicao.equals(AVANCADO)) {
+                    this.habilidadeTit = getHabilidade() - (int) (0.40 * getHabilidade());
+                }
+            }
+        }
     }
 
 }
