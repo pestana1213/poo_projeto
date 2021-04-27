@@ -290,7 +290,7 @@ public class Equipa extends Geral{
                         }
                         }
                     else{
-                        if(meds<=nrdefesas){
+                        if(meds-nrmedios<=0){
 
                         }
                     }

@@ -22,7 +22,7 @@ public class Teste {
         Jogador i = new Jogador("9", "mao", "avancado", 100);
         Jogador j = new Jogador("10", "braco", "avancado", 100);
         Jogador k = new Jogador("11", "perna", "medio", 0);
-        
+        Jogador iij = new Jogador("25", "tuxa", "defesa", 20);
 
 
 
@@ -39,7 +39,8 @@ public class Teste {
         eqq.add(i);
         eqq.add(j);
         eqq.add(k);
-
+        eqq.add(iij);
+        
         Jogador aa = new Jogador("12","Joao", "lateral", 100);
         Jogador bb = new Jogador ("13", "Eduardo", "lateral", 100);
         Jogador cc = new Jogador ("14", "Barbara", "defesa", 100);
@@ -51,7 +52,7 @@ public class Teste {
         Jogador ii = new Jogador ("20", "mao","medio", 100);
         Jogador jj = new Jogador ("21", "braco", "avancado", 100);
         Jogador kk = new Jogador ("22", "perna", "avancado", 100);
-
+        Jogador ij = new Jogador("24", "tuxa", "defesa", 20);
         ArrayList<Jogador> eq = new ArrayList<>();
         eq.add(aa);
         eq.add(bb);

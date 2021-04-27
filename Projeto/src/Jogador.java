@@ -409,54 +409,55 @@ public class Jogador extends Geral implements Habilidades{
     }
 
     public String toString(){
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
-        sb.append("\nJogador: " + super.toString());
+        sb.append("\nJogador: ").append(super.toString());
         sb.append(this.posicao.toString());
-        sb.append("\nHabilidade geral: " + habilidade);
-        sb.append("\nHabilidade na posicao titular: " + this.habilidadeTit);
+        sb.append("\nHabilidade geral: ").append(habilidade);
+        if (this.habilidadeTit !=0){
+        sb.append("\nHabilidade na posicao titular: ").append(this.habilidadeTit);}
         sb.append("\nHistorico: ");
         for(Equipa a: this.historico){
-            sb.append( a.getNome() + " " );
+            sb.append(a.getNome()).append(" ");
         }
         return sb.toString();
     }
 
     public String toStringcomid(){
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
-        sb.append("\nJogador: " + super.toString());
-        sb.append("\nId: " + super.getId());
+        sb.append("\nJogador: ").append(super.toString());
+        sb.append("\nId: ").append(super.getId());
         sb.append(this.posicao.toString());
-        sb.append("\nHabilidade geral: " + this.habilidade);
-        sb.append("\nHabilidade na posicao titular: " + this.habilidadeTit);
+        sb.append("\nHabilidade geral: ").append(this.habilidade);
+        sb.append("\nHabilidade na posicao titular: ").append(this.habilidadeTit);
         sb.append("\nHistorico: ");
         for(Equipa a: this.historico){
-            sb.append( a.getNome() + " " );
+            sb.append(a.getNome()).append(" ");
         }
         return sb.toString();
     }
     public String toStringcomhab(){
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
-        sb.append("\nJogador: " + super.toString());
-        sb.append("\nId: " + super.getId());
+        sb.append("\nJogador: ").append(super.toString());
+        sb.append("\nId: ").append(super.getId());
         sb.append(this.posicao.toString());
-        sb.append("\nHabilidade geral: " + this.habilidade);
-        sb.append("\nHabilidade na posicao titular: " + this.habilidadeTit);
-        sb.append("\nRemate: " + getremate());
-        sb.append("\nDestreza: " + getdestreza());
-        sb.append("\nCabeceamento: " + getcabeca());
-        sb.append("\nImpulsao: " + getimpulsao());
-        sb.append("\nVelocidade: " + getvelocidade());
-        sb.append("\nResistencia: " + getresistencia());
-        sb.append("\nPasse: " + getpasse());
-        if(this.posicao.equals(REDES)){
-            sb.append("\nElasticidade: "+getelasticidade());
+        sb.append("\nHabilidade geral: ").append(this.habilidade);
+        sb.append("\nHabilidade na posicao titular: ").append(this.habilidadeTit);
+        sb.append("\nRemate: ").append(getremate());
+        sb.append("\nDestreza: ").append(getdestreza());
+        sb.append("\nCabeceamento: ").append(getcabeca());
+        sb.append("\nImpulsao: ").append(getimpulsao());
+        sb.append("\nVelocidade: ").append(getvelocidade());
+        sb.append("\nResistencia: ").append(getresistencia());
+        sb.append("\nPasse: ").append(getpasse());
+        if(getposicaostr().equals(REDES)){
+            sb.append("\nElasticidade: ").append(getelasticidade());
         }
         sb.append("\nHistorico: ");
         for(Equipa a: this.historico){
-            sb.append( a.getNome() + " " );
+            sb.append(a.getNome()).append(" ");
         }
         return sb.toString();
     }
@@ -495,6 +496,9 @@ public class Jogador extends Geral implements Habilidades{
                 if (posicao.equals(AVANCADO)) {
                     this.habilidadeTit = getHabilidade() - (int) (0.60 * getHabilidade());
                 }
+                if (posicao.equals(REDES)) {
+                    this.habilidadeTit = getHabilidade() - (int) (0.30 * getHabilidade());
+                }
             }
             case (MEDIO) -> {
                 if (posicao.equals(DEFESA)) {
@@ -505,6 +509,9 @@ public class Jogador extends Geral implements Habilidades{
                 }
                 if (posicao.equals(AVANCADO)) {
                     this.habilidadeTit = getHabilidade() - (int) (0.40 * getHabilidade());
+                }
+                if (posicao.equals(REDES)) {
+                    this.habilidadeTit = getHabilidade() - (int) (0.50 * getHabilidade());
                 }
             }
             case (AVANCADO) -> {
@@ -517,6 +524,9 @@ public class Jogador extends Geral implements Habilidades{
                 if (posicao.equals(DEFESA)) {
                     this.habilidadeTit = getHabilidade() - (int) (0.60 * getHabilidade());
                 }
+                if (posicao.equals(REDES)) {
+                    this.habilidadeTit = getHabilidade() - (int) (0.70 * getHabilidade());
+                }
             }
             case (LATERAL) -> {
                 if (posicao.equals(MEDIO)) {
@@ -526,6 +536,23 @@ public class Jogador extends Geral implements Habilidades{
                     this.habilidadeTit = getHabilidade() - (int) (0.00 * getHabilidade());
                 }
                 if (posicao.equals(AVANCADO)) {
+                    this.habilidadeTit = getHabilidade() - (int) (0.40 * getHabilidade());
+                }
+                if (posicao.equals(REDES)) {
+                    this.habilidadeTit = getHabilidade() - (int) (0.40 * getHabilidade());
+                }
+            }
+            case (REDES) -> {
+                if (posicao.equals(MEDIO)) {
+                    this.habilidadeTit = getHabilidade() - (int) (0.40 * getHabilidade());
+                }
+                if (posicao.equals(DEFESA)) {
+                    this.habilidadeTit = getHabilidade() - (int) (0.30 * getHabilidade());
+                }
+                if (posicao.equals(AVANCADO)) {
+                    this.habilidadeTit = getHabilidade() - (int) (0.60 * getHabilidade());
+                }
+                if (posicao.equals(LATERAL)) {
                     this.habilidadeTit = getHabilidade() - (int) (0.40 * getHabilidade());
                 }
             }

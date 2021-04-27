@@ -68,7 +68,8 @@ public class Posicao extends Geral{
     public String toString(){
         StringBuffer sb = new StringBuffer();
         sb.append("\nPosicao: " + getpos());
-        sb.append("\nPosicao na equipa titular: " + getposTit());
+        if(!this.posicaoTitular.equals("")){
+        sb.append("\nPosicao na equipa titular: " + getposTit());}
         return sb.toString();
     }
 
