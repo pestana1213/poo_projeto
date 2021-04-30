@@ -2,6 +2,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+//Ainda em desenvolvimento, possivelmente pode nao constar no projeto final mas tem como objetivo simular uma liga
 public class Liga {
     Map<String,Equipa> equipas;
 

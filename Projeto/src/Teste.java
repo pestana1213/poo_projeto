@@ -90,7 +90,7 @@ public class Teste {
         Faztudo wq = new Faztudo();
         wq.addEquipa(equipa);
         wq.addEquipa(equipavis);
-
+        Menu.menu(wq);
 
     }
 }

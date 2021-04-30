@@ -3,7 +3,8 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
-
+//Classe que simula os jogos! Ainda falta um metodo para simular o jogo sem escrever na consola! Para apresentar somente o resultado
+//Nesta classe simulamos so um jogo entre duas equipas e chamamos a interface Probjogos onde estabelecemos randoms em que temos em consideraçao as habilidades dos jogadores
 public class UmJogo implements ProbJogos {
 
     private Equipa casa;
@@ -65,6 +66,9 @@ public class UmJogo implements ProbJogos {
         this.goloF = gf;
     }
 
+    //Metodo em que simulamos o jogo, ainda faltam algumas implementaçoes!
+    //A bola começa na equipa da casa e as habilidades dos medios sao comparadas, caso estas sejam maiores que os da equipa adversaria, entao é feito um ataque
+    //Caso contrario, a equipa adversaria faz um ataque
     public void simulajogo() throws ExcecaoPos, InterruptedException {
         int i = 0;
 
@@ -127,7 +131,9 @@ public class UmJogo implements ProbJogos {
         else throw new ExcecaoPos("Numero de jogadores titulares invalido");
         }
 
-
+    //Os ataques podem ser feitos atraves do centro do campo ou atraves dos laterais
+    //É retornado um inteiro, sendo este o tempo que o ataque vai demorar!
+    //Este inteiro é um random limitado com o tempo que achamos conveniente para cada açao!
     public int simulaataque (int time, Equipa ataca, Equipa defende) throws InterruptedException {
         int minutos = 0;
         Random rand = new Random();
@@ -195,7 +201,7 @@ public class UmJogo implements ProbJogos {
         return minutos;
     }
 
-
+    //Tipo de ataque pela lateral, a tatica usada foi "igual" à simulaataque()
     public int simulacanto(int time, Equipa fazocanto, Equipa defende) throws InterruptedException {
 
         int minutos = 0;
@@ -249,6 +255,7 @@ public class UmJogo implements ProbJogos {
         return minutos;
     }
 
+    //Implementaçao feita para simular bolas fora do campo! Ainda so implementada para quando o guarda redes manda para fora
     public int simulabolafora(int time,Equipa ataca,Equipa defende) throws InterruptedException {
 
         int minutos = 0;
@@ -270,6 +277,7 @@ public class UmJogo implements ProbJogos {
         return minutos;
     }
 
+    //Metodo retorna o guarda redes que defende
     public Jogador selecionaguardaredes(Equipa e){
         Jogador redes = new Jogador();
         for (Jogador j:e.getEquipatitular()){
@@ -280,6 +288,7 @@ public class UmJogo implements ProbJogos {
         return redes;
     }
 
+    //Metodo retorna o avancado que marca
     public Jogador selecionaavancado(Equipa e){
         Random rand = new Random();
         int i = (int) e.getEquipatitular().stream().filter(k->k.getposicaostr().equals(Geral.AVANCADO)).count();

@@ -1,10 +1,10 @@
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+//Class que herda da classe Geral o nome e o Id
 public class Equipa extends Geral{
 
     private ArrayList<Jogador> jogadores;
@@ -56,6 +56,7 @@ public class Equipa extends Geral{
         super.setId(id);
     }
 
+    //setEquipatitular ainda precisa de um update para por os jogadores com uma tatica
     public void setEquipatitular(ArrayList<Jogador> titular) throws ExcecaoPos {
         if (titular.size() <= 11) {
             for (Jogador f : titular) {
@@ -75,9 +76,9 @@ public class Equipa extends Geral{
     public void setNome(String nome) throws ExcecaoPos {
         super.setNome(nome);
         hist();
-
     }
 
+    //Se o jogador ja estiver na equipa nao vai ser possivel adiciona lo porque uma equipa nao pode ter dois jogadores iguais
     public void addJogador(Jogador a) throws ExcecaoPos {
 
         if (this.jogadores.stream().anyMatch(j -> j.equals(a))) {
@@ -96,12 +97,6 @@ public class Equipa extends Geral{
         this.equipatitular.remove(a);
     }
 
-    public int habfrente() {
-
-        return (int) (this.jogadores.stream().filter(a -> a.getposicaostr().equals(AVANCADO)).mapToDouble(Jogador::getHabilidade).sum() /
-                this.jogadores.stream().filter(a -> a.getposicaostr().equals(AVANCADO)).count());
-    }
-
     public void addjogequipatitular(Jogador a) throws ExcecaoPos {
         for (Jogador e : this.equipatitular) {
             if (e.equals(a)) {
@@ -111,6 +106,7 @@ public class Equipa extends Geral{
         this.equipatitular.add(a.clone());
     }
 
+    //Faz uma substituiçao entre jogadores que nao estao na equipa titular por jogadores que estao na equipa titular! Ainda falta implementar o metodo no jogo
     public void substitui(Jogador entra, Jogador sai) throws ExcecaoPos {
         int i = 0;
         for (Jogador y : this.equipatitular) {
@@ -125,6 +121,12 @@ public class Equipa extends Geral{
         if (i == 0) {
             throw new ExcecaoPos("Substituicao nao efetuada");
         }
+    }
+    //calcula a habilidade em cada posiçao da equipa
+    public int habfrente() {
+
+        return (int) (this.jogadores.stream().filter(a -> a.getposicaostr().equals(AVANCADO)).mapToDouble(Jogador::getHabilidade).sum() /
+                this.jogadores.stream().filter(a -> a.getposicaostr().equals(AVANCADO)).count());
     }
 
     public int hablateral() {
@@ -177,12 +179,14 @@ public class Equipa extends Geral{
         sb.append("\nHabilidade geral: " + habgeral());
         sb.append("\n-----------Jogadores-----------\n\n");
         for (Jogador e : this.jogadores) {
+            sb.append("\n----------------------\n\n");
             sb.append(e.toString());
         }
         sb.append("\n-----------Jogadores titulares-----------\n\n");
         if (this.equipatitular.size() > 0) {
             sb.append("\nEquipa Titular: ");
             for (Jogador x : this.equipatitular) {
+                sb.append("\n----------------------\n\n");
                 sb.append(x.toString());
             }
         }
@@ -194,6 +198,9 @@ public class Equipa extends Geral{
         return new Equipa(this);
     }
 
+    //Faz update do historico de equipas de um jogador!
+    //Como funciona? Se a ultima equipa no historico de equipas de um jogador for igual à equipa em questao, entao nao se adiciona, caso contrario adiciona-se
+    //Sendo que a ultima equipa é a equipa em que o jogador se encontra
     private void hist() {
         for (Jogador e : this.jogadores) {
             for (Jogador k : this.equipatitular) {
@@ -219,11 +226,14 @@ public class Equipa extends Geral{
         return this.jogadores.stream().filter(j -> j.getNome().equalsIgnoreCase(nome)).collect(Collectors.toCollection(ArrayList::new));
     }
 
+    //Faz update dos jogadores numa equipa, metodo chamado no menu quando se faz transferencias de jogadores entre equipas
+    //Ou quando se poe um jogador a titular ou nao
     public void update(Equipa a) {
         this.equipatitular = a.getEquipatitular();
         this.jogadores = a.getJogadores();
     }
 
+    //verifica se a tatica é valida ou nao, futuramente podemos adicionar mais
     public boolean taticavalida(int nrdefesas, int nrmedios, int nravancados) {
         boolean res = false;
         if (nrdefesas + nrmedios + nravancados == 10) {
@@ -234,11 +244,15 @@ public class Equipa extends Geral{
         return res;
     }
 
+    //Metodo para ordenar os jogadores por posiçao, em funcao da habilidade! Ordena do que tem mais habilidade para o que tem menos
     public List<Jogador> ordenajogpos(Posicao pos) {
         Comparator<Jogador> comp = (e1, e2) -> (int) e2.getHabilidade() - e1.getHabilidade();
         return this.jogadores.stream().filter(e -> e.getPosicao().equals(pos)).sorted(comp).collect(Collectors.toList());
     }
 
+    //Metodo ainda em desenvolvimento!
+    //Objetivo? Pegar nos jogadores e definir as suas posiçoes em funçao da tatica. Caso nao existam jogadores com a posiçao "favorita" suficientes
+    //Para satisfazer os jogadores necessarios para essa posiçao na tatica, entao vai buscar jogadores de outras posiçoes!
     public void setequipatittat(int nrdefesas, int nrmedios, int nravancados) throws ExcecaoPos {
         this.equipatitular = new ArrayList<>();
         ArrayList<Jogador> eqtitular = new ArrayList<>();

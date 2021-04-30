@@ -1,5 +1,6 @@
 import java.util.Random;
 
+//Interface utilizada na simulaçao de jogos! Usada para calcular as probabilidades usadas na simulaçao de um jogo
 public interface ProbJogos {
     Random rand = new Random();
 

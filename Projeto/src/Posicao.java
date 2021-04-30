@@ -1,10 +1,17 @@
 import java.lang.String;
 import java.util.Objects;
 
-public class Posicao extends Geral{
+//Classe utilizada na classe jogador
+public class Posicao{
 
-    private String posicao;
-    private String posicaoTitular;
+    public static final String REDES = "guarda-redes";
+    public static final String DEFESA = "defesa";
+    public static final String MEDIO = "medio";
+    public static final String AVANCADO= "avancado";
+    public static final String LATERAL = "lateral";
+
+    private String posicao;      //posicao favorita
+    private String posicaoTitular;  //posicao que vai ter na equipa titular, caso pertença a essa
 
     public Posicao(){
         this.posicao = new String();
@@ -21,10 +28,11 @@ public class Posicao extends Geral{
         }
         }
 
+    //O jogador se nao pertencer à equipa titular nao vai ter posiçao titular, daí termos posto titu.equals("")
     public Posicao(String pos,String titu) throws ExcecaoPos{
         if (pos.equals(REDES) || pos.equals(DEFESA) || pos.equals(MEDIO) || pos.equals(AVANCADO) || pos.equals(LATERAL)){
             this.posicao = pos;
-            if (titu.equals(REDES) || titu.equals(DEFESA) || titu.equals(MEDIO) || titu.equals(AVANCADO) || titu.equals(LATERAL)) {
+            if (titu.equals("") || titu.equals(REDES) || titu.equals(DEFESA) || titu.equals(MEDIO) || titu.equals(AVANCADO) || titu.equals(LATERAL)) {
                 this.posicaoTitular = titu;
 
             }
@@ -47,6 +55,7 @@ public class Posicao extends Geral{
         return this.posicaoTitular;
     }
 
+    //O jogador tem sempre de ter uma posicao favorita
     public void setpos(String pos) throws ExcecaoPos{
         if (pos.equals(REDES) || pos.equals(DEFESA) || pos.equals(MEDIO) || pos.equals(AVANCADO) || pos.equals(LATERAL)){
             this.posicao = pos;
@@ -56,8 +65,9 @@ public class Posicao extends Geral{
         }
     }
 
+
     public void setposTit(String pos) throws ExcecaoPos{
-        if (pos.equals(REDES) || pos.equals(DEFESA) || pos.equals(MEDIO) || pos.equals(AVANCADO) || pos.equals(LATERAL)){
+        if (pos.equals("") || pos.equals(REDES) || pos.equals(DEFESA) || pos.equals(MEDIO) || pos.equals(AVANCADO) || pos.equals(LATERAL)){
             this.posicaoTitular = pos;
         }
         else {

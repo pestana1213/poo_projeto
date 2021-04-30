@@ -1,5 +1,6 @@
 import java.util.*;
 
+//Class que herda da classe Geral o nome e o Id
 public class Jogador extends Geral implements Habilidades{
 
     private Posicao posicao;
@@ -8,11 +9,11 @@ public class Jogador extends Geral implements Habilidades{
     private ArrayList<Equipa> historico;
 
     public Jogador(){
-    super();
-    this.posicao = new Posicao();
-    this.habilidade = 0;
-    this.habilidadeTit = 0;
-    this.historico = new ArrayList<>();
+        super();
+        this.posicao = new Posicao();
+        this.habilidade = 0;
+        this.habilidadeTit = 0;
+        this.historico = new ArrayList<>();
     }
 
     public Jogador(String id,String nome, String pos, int hab, ArrayList<Equipa> a) throws ExcecaoPos{
@@ -120,10 +121,12 @@ public class Jogador extends Geral implements Habilidades{
 
     public void setHabilidadeTit(int hab) { this.habilidade = hab;}
 
+    //Adiciona uma equipa ao historico, metodo utilizado na classe Equipa
     public void addhist (Equipa a){
         this.historico.add(a);
     }
 
+    //Calculo das habilidades em funçao da posiçao do jogador
     public void velocidade(int x) {
         if(this.posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
             this.habilidade += (0.15 * x);
@@ -396,6 +399,8 @@ public class Jogador extends Geral implements Habilidades{
         return 0;
     }
 
+    //Ainda faltam adicionar habilidades "extra" aos laterias etc
+
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -413,8 +418,8 @@ public class Jogador extends Geral implements Habilidades{
 
         sb.append("\nJogador: ").append(super.toString());
         sb.append(this.posicao.toString());
-        sb.append("\nHabilidade geral: ").append(habilidade);
-        if (this.habilidadeTit !=0){
+        sb.append("\nHabilidade geral: ").append(this.habilidade);
+        if (!this.posicao.getposTit().equals("")){
         sb.append("\nHabilidade na posicao titular: ").append(this.habilidadeTit);}
         sb.append("\nHistorico: ");
         for(Equipa a: this.historico){
@@ -430,7 +435,9 @@ public class Jogador extends Geral implements Habilidades{
         sb.append("\nId: ").append(super.getId());
         sb.append(this.posicao.toString());
         sb.append("\nHabilidade geral: ").append(this.habilidade);
-        sb.append("\nHabilidade na posicao titular: ").append(this.habilidadeTit);
+        if (!this.posicao.getposTit().equals("")){
+            sb.append("\nHabilidade na posicao titular: ").append(this.habilidadeTit);
+        }
         sb.append("\nHistorico: ");
         for(Equipa a: this.historico){
             sb.append(a.getNome()).append(" ");
@@ -444,7 +451,8 @@ public class Jogador extends Geral implements Habilidades{
         sb.append("\nId: ").append(super.getId());
         sb.append(this.posicao.toString());
         sb.append("\nHabilidade geral: ").append(this.habilidade);
-        sb.append("\nHabilidade na posicao titular: ").append(this.habilidadeTit);
+        if (!this.posicao.getposTit().equals("")){
+            sb.append("\nHabilidade na posicao titular: ").append(this.habilidadeTit);}
         sb.append("\nRemate: ").append(getremate());
         sb.append("\nDestreza: ").append(getdestreza());
         sb.append("\nCabeceamento: ").append(getcabeca());
@@ -466,8 +474,8 @@ public class Jogador extends Geral implements Habilidades{
         return new Jogador(this);
     }
 
+    //Metodo para ver em que equipa é que o jogador se encontra! A ultima equipa no historico é a equipa em que o jogador se encontra
     public Equipa ultimo(){
-
         Equipa res = new Equipa();
         if(this.historico.size()!=0) {
             ArrayList<Equipa> hm = new ArrayList<>(this.historico);
@@ -477,6 +485,8 @@ public class Jogador extends Geral implements Habilidades{
         return res;
     }
 
+    //Metodo que vê a habilidade do jogador em certa posicao! Caso seja a sua posiçao "favorita" entao a habilidade na equipa titular vai ser igual à sua habilidade
+    //Caso contrario vai ter "penalizacoes"
     public void sethabtit(String pos) throws ExcecaoPos {
         this.posicao.setposTit(pos);
         String posicao = this.posicao.getpos();
