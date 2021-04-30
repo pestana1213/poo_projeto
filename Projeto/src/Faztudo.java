@@ -1,6 +1,7 @@
 import java.util.*;
 import java.util.stream.Collectors;
 
+//Classe "mestra"
 public class Faztudo {
 
     private Map<String, Equipa> equipas;
@@ -37,6 +38,7 @@ public class Faztudo {
         else throw new ExcecaoPos("Equipa nao se encontra registada");
     }
 
+    //Faz transferencias de jogadores entre equipas
     public void tranfere(Jogador jogador, Equipa sai, Equipa entra) throws ExcecaoPos{
 
         for(Equipa a : this.equipas.values()){
@@ -62,6 +64,8 @@ public class Faztudo {
         else throw new ExcecaoPos("Equipa nao registada");
     }
 
+    //Gera um codigo novo para uma Equipa! Cada Equipa tem um id diferente, nao ha Equipas com o mesmo id
+    //Pomos todos os ids das Equipas numa lista e ordenamos essa lista! Pegamos no ultimo valor da lista e adicionamos 1! Esse valor vai ser o novo id
     public int newCodeNumberequipa(){
         List<Integer> l = this.equipas.keySet().stream()
                 .map(Integer::valueOf)
@@ -74,6 +78,8 @@ public class Faztudo {
         return aux;
     }
 
+    //Gera um codigo novo para um jogador! Cada jogador tem um id diferente, nao ha jogadores com o mesmo id
+    //Pomos todos os ids dos jogadores numa lista e ordenamos essa lista! Pegamos no ultimo valor da lista e adicionamos 1! Esse valor vai ser o novo id
     public int newCodeNumberjogador(){
         ArrayList<Jogador> todosjogadores = new ArrayList<>();
 
@@ -138,6 +144,7 @@ public class Faztudo {
         return this.equipas.values().stream().anyMatch(a->a.getJogadores().stream().anyMatch(b->b.getNome().equalsIgnoreCase(nome)));
     }
 
+    //Identifica uma equipa pelo nome
     public Equipa identificaEquipa(String nome) throws ExcecaoPos {
         Equipa res = new Equipa();
         for(Equipa e : this.equipas.values()){
@@ -148,10 +155,12 @@ public class Faztudo {
         return res;
     }
 
+    //Identifica um jogador numa equipa
     public Jogador identificaJogador(String nome, Equipa e){
        return e.identificaJogador(nome);
     }
 
+    //Faz o update de uma equipa
     public void update(Equipa a){
 
         for(Equipa e: this.equipas.values()){
@@ -161,16 +170,19 @@ public class Faztudo {
         }
     }
 
+    //Devolve todas as equipas que têm o mesmo nome
     public ArrayList<Equipa> equipasmmnome(String nome){
         return this.equipas.values().stream().filter(a->a.getNome().equalsIgnoreCase(nome)).map(Equipa::clone).collect(Collectors.toCollection(ArrayList::new));
     }
 
+    //Devolve todos os jogadores registados com o mesmo nome
     public ArrayList<Jogador> jogadoresmmnome(String nome){
         ArrayList<Jogador> todos = new ArrayList<>();
         this.equipas.values().stream().map(Equipa::getJogadores).forEach(todos::addAll);
         return todos.stream().filter(a->a.getNome().equalsIgnoreCase(nome)).collect(Collectors.toCollection(ArrayList::new));
     }
 
+    //Devolve todos os jogadores com o mesmo nome numa equipa
     public ArrayList<Jogador> jogadoresmmnomenaequipa(String nome, Equipa e){
         ArrayList<Jogador> todos = new ArrayList<>();
         for(Equipa k : this.equipas.values()){
@@ -181,6 +193,7 @@ public class Faztudo {
         return todos.stream().filter(a->a.getNome().equalsIgnoreCase(nome)).collect(Collectors.toCollection(ArrayList::new));
     }
 
+    //Ordena as equipas por habilidade, das que tem mais habilidade para a que tem menos
     public List<Equipa> ordenaporhabilidade(){
         Comparator<Equipa> comp = (e1,e2) -> (int) e2.habgeral()-e1.habgeral();
         return this.equipas.values().stream().sorted(comp).collect(Collectors.toList());

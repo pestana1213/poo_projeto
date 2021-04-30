@@ -1,6 +1,9 @@
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.Collections;
+
 
 //Ainda em desenvolvimento, possivelmente pode nao constar no projeto final mas tem como objetivo simular uma liga
 public class Liga {
@@ -28,8 +31,9 @@ public class Liga {
 
     public void simulaliga(){
         int contaequipas = this.equipas.values().size();
-        if(contaequipas%2==0){ //numero de equipas é par, vai fazer fazer um random para simular os jogos entre as equipas
-
+        List<Equipa> eq = this.equipas.values().stream().map(Equipa::clone).collect(Collectors.toList());
+        if(contaequipas%2==0){//numero de equipas é par, vai fazer fazer um random para simular os jogos entre as equipas
+            Collections.shuffle(eq);
         }
         else{   //o numero de equipas é impar, uma equipa vai passar logo à fase seguinte
 
