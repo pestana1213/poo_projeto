@@ -5,15 +5,17 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 //Class que herda da classe Geral o nome e o Id
-public class Equipa extends Geral{
+public class Equipa extends Geral implements Pontuacao{
 
     private ArrayList<Jogador> jogadores;
     private ArrayList<Jogador> equipatitular;
+    private int pontos;
 
     public Equipa() {
         super();
         this.jogadores = new ArrayList<>();
         this.equipatitular = new ArrayList<>();
+        this.pontos = 0;
         hist();
     }
 
@@ -21,6 +23,7 @@ public class Equipa extends Geral{
         super(nome, id);
         this.jogadores = new ArrayList<>(a);
         this.equipatitular = new ArrayList<>(b);
+        this.pontos = 0;
         hist();
     }
 
@@ -28,6 +31,7 @@ public class Equipa extends Geral{
         super(b);
         this.jogadores = b.getJogadores();
         this.equipatitular = b.getEquipatitular();
+        this.pontos = 0;
         hist();
     }
 
@@ -337,5 +341,18 @@ public class Equipa extends Geral{
             eqtitular.add(guardaredes.get(0));
             setEquipatitular(eqtitular);
         }
+    }
+
+    @Override
+    public void pontos(int pontos) {
+        this.pontos += pontos;
+    }
+
+    public int getpontos(){
+        return this.pontos;
+    }
+
+    public void setPontos(int k){
+        this.pontos = k;
     }
 }

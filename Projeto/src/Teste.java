@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Array;
 import java.security.Key;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -22,7 +23,6 @@ public class Teste {
         Jogador i = new Jogador("9", "mao", "avancado", 100);
         Jogador j = new Jogador("10", "braco", "avancado", 100);
         Jogador k = new Jogador("11", "perna", "medio", 0);
-        Jogador iij = new Jogador("25", "tuxa", "defesa", 20);
 
 
 
@@ -39,8 +39,7 @@ public class Teste {
         eqq.add(i);
         eqq.add(j);
         eqq.add(k);
-        eqq.add(iij);
-        
+
         Jogador aa = new Jogador("12","Joao", "lateral", 100);
         Jogador bb = new Jogador ("13", "Eduardo", "lateral", 100);
         Jogador cc = new Jogador ("14", "Barbara", "defesa", 100);
@@ -69,6 +68,7 @@ public class Teste {
 
         Equipa equipa = new Equipa();
         equipa.setJogadores(eqq);
+        equipa.setEquipatitular(eqq);
         equipa.setId("2");
         equipa.setNome("ola");
 
@@ -85,12 +85,11 @@ public class Teste {
 
 
         Faztudo skrt = new Faztudo(equipas);
-        equipa.setequipatittat(4,4,2);
-        System.out.println(equipa);
         Faztudo wq = new Faztudo();
         wq.addEquipa(equipa);
         wq.addEquipa(equipavis);
-        Menu.menu(wq);
-
+        Liga liga = new Liga();
+        liga.setEquipas(equipas);
+        System.out.println(liga.simulaliga());
     }
 }
