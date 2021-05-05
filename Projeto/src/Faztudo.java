@@ -67,15 +67,20 @@ public class Faztudo {
     //Gera um codigo novo para uma Equipa! Cada Equipa tem um id diferente, nao ha Equipas com o mesmo id
     //Pomos todos os ids das Equipas numa lista e ordenamos essa lista! Pegamos no ultimo valor da lista e adicionamos 1! Esse valor vai ser o novo id
     public int newCodeNumberequipa(){
-        List<Integer> l = this.equipas.keySet().stream()
-                .map(Integer::valueOf)
-                .sorted()
-                .collect(Collectors.toList());
-        if (l.isEmpty()) return 1;
-        Integer i = l.get(0);
-        int aux = i+1;
-        while (l.contains(aux)) aux++;
-        return aux;
+        if (this.equipas.size()==0){
+            return 1;
+        }
+    else {
+            List<Integer> l = this.equipas.keySet().stream()
+                    .map(Integer::valueOf)
+                    .sorted()
+                    .collect(Collectors.toList());
+            if (l.isEmpty()) return 1;
+            Integer i = l.get(0);
+            int aux = i + 1;
+            while (l.contains(aux)) aux++;
+            return aux;
+        }
     }
 
     //Gera um codigo novo para um jogador! Cada jogador tem um id diferente, nao ha jogadores com o mesmo id
@@ -160,6 +165,9 @@ public class Faztudo {
        return e.identificaJogador(nome);
     }
 
+    public Jogador identificaJogadorId(String id, Equipa e){
+        return e.identificaJogadorId(id);
+    }
     //Faz o update de uma equipa
     public void update(Equipa a){
 
@@ -198,5 +206,4 @@ public class Faztudo {
         Comparator<Equipa> comp = (e1,e2) -> (int) e2.habgeral()-e1.habgeral();
         return this.equipas.values().stream().sorted(comp).collect(Collectors.toList());
     }
-
 }

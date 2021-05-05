@@ -7,4 +7,6 @@ public interface Habilidades {
     void remate (int rem);
     void passe (int pass);
     void elasticidade (int elas);
+    void cruzamento (int cruza);
+    void recuperacao (int recu);
 }

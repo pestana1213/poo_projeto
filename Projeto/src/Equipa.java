@@ -19,6 +19,12 @@ public class Equipa extends Geral implements Pontuacao{
         hist();
     }
 
+    public Equipa(String nome, String id){
+        super(nome,id);
+        this.jogadores = new ArrayList<>();
+        this.equipatitular = new ArrayList<>();
+    }
+
     public Equipa(String nome, String id, ArrayList<Jogador> a, ArrayList<Jogador> b) {
         super(nome, id);
         this.jogadores = new ArrayList<>(a);
@@ -27,12 +33,12 @@ public class Equipa extends Geral implements Pontuacao{
         hist();
     }
 
+    //Neste construtor nao é preciso dar update ao historico uma vez que a equipa ja vai receber os jogadores com um historico
     public Equipa(Equipa b) {
         super(b);
         this.jogadores = b.getJogadores();
         this.equipatitular = b.getEquipatitular();
         this.pontos = 0;
-        hist();
     }
 
     public String getId() {
@@ -218,6 +224,13 @@ public class Equipa extends Geral implements Pontuacao{
         }
     }
 
+    public Jogador identificaJogadorId(String id){
+        Jogador ret = new Jogador();
+        for (Jogador j : this.jogadores){
+            if (j.getId().equals(id)) ret = j;
+        }
+        return ret;
+    }
     public boolean temjogador(String nome) {
         return getJogadores().stream().anyMatch(a -> a.getNome().equalsIgnoreCase(nome));
     }
@@ -342,8 +355,6 @@ public class Equipa extends Geral implements Pontuacao{
             setEquipatitular(eqtitular);
         }
     }
-
-    @Override
     public void pontos(int pontos) {
         this.pontos += pontos;
     }
@@ -354,5 +365,10 @@ public class Equipa extends Geral implements Pontuacao{
 
     public void setPontos(int k){
         this.pontos = k;
+    }
+
+    public static Equipa parse(String input,String id){
+        String[] campos = input.split(",");
+        return new Equipa(campos[0],id);
     }
 }

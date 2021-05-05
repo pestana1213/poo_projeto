@@ -1,14 +1,13 @@
-import java.lang.String;
 import java.util.Objects;
 
 //Classe utilizada na classe jogador
 public class Posicao{
 
-    public static final String REDES = "guarda-redes";
-    public static final String DEFESA = "defesa";
-    public static final String MEDIO = "medio";
-    public static final String AVANCADO= "avancado";
-    public static final String LATERAL = "lateral";
+    public static final String REDES = "Guarda-Redes";
+    public static final String DEFESA = "Defesa";
+    public static final String MEDIO = "Medio";
+    public static final String AVANCADO= "Avancado";
+    public static final String LATERAL = "Lateral";
 
     private String posicao;      //posicao favorita
     private String posicaoTitular;  //posicao que vai ter na equipa titular, caso pertença a essa

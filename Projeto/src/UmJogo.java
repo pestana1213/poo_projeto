@@ -1,38 +1,50 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.DoubleStream;
 //Classe que simula os jogos! Ainda falta um metodo para simular o jogo sem escrever na consola! Para apresentar somente o resultado
 //Nesta classe simulamos so um jogo entre duas equipas e chamamos a interface Probjogos onde estabelecemos randoms em que temos em consideraçao as habilidades dos jogadores
 public class UmJogo implements ProbJogos {
 
+    private LocalDate data;
     private Equipa casa;
     private Equipa visita;
     private int goloC;
     private int goloF;
 
     public UmJogo() {
+        this.data = LocalDate.now();
         this.casa = new Equipa();
         this.visita = new Equipa();
         this.goloC = 0;
         this.goloF = 0;
     }
 
-    public UmJogo(Equipa a, Equipa b, int gc, int gf) {
-        this.casa = a;
-        this.visita = b;
+    public UmJogo(Equipa a, Equipa b, int c, int f){
+        this.data = LocalDate.now();
+        this.casa = a.clone();
+        this.visita = b.clone();
+        this.goloC = c;
+        this.goloF = f;
+    }
+    public UmJogo(LocalDate data, Equipa a, Equipa b, int gc, int gf) {
+        this.data = data;
+        this.casa = a.clone();
+        this.visita = b.clone();
         this.goloC = gc;
         this.goloF = gf;
     }
 
     public UmJogo(UmJogo a) {
+        this.data = a.getData();
         this.casa = a.getcasa();
         this.visita = a.getVisita();
         this.goloC = a.getGoloC();
         this.goloF = a.getGoloF();
     }
 
+    public LocalDate getData(){
+        return this.data;
+    }
 
     public Equipa getcasa() {
         return new Equipa(this.casa);
@@ -48,6 +60,10 @@ public class UmJogo implements ProbJogos {
 
     public int getGoloF() {
         return this.goloF;
+    }
+
+    public void setData(LocalDate data){
+        this.data = data;
     }
 
     public void setCasa(Equipa a) {
@@ -295,5 +311,38 @@ public class UmJogo implements ProbJogos {
         ArrayList<Jogador> avancados = e.getEquipatitular().stream().filter(k->k.getposicaostr().equals(Geral.AVANCADO)).collect(Collectors.toCollection(ArrayList::new));
         int selecionado = rand.nextInt(i);
         return avancados.get(selecionado);
+    }
+
+    public static UmJogo parse(String input, Faztudo a) throws ExcecaoPos {
+        String[] campos = input.split(",");
+        String[] data = campos[4].split("-");
+        ArrayList<Jogador> jc = new ArrayList<>();
+        ArrayList<Jogador> jf = new ArrayList<>();
+        Equipa casa = a.identificaEquipa(campos[0]);
+        Equipa fora = a.identificaEquipa(campos[1]);
+        for (int i = 5; i < 16; i++){
+            jc.add(a.identificaJogadorId(campos[i],casa));
+        }
+        casa.setEquipatitular(jc);
+        a.update(casa);
+        for (int i = 16; i < 19; i++){
+            String[] sub = campos[i].split("->");
+            Jogador entra = a.identificaJogadorId(sub[0],casa);
+            Jogador sai = a.identificaJogadorId(sub[1],casa);
+            casa.substitui(entra,sai);
+        }
+        for (int i = 19; i < 30; i++){
+            jf.add(a.identificaJogadorId(campos[i],fora));
+        }
+        fora.setEquipatitular(jf);
+        a.update(fora);
+        for (int i = 30; i < 33; i++){
+            String[] sub = campos[i].split("->");
+            Jogador entra = a.identificaJogadorId(sub[0],fora);
+            Jogador sai = a.identificaJogadorId(sub[1],fora);
+            fora.substitui(entra,sai);
+        }
+
+        return new UmJogo(LocalDate.of(Integer.parseInt(data[0]), Integer.parseInt(data[1]), Integer.parseInt(data[2])),casa,fora,0,0);
     }
 }
