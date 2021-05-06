@@ -231,12 +231,13 @@ public class Equipa extends Geral implements Pontuacao{
         }
         return ret;
     }
+
     public boolean temjogador(String nome) {
         return getJogadores().stream().anyMatch(a -> a.getNome().equalsIgnoreCase(nome));
     }
 
     public Jogador identificaJogador(String nome) {
-        return this.jogadores.stream().filter(j -> j.getNome().equalsIgnoreCase(nome)).findFirst().map(Jogador::clone).orElse(new Jogador());
+        return this.jogadores.stream().filter(j -> j.getNome().equalsIgnoreCase(nome)).findFirst().map(Jogador::clone).get();
     }
 
     public ArrayList<Jogador> jogadoresnome(String nome) {

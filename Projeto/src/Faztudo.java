@@ -93,7 +93,7 @@ public class Faztudo {
             todosjogadores.addAll(jequipa);
         }
 
-        Map<String, Jogador> mapjog = todosjogadores.stream().collect(Collectors.toMap(Jogador::getId, Jogador::new));
+        Map<String, Jogador> mapjog = todosjogadores.stream().collect(Collectors.toMap(Jogador::getId, e->e.clone()));
         List<Integer> l = mapjog.keySet().stream()
                 .map(Integer::valueOf)
                 .sorted()

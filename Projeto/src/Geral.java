@@ -1,7 +1,7 @@
 import java.util.Objects;
 
 //Classe "pai" da classe equipa e jogador, uma vez que estas duas vao ter um id e um nome
-public class Geral {
+public abstract class Geral {
 
     public static final String REDES = "Guarda-Redes";
     public static final String DEFESA = "Defesa";
@@ -64,5 +64,4 @@ public class Geral {
         Geral u = (Geral) o;
         return this.id.compareTo(u.getId());
     }
-
 }

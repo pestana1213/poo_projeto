@@ -172,7 +172,7 @@ public class UmJogo implements ProbJogos {
                 minutos += rand.nextInt(4);
                 if (probmarcar(ataca.habfrente()) > probredes(defende.habredes())) {
                     Jogador remata = selecionaavancado(ataca);
-                    double remate = remata.getremate();
+                    double remate = remata.getRemate();
                     if (rand.nextInt((int) remate) < remate - 7) {
 
                         System.out.println("A equipa " + ataca.getNome() + " marca golo");
@@ -235,7 +235,7 @@ public class UmJogo implements ProbJogos {
                 double cabeceamento=0;
 
                 Jogador cabeceia = selecionaavancado(fazocanto);
-                cabeceamento = cabeceia.getcabeca();
+                cabeceamento = cabeceia.getCabeca();
 
                 System.out.println("OLHA O CRUZAMENTOOOOOO");
                 Thread.sleep(100);
