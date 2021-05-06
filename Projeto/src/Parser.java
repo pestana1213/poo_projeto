@@ -37,7 +37,6 @@ public class Parser {
                     jogadores.put(j.getId(), j);
                     if (ultima == null) throw new ExcecaoPos("err"); //we need to insert the player into the team
                     ultima.addJogador(j); //if no team was parsed previously, file is not well-formed;
-                    System.out.println(ultima);
                     break;
                 case "Jogo":
                     UmJogo jo = UmJogo.parse(linhaPartida[1],tudo);
@@ -53,6 +52,7 @@ public class Parser {
         for (Equipa e: equipas.values()){
             System.out.println(e.toString());
         }
+
         for (UmJogo jog: jogos){
             System.out.println(jog.toString());
         }

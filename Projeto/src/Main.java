@@ -6,9 +6,9 @@ public class Main
 {
 
     public static void main(String[] args) throws Exception {
-        Jogador j = new Jogador("id","joao","Defesa",100);
-        j.getvelocidade();
-        System.out.println(j);
+        Faztudo tudo = new Faztudo();
+        tudo = Parser.parse(tudo);
+        Menu.menu(tudo);
     }
 
 

@@ -3,11 +3,11 @@ import java.util.Objects;
 //Classe "pai" da classe equipa e jogador, uma vez que estas duas vao ter um id e um nome
 public class Geral {
 
-    public static final String REDES = "guarda-redes";
-    public static final String DEFESA = "defesa";
-    public static final String MEDIO = "medio";
-    public static final String AVANCADO= "avancado";
-    public static final String LATERAL = "lateral";
+    public static final String REDES = "Guarda-Redes";
+    public static final String DEFESA = "Defesa";
+    public static final String MEDIO = "Medio";
+    public static final String AVANCADO= "Avancado";
+    public static final String LATERAL = "Lateral";
 
     private String nome;
     private String id;

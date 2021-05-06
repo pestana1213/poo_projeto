@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 //Class que herda da classe Geral o nome e o Id
-public class Jogador extends Geral implements Habilidades{
+public class Jogador extends Geral{
 
     private Posicao posicao;
     private int habilidade;
@@ -121,27 +121,21 @@ public class Jogador extends Geral implements Habilidades{
 
     public void setHabilidadeTit(int hab) { this.habilidade = hab;}
 
-    //Adiciona uma equipa ao historico, metodo utilizado na classe Equipa
-    public void addhist (Equipa a){
-        this.historico.add(a);
+    //Metodo para ver em que equipa é que o jogador se encontra! A ultima equipa no historico é a equipa em que o jogador se encontra
+    public Equipa ultimo(){
+        Equipa res = new Equipa();
+        if(this.historico.size()!=0) {
+            ArrayList<Equipa> hm = new ArrayList<>(this.historico);
+            res = hm.get(this.historico.size()-1);
+        }
+
+        return res;
     }
 
-    //Calculo das habilidades em funçao da posiçao do jogador
-    public void velocidade(int x) {
-        if(this.posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
-            this.habilidade += (0.15 * x);
-        }
-        if(this.posicao.getpos().equals(DEFESA)&& x>=0 && x <=100){
-            this.habilidade += (0.15 * x);
-        }
-        if(this.posicao.getpos().equals(MEDIO)&& x>=0 && x <=100){
-            this.habilidade += (0.10 * x);
-        }
-        if(this.posicao.getpos().equals(LATERAL)&& x>=0 && x <=100){
-            this.habilidade += (0.13 * x);
-        }
-        if(this.posicao.getpos().equals(REDES)&& x>=0 && x <=100){
-            this.habilidade += (0.12 * x);
+    //Adiciona uma equipa ao historico, metodo utilizado na classe Equipa
+    public void addhist (Equipa a){
+        if (!ultimo().equals(a)){
+        this.historico.add(a);
         }
     }
 
@@ -164,24 +158,6 @@ public class Jogador extends Geral implements Habilidades{
         return 0;
         }
 
-    public void resistencia(int x) {
-        if(this.posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
-            this.habilidade += (0.12 * x);
-        }
-        if(this.posicao.getpos().equals(DEFESA)&& x>=0 && x <=100){
-            this.habilidade += (0.15 * x);
-        }
-        if(this.posicao.getpos().equals(MEDIO)&& x>=0 && x <=100){
-            this.habilidade += (0.15 * x);
-        }
-        if(this.posicao.getpos().equals(LATERAL)&& x>=0 && x <=100){
-            this.habilidade += (0.16 * x);
-        }
-        if(this.posicao.getpos().equals(REDES)&& x>=0 && x <=100){
-            this.habilidade += (0.15 * x);
-        }
-    }
-
     public double getresistencia(){
         if(this.posicao.getpos().equals(AVANCADO)){
             return this.habilidade*0.12;
@@ -201,23 +177,6 @@ public class Jogador extends Geral implements Habilidades{
         return 0;
     }
 
-    public void destreza(int x) {
-        if(this.posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
-            this.habilidade += (0.15 * x);
-        }
-        if(this.posicao.getpos().equals(DEFESA)&& x>=0 && x <=100){
-            this.habilidade += (0.18 * x);
-        }
-        if(this.posicao.getpos().equals(MEDIO)&& x>=0 && x <=100){
-            this.habilidade += (0.13 * x);
-        }
-        if(this.posicao.getpos().equals(LATERAL)&& x>=0 && x <=100){
-            this.habilidade += (0.12 * x);
-        }
-        if(this.posicao.getpos().equals(REDES)&& x>=0 && x <=100){
-            this.habilidade += (0.15 * x);
-        }
-    }
 
     public double getdestreza(){
         if(this.posicao.getpos().equals(AVANCADO)){
@@ -238,23 +197,6 @@ public class Jogador extends Geral implements Habilidades{
         return 0;
     }
 
-    public void impulsao(int x) {
-        if(this.posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
-            this.habilidade += (0.13 * x);
-        }
-        if(this.posicao.getpos().equals(DEFESA)&& x>=0 && x <=100){
-            this.habilidade += (0.15 * x);
-        }
-        if(this.posicao.getpos().equals(MEDIO)&& x>=0 && x <=100){
-            this.habilidade += (0.12 * x);
-        }
-        if(this.posicao.getpos().equals(LATERAL)&& x>=0 && x <=100){
-            this.habilidade += (0.11 * x);
-        }
-        if(this.posicao.getpos().equals(REDES)&& x>=0 && x <=100){
-            this.habilidade += (0.19 * x);
-        }
-    }
 
     public double getimpulsao(){
         if(this.posicao.getpos().equals(AVANCADO)){
@@ -273,24 +215,6 @@ public class Jogador extends Geral implements Habilidades{
             return this.habilidade * 0.19;
         }
         return 0;
-    }
-
-    public void cabeca(int x) {
-        if(this.posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
-            this.habilidade += (0.15 * x);
-        }
-        if(this.posicao.getpos().equals(DEFESA)&& x>=0 && x <=100){
-            this.habilidade += (0.14 * x);
-        }
-        if(this.posicao.getpos().equals(MEDIO)&& x>=0 && x <=100){
-            this.habilidade += (0.10 * x);
-        }
-        if(this.posicao.getpos().equals(LATERAL)&& x>=0 && x <=100){
-            this.habilidade += (0.10 * x);
-        }
-        if(this.posicao.getpos().equals(REDES)&& x>=0 && x <=100){
-            this.habilidade += (0.02 * x);
-        }
     }
 
     public double getcabeca(){
@@ -312,24 +236,6 @@ public class Jogador extends Geral implements Habilidades{
         return 0;
     }
 
-    public void remate(int x) {
-        if(this.posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
-            this.habilidade += (0.2 * x);
-        }
-        if(this.posicao.getpos().equals(DEFESA)&& x>=0 && x <=100){
-            this.habilidade += (0.08 * x);
-        }
-        if(this.posicao.getpos().equals(MEDIO)&& x>=0 && x <=100){
-            this.habilidade += (0.09 * x);
-        }
-        if(this.posicao.getpos().equals(LATERAL)&& x>=0 && x <=100){
-            this.habilidade += (0.10 * x);
-        }
-        if(this.posicao.getpos().equals(REDES)&& x>=0 && x <=100){
-            this.habilidade += (0.03 * x);
-        }
-    }
-
     public double getremate(){
         if(this.posicao.getpos().equals(AVANCADO)){
             return this.habilidade*0.2;
@@ -347,24 +253,6 @@ public class Jogador extends Geral implements Habilidades{
             return this.habilidade*0.03;
         }
         return 0;
-    }
-
-    public void passe(int x) {
-        if(this.posicao.getpos().equals(AVANCADO) && x>=0 && x <=100){
-            this.habilidade += (0.1 * x);
-        }
-        if(this.posicao.getpos().equals(DEFESA)&& x>=0 && x <=100){
-            this.habilidade += (0.15 * x);
-        }
-        if(this.posicao.getpos().equals(MEDIO)&& x>=0 && x <=100){
-            this.habilidade += (0.21 * x);
-        }
-        if(this.posicao.getpos().equals(LATERAL)&& x>=0 && x <=100){
-            this.habilidade += (0.18 * x);
-        }
-        if(this.posicao.getpos().equals(REDES)&& x>=0 && x <=100){
-            this.habilidade += (0.14 * x);
-        }
     }
 
     public double getpasse(){
@@ -386,12 +274,6 @@ public class Jogador extends Geral implements Habilidades{
         return 0;
     }
 
-    public void elasticidade(int x ){
-        if(this.posicao.getpos().equals(REDES)&& x>=0 && x <=100){
-            this.habilidade += (0.20 * x);
-        }
-    }
-
     public double getelasticidade(){
         if(this.posicao.getpos().equals(REDES)){
             return this.habilidade*0.2;
@@ -399,23 +281,11 @@ public class Jogador extends Geral implements Habilidades{
         return 0;
     }
 
-    public void cruzamento(int x) {
-        if (this.posicao.getpos().equals(LATERAL) && x >= 0 && x <= 100) {
-            this.habilidade += (0.1 * x);
-        }
-    }
-
     public double getcruzamento(){
         if(this.posicao.getpos().equals(LATERAL)){
             return this.habilidade*0.1;
         }
         return 0;
-    }
-
-    public void recuperacao(int x){
-        if (this.posicao.getpos().equals(MEDIO) && x >= 0 && x <= 100) {
-            this.habilidade += (0.1 * x);
-        }
     }
 
     public double getrecuperacao(){
@@ -497,17 +367,6 @@ public class Jogador extends Geral implements Habilidades{
 
     public Jogador clone(){
         return new Jogador(this);
-    }
-
-    //Metodo para ver em que equipa é que o jogador se encontra! A ultima equipa no historico é a equipa em que o jogador se encontra
-    public Equipa ultimo(){
-        Equipa res = new Equipa();
-        if(this.historico.size()!=0) {
-            ArrayList<Equipa> hm = new ArrayList<>(this.historico);
-            res = hm.get(this.historico.size()-1);
-        }
-
-        return res;
     }
 
     //Metodo que vê a habilidade do jogador em certa posicao! Caso seja a sua posiçao "favorita" entao a habilidade na equipa titular vai ser igual à sua habilidade
@@ -594,61 +453,38 @@ public class Jogador extends Geral implements Habilidades{
         }
     }
 
-    public void habilidadeaux(int v, int r, int d,int i, int c,int remate, int passe){
-        String pos = this.posicao.getpos();
-        double hab = 0;
-        switch (pos){
-            case(DEFESA):
-                hab = 0.15 * v + 0.15 * r + 0.18 * d +  0.15 * i + 0.14 * c + 0.08 * remate + 0.15 * passe;
-                setHabilidade((int) hab);
-                break;
-            case(AVANCADO):
-                hab = 0.15 * v + 0.12 * r + 0.15 * d +  0.13 * i + 0.15 * c + 0.2 * remate + 0.1 * passe;
-                setHabilidade((int) hab);
-            default:
-                break;
-
-        }
-    }
-    public void habilidadeespecial(int v, int r, int d,int i, int c,int remate, int passe,int especial){
-        String pos = this.posicao.getpos();
-        double hab = 0;
-        switch (pos){
-            case(MEDIO):
-                hab = 0.15 * v + 0.15 * r + 0.13 * d +  0.12 * i + 0.1 * c + 0.09 * remate + 0.21 * passe + 0.1 * especial;
-                setHabilidade((int) hab);
-                break;
-            case(LATERAL):
-                hab = 0.13 * v + 0.16 * r + 0.12 * d +  0.11 * i + 0.15* c + 0.1 * remate + 0.18 * passe + 0.1 * especial;
-                setHabilidade((int) hab);
-            case(REDES):
-                hab = 0.12 * v + 0.15 * r + 0.15 * d +  0.19 * i + 0.02 * c + 0.03 * remate + 0.14 * passe + 0.2 * especial;
-                setHabilidade((int) hab);
-            default:
-                break;
-
-        }
-    }
     public static Jogador parse(String input,Posicao posi) throws ExcecaoPos {
         String[] campos = input.split(",");
-        Jogador j = new Jogador(campos[1],campos[0],posi,10);;
-        j.velocidade(Integer.parseInt(campos[2]));
-        j.resistencia(Integer.parseInt(campos[3]));
-        j.destreza(Integer.parseInt(campos[4]));
-        j.impulsao(Integer.parseInt(campos[5]));
-        j.cabeca(Integer.parseInt(campos[6]));
-        j.remate(Integer.parseInt(campos[7]));
-        j.passe(Integer.parseInt(campos[8]));
-        if (posi.equals(REDES)){
-            j.elasticidade(Integer.parseInt(campos[9]));
+        double hab=0;
+        String pos = posi.getpos();
+        System.out.println(Integer.parseInt(campos[2]));
+        switch (pos){
+            case(DEFESA):
+                hab = 0.15 * Integer.parseInt(campos[2])  + 0.15 * Integer.parseInt(campos[3]) + 0.18 * Integer.parseInt(campos[4])
+                        +  0.15 * Integer.parseInt(campos[5]) + 0.14 * Integer.parseInt(campos[6]) + 0.08 * Integer.parseInt(campos[7]) + 0.15 * Integer.parseInt(campos[8]);
+                break;
+            case(AVANCADO):
+                hab = 0.15 * Integer.parseInt(campos[2]) + 0.12 * Integer.parseInt(campos[3]) + 0.15 * Integer.parseInt(campos[4]) +  0.13 * Integer.parseInt(campos[5])
+                        + 0.15 * Integer.parseInt(campos[6]) + 0.2 * Integer.parseInt(campos[7]) + 0.1 * Integer.parseInt(campos[8]);
+                break;
+            case(LATERAL):
+                hab = 0.13 *  Integer.parseInt(campos[2]) + 0.16 *  Integer.parseInt(campos[3]) + 0.12 *  Integer.parseInt(campos[4])
+                        +  0.11 *  Integer.parseInt(campos[5]) + 0.15*  Integer.parseInt(campos[6]) + 0.1 *  Integer.parseInt(campos[7]) + 0.18 *  Integer.parseInt(campos[8])
+                        + 0.1 *  Integer.parseInt(campos[9]);
+                break;
+            case(REDES):
+                hab = 0.12 * Integer.parseInt(campos[2]) + 0.15 * Integer.parseInt(campos[3]) + 0.15 * Integer.parseInt(campos[4]) +  0.19 * Integer.parseInt(campos[5])
+                        + 0.02 * Integer.parseInt(campos[6]) + 0.03 * Integer.parseInt(campos[7]) + 0.14 * Integer.parseInt(campos[8])
+                        + 0.2 * Integer.parseInt(campos[9]);
+                break;
+            case(MEDIO):
+                hab = 0.15 * Integer.parseInt(campos[2]) + 0.15 * Integer.parseInt(campos[3]) + 0.13 * Integer.parseInt(campos[4]) +
+                        0.12 * Integer.parseInt(campos[5]) + 0.1 * Integer.parseInt(campos[6]) + 0.09 * Integer.parseInt(campos[7])
+                        + 0.21 * Integer.parseInt(campos[8]) + 0.1 * Integer.parseInt(campos[9]);
+                break;
+            default:
+                break;
         }
-        if (posi.equals(MEDIO)) {
-            j.recuperacao(Integer.parseInt(campos[9]));
-        }
-        if (posi.equals(LATERAL)){
-            j.cruzamento(Integer.parseInt(campos[9]));
-        }
-
-        return j;
+        return new Jogador(campos[1],campos[0],posi,(int)hab);
     }
 }

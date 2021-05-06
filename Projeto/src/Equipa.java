@@ -214,11 +214,11 @@ public class Equipa extends Geral implements Pontuacao{
     private void hist() {
         for (Jogador e : this.jogadores) {
             for (Jogador k : this.equipatitular) {
-                if (!k.ultimo().equals(this)) {
+                if (!k.ultimo().getNome().equals(this.getNome())) {
                     k.addhist(this);
                 }
             }
-            if (!e.ultimo().equals(this)) {
+            if (!e.ultimo().getNome().equals(this.getNome())) {
                 e.addhist(this);
             }
         }

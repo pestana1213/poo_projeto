@@ -329,7 +329,6 @@ public class UmJogo implements ProbJogos {
             String[] sub = campos[i].split("->");
             Jogador entra = a.identificaJogadorId(sub[0],casa);
             Jogador sai = a.identificaJogadorId(sub[1],casa);
-            casa.substitui(entra,sai);
         }
         for (int i = 19; i < 30; i++){
             jf.add(a.identificaJogadorId(campos[i],fora));
@@ -340,7 +339,6 @@ public class UmJogo implements ProbJogos {
             String[] sub = campos[i].split("->");
             Jogador entra = a.identificaJogadorId(sub[0],fora);
             Jogador sai = a.identificaJogadorId(sub[1],fora);
-            fora.substitui(entra,sai);
         }
 
         return new UmJogo(LocalDate.of(Integer.parseInt(data[0]), Integer.parseInt(data[1]), Integer.parseInt(data[2])),casa,fora,0,0);
