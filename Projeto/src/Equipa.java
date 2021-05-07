@@ -68,15 +68,16 @@ public class Equipa extends Geral implements Pontuacao{
 
     //setEquipatitular ainda precisa de um update para por os jogadores com uma tatica
     public void setEquipatitular(ArrayList<Jogador> titular) throws ExcecaoPos {
+        ArrayList<Jogador> jogadores = new ArrayList<>();
         if (titular.size() <= 11) {
             for (Jogador f : titular) {
                 if (this.jogadores.contains(f)) {
-                    this.equipatitular.add(f.clone());
+                    jogadores.add(f.clone());
                 } else {
                     throw new ExcecaoPos("Jogador nao pertence a equipa");
                 }
             }
-
+            this.equipatitular = jogadores;
             hist();
         } else {
             throw new ExcecaoPos("Equipa titular com demasiados elementos");

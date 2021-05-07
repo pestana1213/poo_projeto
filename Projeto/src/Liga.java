@@ -39,6 +39,12 @@ public class Liga {
         this.jogos = jogos.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
+    public void addJogo(UmJogo j){
+        this.equipas.putIfAbsent(j.getcasa().getId(),j.getcasa().clone());
+        this.equipas.putIfAbsent(j.getVisita().getId(),j.getVisita().clone());
+        this.jogos.putIfAbsent(j.getData(),j);
+    }
+
     public void calendario(){
 
         List<Equipa> eq = this.equipas.values().stream().map(Equipa::clone).collect(Collectors.toList());
@@ -97,6 +103,14 @@ public class Liga {
         sb.append("Calendario de jogos: \n");
         for(LocalDate data : this.jogos.keySet()){
             sb.append("\nDia: " + data + "\nJogo: " + this.jogos.get(data).getcasa().getNome() +" VS " + this.jogos.get(data).getVisita().getNome());
+        }
+        return sb.toString();
+    }
+
+    public String todosOsJogos(){
+        StringBuilder sb = new StringBuilder();
+        for (UmJogo jogo : this.jogos.values()){
+            sb.append("\nDia: " + jogo.getData() + "\nJogo: \n" + jogo.getcasa().getNome() + " Vs " + jogo.getVisita().getNome() + "\nResultado: " + jogo.getGoloC() + "-" + jogo.getGoloC() + "\n\n");
         }
         return sb.toString();
     }

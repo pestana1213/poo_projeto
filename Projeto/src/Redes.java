@@ -4,8 +4,10 @@ public class Redes extends Jogador {
 
     private int elasticidade;
 
-    public Redes(){
+    public Redes() throws ExcecaoPos {
         super();
+        super.setPosicao(new Posicao(Posicao.REDES));
+
         this.elasticidade = 0;
     }
 

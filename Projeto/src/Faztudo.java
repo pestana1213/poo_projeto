@@ -91,10 +91,12 @@ public class Faztudo {
         for(Equipa e : this.equipas.values()){
             ArrayList<Jogador> jequipa = e.getJogadores();
             todosjogadores.addAll(jequipa);
+
         }
 
-        Map<String, Jogador> mapjog = todosjogadores.stream().collect(Collectors.toMap(Jogador::getId, e->e.clone()));
-        List<Integer> l = mapjog.keySet().stream()
+        List<String> mapjog = todosjogadores.stream().map(Jogador::getId).collect(Collectors.toList());
+
+        List<Integer> l = mapjog.stream()
                 .map(Integer::valueOf)
                 .sorted()
                 .collect(Collectors.toList());
@@ -206,4 +208,5 @@ public class Faztudo {
         Comparator<Equipa> comp = (e1,e2) -> (int) e2.habgeral()-e1.habgeral();
         return this.equipas.values().stream().sorted(comp).collect(Collectors.toList());
     }
+
 }

@@ -35,6 +35,13 @@ public class Jogador extends Geral{
                    int v, int r, int d, int i, int c, int remate, int passe, ArrayList<Equipa>a){
         super(nome,id);
         this.posicao = pos;
+        this.velocidade = v;
+        this.resistencia = r;
+        this.destreza = d;
+        this.impulsao = i;
+        this.cabeca = c;
+        this.remate = remate;
+        this.passe = passe;
         this.habilidade = 0;
         this.habilidadeTit = 0;
         this.historico = new ArrayList<>(a);
@@ -43,6 +50,13 @@ public class Jogador extends Geral{
                    int v, int r, int d, int i, int c, int remate, int passe){
         super(nome,id);
         this.posicao = pos;
+        this.velocidade = v;
+        this.resistencia = r;
+        this.destreza = d;
+        this.impulsao = i;
+        this.cabeca = c;
+        this.remate = remate;
+        this.passe = passe;
         this.habilidade = 0;
         this.habilidadeTit = 0;
         this.historico = new ArrayList<>();
@@ -59,6 +73,8 @@ public class Jogador extends Geral{
         this.cabeca = e.getCabeca();
         this.remate = e.getRemate();
         this.passe = e.getPasse();
+        this.habilidade = e.getHabilidade();
+        this.habilidadeTit = e.getHabilidadeTit();
     }
 
     public int getCabeca() {

@@ -321,18 +321,22 @@ public class UmJogo implements ProbJogos {
         Equipa casa = a.identificaEquipa(campos[0]);
         Equipa fora = a.identificaEquipa(campos[1]);
         for (int i = 5; i < 16; i++){
-            jc.add(a.identificaJogadorId(campos[i],casa));
+            if(!casa.getEquipatitular().contains( a.identificaJogadorId(campos[i],casa))) {
+                jc.add(a.identificaJogadorId(campos[i], casa));
+            }
         }
         casa.setEquipatitular(jc);
         a.update(casa);
+
         for (int i = 16; i < 19; i++){
             String[] sub = campos[i].split("->");
             Jogador entra = a.identificaJogadorId(sub[0],casa);
             Jogador sai = a.identificaJogadorId(sub[1],casa);
         }
         for (int i = 19; i < 30; i++){
-            jf.add(a.identificaJogadorId(campos[i],fora));
-        }
+            if(!fora.getEquipatitular().contains( a.identificaJogadorId(campos[i],fora))) {
+                jf.add(a.identificaJogadorId(campos[i], fora));
+            }        }
         fora.setEquipatitular(jf);
         a.update(fora);
         for (int i = 30; i < 33; i++){

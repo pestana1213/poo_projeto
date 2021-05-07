@@ -18,7 +18,7 @@ public class Posicao{
     }
 
     public Posicao(String pos) throws ExcecaoPos{
-        if (pos.equals(REDES) || pos.equals(DEFESA) || pos.equals(MEDIO) || pos.equals(AVANCADO) || pos.equals(LATERAL)){
+        if (pos.equalsIgnoreCase(REDES) || pos.equalsIgnoreCase(DEFESA) || pos.equalsIgnoreCase(MEDIO) || pos.equalsIgnoreCase(AVANCADO) || pos.equalsIgnoreCase(LATERAL)){
             this.posicao = pos;
             this.posicaoTitular = new String();
         }

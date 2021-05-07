@@ -9,7 +9,7 @@ public class Main
         Faztudo tudo = new Faztudo();
         Parser.parse(tudo);
         Menu.menu(tudo);
-    }
+        }
 
 
 }

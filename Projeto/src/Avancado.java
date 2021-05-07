@@ -2,8 +2,9 @@ import java.util.ArrayList;
 
 public class Avancado extends Jogador {
 
-    public Avancado() {
+    public Avancado() throws ExcecaoPos {
         super();
+        super.setPosicao(new Posicao(Posicao.AVANCADO));
     }
 
     public Avancado(String id,String nome, ArrayList<Equipa> a

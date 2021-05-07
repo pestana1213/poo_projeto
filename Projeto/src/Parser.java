@@ -11,6 +11,7 @@ import java.util.Map;
 public class Parser {
 
     public static void parse(Faztudo tudo) throws ExcecaoPos {
+        Liga liga = new Liga();
         List<String> linhas = lerFicheiro("C:\\Users\\Pestana\\Desktop\\POO\\Projeto\\src\\output.txt");
         Map<String, Equipa> equipas = new HashMap<>(); //nome, equipa
         Map<String, Jogador> jogadores = new HashMap<>(); //numero, jogador
@@ -60,14 +61,14 @@ public class Parser {
                 case "Jogo":
                     UmJogo jo = UmJogo.parse(linhaPartida[1],tudo);
                     jogos.add(jo);
+                    liga.addJogo(jo);
                     break;
                 default:
                     throw new ExcecaoPos("err");
 
             }
         }
-
-
+        System.out.println(liga.todosOsJogos());
         //debug
     }
 

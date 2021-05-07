@@ -2,8 +2,9 @@ import java.util.ArrayList;
 
 public class Defesa extends Jogador {
 
-    public Defesa() {
+    public Defesa() throws ExcecaoPos {
         super();
+        super.setPosicao(new Posicao(Posicao.DEFESA));
     }
 
     public Defesa(String id,String nome, ArrayList<Equipa> a
@@ -31,7 +32,7 @@ public class Defesa extends Jogador {
 
     public static Defesa parse(String input) throws ExcecaoPos {
         String[] campos = input.split(",");
-        return new Defesa(campos[1], campos[0],
+        Defesa res = new Defesa(campos[1], campos[0],
                 Integer.parseInt(campos[2]),
                 Integer.parseInt(campos[3]),
                 Integer.parseInt(campos[4]),
@@ -39,5 +40,6 @@ public class Defesa extends Jogador {
                 Integer.parseInt(campos[6]),
                 Integer.parseInt(campos[7]),
                 Integer.parseInt(campos[8]));
+        return res;
     }
 }

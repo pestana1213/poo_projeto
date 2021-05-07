@@ -4,8 +4,10 @@ public class Medio extends Jogador {
 
     private int recuperacao;
 
-    public Medio()  {
+    public Medio() throws ExcecaoPos {
         super();
+        super.setPosicao(new Posicao(Posicao.MEDIO));
+
     }
 
     public Medio(String id,String nome, ArrayList<Equipa> a

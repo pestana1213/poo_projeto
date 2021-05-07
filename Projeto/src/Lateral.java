@@ -4,8 +4,10 @@ public class Lateral extends Jogador {
 
     private int cruzamento;
 
-    public Lateral() {
+    public Lateral() throws ExcecaoPos {
         super();
+        super.setPosicao(new Posicao(Posicao.LATERAL));
+
     }
 
     public Lateral(String id,String nome, ArrayList<Equipa> a
