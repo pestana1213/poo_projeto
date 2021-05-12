@@ -1,5 +1,8 @@
 import java.lang.module.ModuleDescriptor;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Menu {
@@ -14,7 +17,7 @@ public class Menu {
         sb.append("3) Ver todos os jogadores. \n");
         sb.append("4) Adicionar jogador associado a equipa. \n");
         sb.append("5) Fazer transferencia de jogadores entre equipas. \n");
-        sb.append("6) Realizar um jogo amigavel entre duas equipas. \n");
+        sb.append("6) Jogos. \n");
         sb.append("7) Nova liga. \n");
         sb.append("Nota: PARA A REALIZACAO DA OPCAO 6) E 7) AS EQUIPAS EM QUESTAO JA PRECISAM DE ESTAR REGISTADAS. \n");
         System.out.println(sb.toString());
@@ -663,18 +666,68 @@ private static Jogador jogadormmnomenaequipa(Faztudo a, String nome,Equipa e) th
         return titulares;
     }
 
+    private static void simularJogoRegistado(Faztudo a) throws ExcecaoPos, InterruptedException {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Jogos Registados\n\n");
+        System.out.println(a.jogosRegistados());
+        System.out.println("Nome da equipa da equipa da casa: ");
+        String casa = scanner.nextLine();
+        Equipa dacasa = equipasmmnome(a,casa);
+        System.out.println("\nNome da equipa da equipa visitante: ");
+        String visita = scanner.nextLine();
+        Equipa fora = equipasmmnome(a,visita);
+        System.out.println("\nData do jogo: ");
+        System.out.println("\nDia: ");
+        int dia = scanner.nextInt();
+        scanner.nextLine();
+        System.out.println("\nMes:");
+        int mes = scanner.nextInt();
+        scanner.nextLine();
+        System.out.println("\nAno");
+        int ano = scanner.nextInt();
+        scanner.nextLine();
+        LocalDate data = LocalDate.of(ano,mes,dia);
+        UmJogo jogo = a.identificaJogo(data);
+        System.out.println("\nDeseja ver a simulacao?\n1)Sim\n2)Nao");
+        int op = scanner.nextInt();
+        scanner.nextLine();
+        switch (op){
+            case(1):
+                a.simulaJogoEspecifico(dacasa,fora,data);
+                break;
+            case(2):
+                a.simulaJogoEspecificosemprint(dacasa,fora,data);
+                System.out.println(a.resultadojogorealizado(dacasa,fora,data));
+                break;
+            default:
+                menu(a);
+        }
+    }
+
     private static void simulajogo(Faztudo a) throws ExcecaoPos, InterruptedException {
         Scanner scanner = new Scanner(System.in);
         clearWindow();
         System.out.println("------------Simular jogo amigavel------------");
-        System.out.println("Qual a equipa da casa? \n");
-        String casa = scanner.nextLine();
-        Equipa equipacasa = equipasmmnome(a,casa);
-        System.out.println("Qual a equipa que vai jogar contra " + equipacasa.getNome() + "? \n");
-        String visita = scanner.nextLine();
-        Equipa equipavisita = equipasmmnome(a,visita);
-        a.simulaumjogo(equipacasa,equipavisita);
+        System.out.println("\n1)Registar um jogo");
+        System.out.println("\n2)Realizar um jogo ja registado");
+        System.out.println("\n3)Historico de jogos realizados");
+        int op = scanner.nextInt();
+        switch (op){
+            case(1):
+                a.addJogo(registarJogo(a));
+                break;
+            case(2):
+                simularJogoRegistado(a);
+                break;
+            case(3):
+                clearWindow();
+                System.out.println(a.historicoJogos());
+                volta(a);
+            default:
+                menu(a);
+                break;
 
+        }
     }
 
 
@@ -697,6 +750,30 @@ private static Jogador jogadormmnomenaequipa(Faztudo a, String nome,Equipa e) th
         }
     }
 
+    private static UmJogo registarJogo(Faztudo a) throws ExcecaoPos, InterruptedException {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("\n\nRegistar Jogo\n\n");
+        System.out.println("Nome da equipa da casa: ");
+        String nome = scanner.nextLine();
+        Equipa casa = equipasmmnome(a,nome);
+        System.out.println("\nNome da equipa da casa: ");
+        String outro = scanner.nextLine();
+        Equipa fora = equipasmmnome(a,outro);
+        System.out.println("\nEm que data se ira realizar o jogo: ");
+        System.out.println("\nDia: ");
+        int dia = scanner.nextInt();
+        scanner.nextLine();
+        System.out.println("\nMes: ");
+        int mes = scanner.nextInt();
+        scanner.nextLine();
+        System.out.println("\nAno: ");
+        int ano = scanner.nextInt();
+        scanner.nextLine();
+        LocalDate data = LocalDate.of(ano,mes,dia);
+        Map<String,Jogador> jog = new LinkedHashMap<>();
+
+        return new UmJogo(data,casa,fora,0,0,jog,jog);
+    }
     private static void adicionarjogequipa(Faztudo a) throws ExcecaoPos, InterruptedException {
         Scanner scanner = new Scanner(System.in);
         Jogador jog = registajogador(a);

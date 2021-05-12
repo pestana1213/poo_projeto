@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -5,32 +6,67 @@ import java.util.stream.Collectors;
 public class Faztudo {
 
     private Map<String, Equipa> equipas;
+    private ArrayList<UmJogo> jogos;
+    private ArrayList<UmJogo> jogosrealizados;
 
     public Faztudo() {
         this.equipas = new LinkedHashMap<>();
+        this.jogos = new ArrayList<>();
+        this.jogosrealizados = new ArrayList<>();
     }
 
     public Faztudo(Map<String, Equipa> equipas) {
         this.equipas = new LinkedHashMap<>(equipas);
+        this.jogos = new ArrayList<>();
+    }
+
+    public Faztudo(Map<String, Equipa> equipas,ArrayList<UmJogo> jogos,ArrayList<UmJogo> jogosrealizados) {
+        this.equipas = new LinkedHashMap<>(equipas);
+        this.jogos = new ArrayList<>(jogos);
+        this.jogosrealizados = new ArrayList<>(jogosrealizados);
     }
 
     public Faztudo(Faztudo e) {
         this.equipas = e.getEquipas();
+        this.jogos = e.getJogos();
+        this.jogosrealizados = e.getJogosRealizados();
     }
 
     public Map<String, Equipa> getEquipas() {
         return this.equipas.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().clone()));
     }
 
+    public ArrayList<UmJogo> getJogos(){
+        return this.jogos.stream().map(UmJogo::new).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public ArrayList<UmJogo> getJogosRealizados(){
+        return this.jogosrealizados.stream().map(UmJogo::new).collect(Collectors.toCollection(ArrayList::new));
+    }
+
     public void setEquipas(Map<String, Equipa> e) {
         this.equipas = new LinkedHashMap<>(e);
     }
+
+    public void setJogos(ArrayList<UmJogo> e){ this.jogos = new ArrayList<>(e);}
+
+    public void setJogosrealizados(ArrayList<UmJogo> e){ this.jogosrealizados = new ArrayList<>(e);}
 
     public void addEquipa(Equipa e) throws ExcecaoPos {
 
         if (this.equipas.containsKey(e.getId())) throw new ExcecaoPos("Equipa ja registada");
         else
             this.equipas.putIfAbsent(e.getId(), e);
+    }
+
+    public void addJogo(UmJogo e){
+        if(!this.jogos.contains(e)){
+            this.jogos.add(e);
+        }
+    }
+
+    private void addJogoRealizado(UmJogo e){
+        this.jogosrealizados.add(e);
     }
 
     public void removeEquipa(Equipa e) throws ExcecaoPos {
@@ -59,7 +95,11 @@ public class Faztudo {
 
         if (contida(casa) && contida(visita)) {
             UmJogo jogo = new UmJogo(casa,visita,0,0);
+            if(!this.jogos.contains(jogo)){
+                addJogo(jogo);
+            }
             jogo.simulajogo();
+            addJogoRealizado(jogo);
         }
         else throw new ExcecaoPos("Equipa nao registada");
     }
@@ -143,12 +183,97 @@ public class Faztudo {
         return sb.toString();
     }
 
+    public String jogosRegistados(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("Jogos Registados: \n");
+        for(UmJogo jogo : this.jogos){
+            sb.append("\nDia: " + jogo.getData() + "\nJogo: \n" + jogo.getcasa().getNome() + " Vs " + jogo.getVisita().getNome() +"\n");
+        }
+
+        return sb.toString();
+    }
+
+    public String historicoJogos() {
+        StringBuilder sb = new StringBuilder();
+        if (this.jogosrealizados.size() > 0) {
+            sb.append("Historico de Jogos: \n");
+            for (UmJogo jogo : this.jogosrealizados) {
+                sb.append("\nDia: " + jogo.getData() + "\nJogo: \n" + jogo.getcasa().getNome() + " Vs " + jogo.getVisita().getNome() +  "\nResultado: " + jogo.getGoloC() + "-" + jogo.getGoloC() + "\n\n");
+            }
+        } else {
+            sb.append("\n\nAinda nao foram feitos jogos\n\n");
+        }
+
+        return sb.toString();
+    }
+
+    public void simulaJogoEspecifico(Equipa casa,Equipa fora, LocalDate data) throws ExcecaoPos, InterruptedException {
+        int j = 0;
+        UmJogo aux = new UmJogo();
+        for (UmJogo jogo : this.jogos){
+            if (casa.equals(jogo.getcasa()) && fora.equals(jogo.getVisita()) && data.equals(jogo.getData())){
+                jogo.simulajogo();
+                addJogoRealizado(jogo);
+                aux = jogo;
+
+                j += 1;
+            }
+        }
+        if (j==0){
+            throw new ExcecaoPos("Jogo nao registado");
+        }
+        this.jogos.remove(aux);
+    }
+
+    public void simulaJogoEspecificosemprint(Equipa casa,Equipa fora, LocalDate data) throws ExcecaoPos, InterruptedException {
+        int j = 0;
+        UmJogo aux = new UmJogo();
+        for (UmJogo jogo : this.jogos){
+            if (casa.equals(jogo.getcasa()) && fora.equals(jogo.getVisita()) && data.equals(jogo.getData())){
+                jogo.simulajogosemprint();
+                addJogoRealizado(jogo);
+                aux=jogo;
+                j = 1;
+            }
+        }
+        if (j==0){
+            throw new ExcecaoPos("Jogo nao registado");
+        }
+        this.jogos.remove(aux);
+    }
+
+    public String resultadojogorealizado(Equipa casa, Equipa fora, LocalDate data){
+        StringBuilder sb = new StringBuilder();
+        for (UmJogo jogo:this.jogosrealizados){
+            if (casa.equals(jogo.getcasa()) && fora.equals(jogo.getVisita()) && data.equals(jogo.getData())){
+                sb.append("Resultado: \n" + jogo.getcasa().getNome() + "-> " + jogo.getGoloC());
+                sb.append("\n" + jogo.getVisita().getNome() + "-> " + jogo.getGoloF());
+            }
+        }
+        return sb.toString();
+    }
+
     public boolean jaexistenome(String nome){
-        return this.equipas.values().stream().anyMatch(a->a.getNome().equalsIgnoreCase(nome));
+    return this.equipas.values().stream().anyMatch(a->a.getNome().equalsIgnoreCase(nome));
     }
 
     public boolean jaexitenomejogador(String nome){
         return this.equipas.values().stream().anyMatch(a->a.getJogadores().stream().anyMatch(b->b.getNome().equalsIgnoreCase(nome)));
+    }
+
+    public UmJogo identificaJogo(LocalDate data) throws ExcecaoPos {
+        UmJogo aux = new UmJogo();
+        int k = 0;
+        for(UmJogo jogo:this.jogos){
+            if(data.equals(jogo.getData())){
+                aux=jogo;
+                k=1;
+            }
+        }
+        if(k==0){
+            throw new ExcecaoPos("Jogo nao registado");
+        }
+        return aux;
     }
 
     //Identifica uma equipa pelo nome
@@ -208,5 +333,6 @@ public class Faztudo {
         Comparator<Equipa> comp = (e1,e2) -> (int) e2.habgeral()-e1.habgeral();
         return this.equipas.values().stream().sorted(comp).collect(Collectors.toList());
     }
+
 
 }

@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 //Classe que simula os jogos! Ainda falta um metodo para simular o jogo sem escrever na consola! Para apresentar somente o resultado
 //Nesta classe simulamos so um jogo entre duas equipas e chamamos a interface Probjogos onde estabelecemos randoms em que temos em consideraçao as habilidades dos jogadores
@@ -10,6 +11,8 @@ public class UmJogo implements ProbJogos {
     private Equipa visita;
     private int goloC;
     private int goloF;
+    private Map<String,Jogador> subscasa;
+    private Map<String,Jogador> subsfora;
 
     public UmJogo() {
         this.data = LocalDate.now();
@@ -17,6 +20,8 @@ public class UmJogo implements ProbJogos {
         this.visita = new Equipa();
         this.goloC = 0;
         this.goloF = 0;
+        this.subscasa = new LinkedHashMap<>();
+        this.subsfora = new LinkedHashMap<>();
     }
 
     public UmJogo(Equipa a, Equipa b, int c, int f){
@@ -25,13 +30,18 @@ public class UmJogo implements ProbJogos {
         this.visita = b.clone();
         this.goloC = c;
         this.goloF = f;
+        this.subscasa = new LinkedHashMap<>();
+        this.subsfora = new LinkedHashMap<>();
     }
-    public UmJogo(LocalDate data, Equipa a, Equipa b, int gc, int gf) {
+
+    public UmJogo(LocalDate data, Equipa a, Equipa b, int gc, int gf, Map<String,Jogador>subscasa, Map<String,Jogador> subsfora) {
         this.data = data;
         this.casa = a.clone();
         this.visita = b.clone();
         this.goloC = gc;
         this.goloF = gf;
+        this.subscasa = new LinkedHashMap<>(subscasa);
+        this.subsfora = new LinkedHashMap<>(subsfora);
     }
 
     public UmJogo(UmJogo a) {
@@ -40,6 +50,8 @@ public class UmJogo implements ProbJogos {
         this.visita = a.getVisita();
         this.goloC = a.getGoloC();
         this.goloF = a.getGoloF();
+        this.subscasa = a.getsubsCasa();
+        this.subsfora = a.getsubsFora();
     }
 
     public LocalDate getData(){
@@ -62,6 +74,14 @@ public class UmJogo implements ProbJogos {
         return this.goloF;
     }
 
+    public Map<String,Jogador> getsubsCasa(){
+        return this.subscasa.entrySet().stream().collect(Collectors.toMap(k->k.getKey(), e->e.getValue().clone()));
+    }
+
+    public Map<String,Jogador> getsubsFora(){
+        return this.subsfora.entrySet().stream().collect(Collectors.toMap(k->k.getKey(), e->e.getValue().clone()));
+    }
+
     public void setData(LocalDate data){
         this.data = data;
     }
@@ -82,20 +102,108 @@ public class UmJogo implements ProbJogos {
         this.goloF = gf;
     }
 
+    public void setSubscasa(Map<String,Jogador> jogs) throws ExcecaoPos {
+        if (jogs.size() % 2 == 0 && jogs.size()<=6) {
+            this.subscasa = jogs.entrySet().stream().collect(Collectors.toMap(e->e.getKey(), e -> e.getValue().clone()));
+        }
+        else{
+            throw new ExcecaoPos("Erro");
+        }
+    }
+
+    public void setSubsfora(Map<String,Jogador> jogs) throws ExcecaoPos {
+        if (jogs.size() % 2 == 0 && jogs.size()<=6) {
+            this.subsfora = jogs.entrySet().stream().collect(Collectors.toMap(e->e.getKey(), e -> e.getValue().clone()));
+        }
+        else{
+            throw new ExcecaoPos("Erro");
+        }
+    }
+
+    public void addsubscasa(Jogador e, Jogador s) throws ExcecaoPos {
+        if (!this.subscasa.containsValue(e) && !this.subscasa.containsValue(s) && this.subscasa.size()<=4){
+            this.subscasa.put(s.getId(),e.clone());
+        }
+        else{
+            throw new ExcecaoPos("Substituicao impossivel");
+        }
+    }
+
+    public void addsubsfora(Jogador e, Jogador s) throws ExcecaoPos {
+        if (!this.subsfora.containsValue(e) && !this.subsfora.containsValue(s) && this.subsfora.size()<=4){
+            this.subsfora.put(s.getId(),e.clone());
+        }
+        else{
+            throw new ExcecaoPos("Substituicao impossivel");
+        }
+    }
+
+    private void fazsubstituicoes(int time,ArrayList<Integer>temposubscasa,ArrayList<Integer>temposubsfora) throws ExcecaoPos {
+
+        Map<String,Jogador> subscasa = new LinkedHashMap<>(this.subscasa);
+        Map<String,Jogador> subsfora = new LinkedHashMap<>(this.subsfora);
+
+        ArrayList<Integer> todostempos = new ArrayList<>();
+        Random rand = new Random();
+
+        todostempos.addAll(temposubscasa);
+        todostempos.addAll(temposubsfora);
+        for(Integer p : temposubscasa) {
+            if (time==p){
+                Jogador sai = this.casa.identificaJogadorId(subscasa.keySet().stream().findFirst().get());
+                Jogador entra = subscasa.get(sai.getId());
+                this.casa.substitui(entra,sai);
+                subscasa.remove(sai.getId());
+                System.out.println("\nSubstituicao efetuada com sucesso:\nSai: " + sai.getNome() + "\nEntra: " + entra.getNome() );
+            }
+        }
+
+        for(Integer p : temposubsfora){
+            if (time==p){
+                Jogador sai = this.visita.identificaJogadorId(subsfora.keySet().stream().findFirst().get());
+                Jogador entra = subsfora.get(sai.getId());
+                this.visita.substitui(entra,sai);
+                subsfora.remove(sai.getId());
+                System.out.println("\nSubstituicao efetuada com sucesso:\nSai: " + sai.getNome() + "\nEntra: " + entra.getNome() );
+            }
+        }
+    }
+
     //Metodo em que simulamos o jogo, ainda faltam algumas implementaçoes!
     //A bola começa na equipa da casa e as habilidades dos medios sao comparadas, caso estas sejam maiores que os da equipa adversaria, entao é feito um ataque
     //Caso contrario, a equipa adversaria faz um ataque
     public void simulajogo() throws ExcecaoPos, InterruptedException {
         int i = 0;
+        ArrayList<Integer> temposubscasa = new ArrayList<>();
+        ArrayList<Integer> temposubsfora = new ArrayList<>();
+        System.out.println(this.casa.getNome() + " Vs " + this.visita.getNome());
+        for (int k=0; k<=(subscasa.size()/2)+1;k++){
+            int tempo = rand.nextInt(85);
+            if (tempo>5) {
+                temposubscasa.add(tempo);
+            }
+            else tempo=rand.nextInt(85);
+        }
+
+        for (int k=0; k<=(subsfora.size()/2)+1;k++) {
+            int tempo = rand.nextInt(85);
+            if (tempo > 5) {
+                temposubsfora.add(tempo);
+            }
+            else tempo = rand.nextInt(85);
+        }
 
         if(this.casa.getEquipatitular().size() == 11 && this.visita.getEquipatitular().size() == 11) {
             for (int time = 0; time <= 45; time++) {
+                fazsubstituicoes(time,temposubscasa,temposubsfora);
                 System.out.println("\nO jogo esta a decorrer \nMinuto: "+ time);
-                while ( time <= 5) {
-                    Thread.sleep(500);
-                    System.out.println("\nO jogo esta a decorrer \nMinuto: "+ time);
-                    time ++;
-                }
+                    while (time <= 5) {
+                        Thread.sleep(500);
+                        fazsubstituicoes(time,temposubscasa,temposubsfora);
+                        System.out.println("\nO jogo esta a decorrer \nMinuto: " + time);
+                        time++;
+                    }
+
                     if (probmeio(this.casa.habmedio()) > probmeio(this.visita.habmedio())) {
                         System.out.println("A equipa " + this.casa.getNome() + " esta a fazer um ataque");
                         i = simulaataque(time, this.casa, this.visita) + time;
@@ -104,25 +212,27 @@ public class UmJogo implements ProbJogos {
                         System.out.println("A equipa " + this.visita.getNome() + " esta a fazer um ataque");
                         i = simulaataque(time, this.visita, this.casa) + time;
                     }
-                    Thread.sleep(500);
-                    while (time != i && time < 45) {
-                        Thread.sleep(500);
-                        time++;
-                        System.out.print("\nMinuto: " + (time));
-                    }
+                        while (time != i && time < 45){
+                            Thread.sleep(500);
+                            fazsubstituicoes(time,temposubscasa,temposubsfora);
+                            time++;
+                            System.out.print("\nMinuto: " + (time));
+                }
 
             }
 
             System.out.println("\nInicio da segunda parte\nEquipa " + this.casa.getNome() +": " + this.goloC + "\nEquipa " + this.visita.getNome() +":"  + this.goloF);
 
             for (int time=46; time<=90;time ++){
+                fazsubstituicoes(time,temposubscasa,temposubsfora);
                 System.out.println("\nO jogo esta a decorrer \nMinuto: "+ time);
                     //Na primeira parte a bola vai começar na equipa da casa
-                    while( time <= 49) {
+                    while (time <= 49) {
                         Thread.sleep(500);
-                        System.out.println("\nO jogo esta a decorrer \nMinuto: "+ time);
-                        time ++;
-                    }
+                        fazsubstituicoes(time,temposubscasa,temposubsfora);
+                        System.out.println("\nO jogo esta a decorrer \nMinuto: " + time);
+                        time++;
+                        }
                         if (probmeio(this.visita.habmedio()) > probmeio(this.casa.habmedio())) {
                             System.out.println("A equipa " + this.visita.getNome() + " esta a fazer um ataque");
                             i = simulaataque(time, this.visita, this.casa) + time;
@@ -134,14 +244,13 @@ public class UmJogo implements ProbJogos {
 
                         }
                         Thread.sleep(500);
-                        while (time != i && time < 90) {
+                        while (time != i && time < 45) {
                             Thread.sleep(500);
+                            fazsubstituicoes(time,temposubscasa,temposubsfora);
                             time++;
                             System.out.print("\nMinuto: " + (time));
                         }
-
-            }
-
+                }
             System.out.println("\nEquipa " + this.casa.getNome() +": " + this.goloC + "\nEquipa " + this.visita.getNome() +":"  + this.goloF);
         }
         else throw new ExcecaoPos("Numero de jogadores titulares invalido");
@@ -313,11 +422,26 @@ public class UmJogo implements ProbJogos {
         return avancados.get(selecionado);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UmJogo umJogo = (UmJogo) o;
+        return goloC == umJogo.goloC && goloF == umJogo.goloF && Objects.equals(data, umJogo.data) && Objects.equals(casa, umJogo.casa) && Objects.equals(visita, umJogo.visita);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(data, casa, visita, goloC, goloF);
+    }
+
     public static UmJogo parse(String input, Faztudo a) throws ExcecaoPos {
         String[] campos = input.split(",");
         String[] data = campos[4].split("-");
         ArrayList<Jogador> jc = new ArrayList<>();
         ArrayList<Jogador> jf = new ArrayList<>();
+        Map<String,Jogador> sc = new LinkedHashMap<>();
+        Map<String,Jogador> sf = new LinkedHashMap<>();
         Equipa casa = a.identificaEquipa(campos[0]);
         Equipa fora = a.identificaEquipa(campos[1]);
         for (int i = 5; i < 16; i++){
@@ -326,25 +450,256 @@ public class UmJogo implements ProbJogos {
             }
         }
         casa.setEquipatitular(jc);
-        a.update(casa);
 
         for (int i = 16; i < 19; i++){
             String[] sub = campos[i].split("->");
-            Jogador entra = a.identificaJogadorId(sub[0],casa);
-            Jogador sai = a.identificaJogadorId(sub[1],casa);
+            Jogador sai = a.identificaJogadorId(sub[0],casa);
+            Jogador entra = a.identificaJogadorId(sub[1],casa);
+            sc.put(sub[0],entra.clone());
+
         }
+
         for (int i = 19; i < 30; i++){
             if(!fora.getEquipatitular().contains( a.identificaJogadorId(campos[i],fora))) {
                 jf.add(a.identificaJogadorId(campos[i], fora));
-            }        }
+            }
+        }
         fora.setEquipatitular(jf);
-        a.update(fora);
         for (int i = 30; i < 33; i++){
             String[] sub = campos[i].split("->");
-            Jogador entra = a.identificaJogadorId(sub[0],fora);
-            Jogador sai = a.identificaJogadorId(sub[1],fora);
+            Jogador sai = a.identificaJogadorId(sub[0],fora);
+            Jogador entra = a.identificaJogadorId(sub[1],fora);
+            sf.put(sub[0],entra.clone());;
         }
 
-        return new UmJogo(LocalDate.of(Integer.parseInt(data[0]), Integer.parseInt(data[1]), Integer.parseInt(data[2])),casa,fora,0,0);
+        return new UmJogo(LocalDate.of(Integer.parseInt(data[0]), Integer.parseInt(data[1]), Integer.parseInt(data[2])),casa,fora,0,0,sc,sf);
     }
+
+
+
+
+    private void fazsubstituicoessemprint(int time,ArrayList<Integer>temposubscasa,ArrayList<Integer>temposubsfora) throws ExcecaoPos {
+
+        Map<String,Jogador> subscasa = new LinkedHashMap<>(this.subscasa);
+        Map<String,Jogador> subsfora = new LinkedHashMap<>(this.subsfora);
+
+        ArrayList<Integer> todostempos = new ArrayList<>();
+        Random rand = new Random();
+
+        todostempos.addAll(temposubscasa);
+        todostempos.addAll(temposubsfora);
+        for(Integer p : temposubscasa) {
+            if (time==p){
+                Jogador sai = this.casa.identificaJogadorId(subscasa.keySet().stream().findFirst().get());
+                Jogador entra = subscasa.get(sai.getId());
+                this.casa.substitui(entra,sai);
+                subscasa.remove(sai.getId());
+            }
+        }
+
+        for(Integer p : temposubsfora){
+            if (time==p){
+                Jogador sai = this.visita.identificaJogadorId(subsfora.keySet().stream().findFirst().get());
+                Jogador entra = subsfora.get(sai.getId());
+                this.visita.substitui(entra,sai);
+                subsfora.remove(sai.getId());
+            }
+        }
+    }
+
+    //Metodo em que simulamos o jogo, ainda faltam algumas implementaçoes!
+    //A bola começa na equipa da casa e as habilidades dos medios sao comparadas, caso estas sejam maiores que os da equipa adversaria, entao é feito um ataque
+    //Caso contrario, a equipa adversaria faz um ataque
+    public void simulajogosemprint() throws ExcecaoPos, InterruptedException {
+        int i = 0;
+        ArrayList<Integer> temposubscasa = new ArrayList<>();
+        ArrayList<Integer> temposubsfora = new ArrayList<>();
+
+        for (int k=0; k<=(subscasa.size()/2)+1;k++){
+            int tempo = rand.nextInt(85);
+            if (tempo>5) {
+                temposubscasa.add(tempo);
+            }
+            else tempo=rand.nextInt(85);
+        }
+
+        for (int k=0; k<=(subsfora.size()/2)+1;k++) {
+            int tempo = rand.nextInt(85);
+            if (tempo > 5) {
+                temposubsfora.add(tempo);
+            }
+            else tempo = rand.nextInt(85);
+        }
+
+        if(this.casa.getEquipatitular().size() == 11 && this.visita.getEquipatitular().size() == 11) {
+            for (int time = 0; time <= 45; time++) {
+                fazsubstituicoessemprint(time,temposubscasa,temposubsfora);
+                while (time <= 5) {
+                    fazsubstituicoessemprint(time,temposubscasa,temposubsfora);
+                    time++;
+                }
+
+                if (probmeio(this.casa.habmedio()) > probmeio(this.visita.habmedio())) {
+                    i = simulaataquesemprint(time, this.casa, this.visita) + time;
+
+                } else {
+                    i = simulaataquesemprint(time, this.visita, this.casa) + time;
+                }
+                while (time != i && time < 45){
+                    fazsubstituicoessemprint(time,temposubscasa,temposubsfora);
+                    time++;
+                }
+
+            }
+
+
+            for (int time=46; time<=90;time ++){
+                fazsubstituicoessemprint(time,temposubscasa,temposubsfora);
+                //Na primeira parte a bola vai começar na equipa da casa
+                while (time <= 49) {
+                    fazsubstituicoessemprint(time,temposubscasa,temposubsfora);
+                    time++;
+                }
+                if (probmeio(this.visita.habmedio()) > probmeio(this.casa.habmedio())) {
+                    i = simulaataquesemprint(time, this.visita, this.casa) + time;
+
+                } else {
+                    i = simulaataquesemprint(time, this.casa, this.visita) + time;
+
+
+                }
+                while (time != i && time < 45) {
+                    fazsubstituicoessemprint(time,temposubscasa,temposubsfora);
+                    time++;
+                }
+            }
+        }
+        else throw new ExcecaoPos("Numero de jogadores titulares invalido");
+    }
+
+    //Os ataques podem ser feitos atraves do centro do campo ou atraves dos laterais
+    //É retornado um inteiro, sendo este o tempo que o ataque vai demorar!
+    //Este inteiro é um random limitado com o tempo que achamos conveniente para cada açao!
+    public int simulaataquesemprint (int time, Equipa ataca, Equipa defende) throws InterruptedException {
+        int minutos = 0;
+        Random rand = new Random();
+        boolean marca = false;
+
+        if (time>45){
+            time = time/2;
+        }
+
+        //se a equipa que esta a atacar tiver mais habilidade nos laterais entao ha mais probabilidade de fazer o ataque pelos laterais
+        int lat = rand.nextInt(ataca.hablateral());
+        int frente = rand.nextInt(ataca.habfrente());
+
+        if (lat-15>frente){
+            minutos += simulacantosemprint(time+minutos,ataca,defende);
+        }
+        else {
+            if (probmarcar(ataca.habfrente()) > probdefender(defende.habdefesa())) {
+                minutos += rand.nextInt(4);
+                if (probmarcar(ataca.habfrente()) > probredes(defende.habredes())) {
+                    Jogador remata = selecionaavancado(ataca);
+                    double remate = remata.getRemate();
+                    if (rand.nextInt((int) remate) < remate - 7) {
+                        marca = true;
+                        if (ataca.equals(this.visita)) {
+                            this.goloF++;
+                        } else {
+                            this.goloC++;
+                        }
+                        minutos += rand.nextInt(6);
+                    } else {
+                        int proboutroataque = rand.nextInt(ataca.habmedio());
+                        if (proboutroataque > ataca.habmedio()-8){
+                            minutos += simulaataquesemprint(minutos+time, ataca,defende);
+                        }
+                        else{
+                            minutos += simulaataquesemprint(minutos+time, defende,ataca);
+                        }
+                        minutos += rand.nextInt(6);
+                    }
+                } else {
+                    minutos += rand.nextInt(3);
+                }
+            } else {
+                minutos += rand.nextInt(3);
+                int bolafora = rand.nextInt(100);
+                if (bolafora > 80){
+                    minutos += simulabolaforasemprint(time+minutos,ataca,defende);
+                }
+            }
+        }
+
+
+        if (marca){
+            minutos += 3 + simulaataquesemprint(time+minutos,defende,ataca);
+        }
+        return minutos;
+    }
+
+    //Tipo de ataque pela lateral, a tatica usada foi "igual" à simulaataque()
+    public int simulacantosemprint(int time, Equipa fazocanto, Equipa defende) throws InterruptedException {
+
+        int minutos = 0;
+        Random rand = new Random();
+        boolean marca = false;
+
+        if (time>45){
+            time = time/2;
+        }
+
+        if(problateral(fazocanto.hablateral()) > problateral(defende.hablateral())){
+            minutos += rand.nextInt(4);
+            if(probmarcar(fazocanto.habfrente()) > probdefender(defende.habdefesa())){
+                double cabeceamento=0;
+                Jogador cabeceia = selecionaavancado(fazocanto);
+                cabeceamento = cabeceia.getCabeca();
+                if(rand.nextInt((int)cabeceamento)+(15) < cabeceamento){
+                    marca = true;
+                    if(fazocanto.equals(this.visita)) {
+                        this.goloF++;
+                    }
+                    else{
+                        this.goloC ++;
+                    }
+                    minutos += rand.nextInt(6);}
+
+                else {
+                    minutos += rand.nextInt(6);
+                }
+            }
+        }
+        else {
+            minutos += rand.nextInt(3);
+            simulacantosemprint(time+minutos, defende,fazocanto);
+        }
+
+        if (marca){
+            minutos += 3 + simulaataquesemprint(time+minutos,defende,fazocanto);
+        }
+        return minutos;
+    }
+
+    //Implementaçao feita para simular bolas fora do campo! Ainda so implementada para quando o guarda redes manda para fora
+    public int simulabolaforasemprint(int time,Equipa ataca,Equipa defende) throws InterruptedException {
+
+        int minutos = 0;
+        Random rand = new Random();
+        boolean marca = false;
+
+        if (time>45){
+            time = time/2;
+        }
+        if (ataca.hablateral()+ataca.habmedio() > defende.hablateral()+defende.habmedio()){
+            minutos += simulaataquesemprint(time+minutos,ataca,defende);
+
+        }
+        else{
+            minutos += simulaataquesemprint(time+minutos, defende, ataca);
+        }
+        return minutos;
+    }
+
 }

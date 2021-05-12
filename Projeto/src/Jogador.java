@@ -105,7 +105,7 @@ public class Jogador extends Geral{
         return passe;
     }
 
-    public String getIde() {
+    public String getId () {
         return super.getId();
     }
 
@@ -143,6 +143,7 @@ public class Jogador extends Geral{
     public void setPasse(int passe) {
         this.passe = passe;
     }
+
     public Posicao getPosicao(){
         return this.posicao.clone();
     }

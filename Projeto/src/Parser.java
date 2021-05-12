@@ -61,14 +61,13 @@ public class Parser {
                 case "Jogo":
                     UmJogo jo = UmJogo.parse(linhaPartida[1],tudo);
                     jogos.add(jo);
-                    liga.addJogo(jo);
+                    tudo.addJogo(jo);
                     break;
                 default:
                     throw new ExcecaoPos("err");
 
             }
         }
-        System.out.println(liga.todosOsJogos());
         //debug
     }
 

@@ -72,6 +72,7 @@ public class Equipa extends Geral implements Pontuacao{
         if (titular.size() <= 11) {
             for (Jogador f : titular) {
                 if (this.jogadores.contains(f)) {
+                    f.sethabtit(f.getposicaostr());
                     jogadores.add(f.clone());
                 } else {
                     throw new ExcecaoPos("Jogador nao pertence a equipa");
@@ -119,46 +120,47 @@ public class Equipa extends Geral implements Pontuacao{
 
     //Faz uma substituiçao entre jogadores que nao estao na equipa titular por jogadores que estao na equipa titular! Ainda falta implementar o metodo no jogo
     public void substitui(Jogador entra, Jogador sai) throws ExcecaoPos {
-        int i = 0;
-        for (Jogador y : this.equipatitular) {
-            for (Jogador x : this.jogadores) {
-                if (y.equals(sai) && x.equals(entra)) {
-                    addjogequipatitular(entra.clone());
-                    this.equipatitular.remove(sai);
-                    i = 1;
-                }
+
+        if (this.equipatitular.stream().anyMatch(e -> e.getNome().equalsIgnoreCase(sai.getNome()))) {
+            if (this.jogadores.stream().anyMatch(e -> e.getNome().equalsIgnoreCase(entra.getNome()))) {
+                this.equipatitular.remove(sai);
+                this.equipatitular.add(entra);
+            }
+            else{
+                throw new ExcecaoPos("Erro");
             }
         }
-        if (i == 0) {
-            throw new ExcecaoPos("Substituicao nao efetuada");
+        else{
+            throw new ExcecaoPos("Erro");
         }
     }
+
     //calcula a habilidade em cada posiçao da equipa
     public int habfrente() {
 
-        return (int) (this.jogadores.stream().filter(a -> a.getposicaostr().equals(AVANCADO)).mapToDouble(Jogador::getHabilidade).sum() /
-                this.jogadores.stream().filter(a -> a.getposicaostr().equals(AVANCADO)).count());
+        return (int) (this.equipatitular.stream().filter(a -> a.getPosicao().getposTit().equals(AVANCADO)).mapToDouble(Jogador::getHabilidadeTit).sum() /
+                this.equipatitular.stream().filter(a -> a.getPosicao().getposTit().equals(AVANCADO)).count());
     }
 
     public int hablateral() {
 
-        return (int) (this.jogadores.stream().filter(a -> a.getposicaostr().equals(LATERAL)).mapToDouble(Jogador::getHabilidade).sum() /
-                this.jogadores.stream().filter(a -> a.getposicaostr().equals(LATERAL)).count());
+        return (int) (this.equipatitular.stream().filter(a -> a.getPosicao().getposTit().equals(LATERAL)).mapToDouble(Jogador::getHabilidadeTit).sum() /
+                this.equipatitular.stream().filter(a -> a.getPosicao().getposTit().equals(LATERAL)).count());
     }
 
     public int habmedio() {
-        return (int) (this.jogadores.stream().filter(a -> a.getposicaostr().equals(MEDIO)).mapToDouble(Jogador::getHabilidade).sum() /
-                this.jogadores.stream().filter(a -> a.getposicaostr().equals(MEDIO)).count());
+        return (int) (this.equipatitular.stream().filter(a -> a.getPosicao().getposTit().equals(MEDIO)).mapToDouble(Jogador::getHabilidadeTit).sum() /
+                this.equipatitular.stream().filter(a -> a.getPosicao().getposTit().equals(MEDIO)).count());
     }
 
     public int habdefesa() {
-        return (int) (this.jogadores.stream().filter(a -> a.getposicaostr().equals(DEFESA)).mapToDouble(Jogador::getHabilidade).sum() /
-                this.jogadores.stream().filter(a -> a.getposicaostr().equals(DEFESA)).count());
+        return (int) (this.equipatitular.stream().filter(a -> a.getPosicao().getposTit().equals(DEFESA)).mapToDouble(Jogador::getHabilidadeTit).sum() /
+                this.equipatitular.stream().filter(a -> a.getPosicao().getposTit().equals(DEFESA)).count());
     }
 
     public int habredes() {
-        return (int) (this.jogadores.stream().filter(a -> a.getposicaostr().equals(REDES)).mapToDouble(Jogador::getHabilidade).sum() /
-                this.jogadores.stream().filter(a -> a.getposicaostr().equals(REDES)).count());
+        return (int) (this.equipatitular.stream().filter(a -> a.getPosicao().getposTit().equals(REDES)).mapToDouble(Jogador::getHabilidadeTit).sum() /
+                this.equipatitular.stream().filter(a -> a.getPosicao().getposTit().equals(REDES)).count());
     }
 
     public int habgeral() {
@@ -173,7 +175,7 @@ public class Equipa extends Geral implements Pontuacao{
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Equipa equipa = (Equipa) o;
-        return jogadores.equals(equipa.jogadores) && equipatitular.equals(equipa.equipatitular);
+        return true;
     }
 
     @Override
