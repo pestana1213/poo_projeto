@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Defesa extends Jogador {
@@ -21,6 +24,7 @@ public class Defesa extends Jogador {
     public Defesa(Defesa e) {
         super(e);
     }
+
     public int calculahabilidade(int v, int r,int d, int i, int c, int remate, int p){
         return (int) (0.15 * v + 0.15 * r + 0.18 * d +  0.15 * i
                 + 0.14 * c + 0.08 * remate + 0.15 * p);
@@ -28,6 +32,19 @@ public class Defesa extends Jogador {
 
     public Defesa clone(){
         return new Defesa(this);
+    }
+
+    public void guarda() throws IOException {
+        BufferedWriter escritor = new BufferedWriter(new FileWriter("C:\\Users\\Pestana\\Desktop\\POO\\Projeto\\src\\output.txt",true));
+        escritor.write("\nDefesa:");
+        escritor.flush();
+        super.guarda();
+        escritor.flush();
+        escritor.close();
+    }
+
+    public boolean equals(Defesa e){
+        return super.equals(e);
     }
 
     public static Defesa parse(String input) throws ExcecaoPos {

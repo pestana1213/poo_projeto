@@ -1,3 +1,7 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.SQLClientInfoException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -139,32 +143,27 @@ public class UmJogo implements ProbJogos {
     }
 
     private void fazsubstituicoes(int time,ArrayList<Integer>temposubscasa,ArrayList<Integer>temposubsfora) throws ExcecaoPos {
-
-        Map<String,Jogador> subscasa = new LinkedHashMap<>(this.subscasa);
-        Map<String,Jogador> subsfora = new LinkedHashMap<>(this.subsfora);
-
-        ArrayList<Integer> todostempos = new ArrayList<>();
-        Random rand = new Random();
-
-        todostempos.addAll(temposubscasa);
-        todostempos.addAll(temposubsfora);
         for(Integer p : temposubscasa) {
             if (time==p){
-                Jogador sai = this.casa.identificaJogadorId(subscasa.keySet().stream().findFirst().get());
-                Jogador entra = subscasa.get(sai.getId());
+                if(this.subscasa.size()>=0){
+                Jogador sai = this.casa.identificaJogadorId(this.subscasa.keySet().stream().findFirst().get());
+                Jogador entra = this.subscasa.get(sai.getId());
                 this.casa.substitui(entra,sai);
-                subscasa.remove(sai.getId());
-                System.out.println("\nSubstituicao efetuada com sucesso:\nSai: " + sai.getNome() + "\nEntra: " + entra.getNome() );
+                this.subscasa.remove(sai.getId());
+                System.out.println("\nSubstituicao efetuada com sucesso na equipa: " + this.casa.getNome() + "\nSai: " + sai.getNome() + "\nEntra: " + entra.getNome() );
+                }
             }
         }
 
         for(Integer p : temposubsfora){
             if (time==p){
-                Jogador sai = this.visita.identificaJogadorId(subsfora.keySet().stream().findFirst().get());
-                Jogador entra = subsfora.get(sai.getId());
-                this.visita.substitui(entra,sai);
-                subsfora.remove(sai.getId());
-                System.out.println("\nSubstituicao efetuada com sucesso:\nSai: " + sai.getNome() + "\nEntra: " + entra.getNome() );
+                if(this.subsfora.size()>=0) {
+                    Jogador sai = this.visita.identificaJogadorId(this.subsfora.keySet().stream().findFirst().get());
+                    Jogador entra = this.subsfora.get(sai.getId());
+                    this.visita.substitui(entra, sai);
+                    this.subsfora.remove(sai.getId());
+                    System.out.println("\nSubstituicao efetuada com sucesso na equipa: " + this.visita.getNome() + "\nSai: " + sai.getNome() + "\nEntra: " + entra.getNome());
+                }
             }
         }
     }
@@ -172,11 +171,16 @@ public class UmJogo implements ProbJogos {
     //Metodo em que simulamos o jogo, ainda faltam algumas implementaçoes!
     //A bola começa na equipa da casa e as habilidades dos medios sao comparadas, caso estas sejam maiores que os da equipa adversaria, entao é feito um ataque
     //Caso contrario, a equipa adversaria faz um ataque
+
     public void simulajogo() throws ExcecaoPos, InterruptedException {
+        Map<String,Jogador> antescasa = getsubsCasa();
+        Map<String,Jogador> antesfora = getsubsFora();
+
         int i = 0;
         ArrayList<Integer> temposubscasa = new ArrayList<>();
         ArrayList<Integer> temposubsfora = new ArrayList<>();
         System.out.println(this.casa.getNome() + " Vs " + this.visita.getNome());
+
         for (int k=0; k<=(subscasa.size()/2)+1;k++){
             int tempo = rand.nextInt(85);
             if (tempo>5) {
@@ -212,13 +216,12 @@ public class UmJogo implements ProbJogos {
                         System.out.println("A equipa " + this.visita.getNome() + " esta a fazer um ataque");
                         i = simulaataque(time, this.visita, this.casa) + time;
                     }
-                        while (time != i && time < 45){
+                        while (time>0 && time != i && time < 45){
                             Thread.sleep(500);
                             fazsubstituicoes(time,temposubscasa,temposubsfora);
                             time++;
                             System.out.print("\nMinuto: " + (time));
                 }
-
             }
 
             System.out.println("\nInicio da segunda parte\nEquipa " + this.casa.getNome() +": " + this.goloC + "\nEquipa " + this.visita.getNome() +":"  + this.goloF);
@@ -244,7 +247,7 @@ public class UmJogo implements ProbJogos {
 
                         }
                         Thread.sleep(500);
-                        while (time != i && time < 45) {
+                        while (time>45 && time != i && time < 45) {
                             Thread.sleep(500);
                             fazsubstituicoes(time,temposubscasa,temposubsfora);
                             time++;
@@ -252,6 +255,10 @@ public class UmJogo implements ProbJogos {
                         }
                 }
             System.out.println("\nEquipa " + this.casa.getNome() +": " + this.goloC + "\nEquipa " + this.visita.getNome() +":"  + this.goloF);
+
+            this.subsfora = antesfora.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue));
+            this.subscasa = antescasa.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue));
+
         }
         else throw new ExcecaoPos("Numero de jogadores titulares invalido");
         }
@@ -259,7 +266,7 @@ public class UmJogo implements ProbJogos {
     //Os ataques podem ser feitos atraves do centro do campo ou atraves dos laterais
     //É retornado um inteiro, sendo este o tempo que o ataque vai demorar!
     //Este inteiro é um random limitado com o tempo que achamos conveniente para cada açao!
-    public int simulaataque (int time, Equipa ataca, Equipa defende) throws InterruptedException {
+    public int simulaataque (int time, Equipa ataca, Equipa defende) throws InterruptedException, ExcecaoPos {
         int minutos = 0;
         Random rand = new Random();
         boolean marca = false;
@@ -327,7 +334,7 @@ public class UmJogo implements ProbJogos {
     }
 
     //Tipo de ataque pela lateral, a tatica usada foi "igual" à simulaataque()
-    public int simulacanto(int time, Equipa fazocanto, Equipa defende) throws InterruptedException {
+    public int simulacanto(int time, Equipa fazocanto, Equipa defende) throws InterruptedException, ExcecaoPos {
 
         int minutos = 0;
         Random rand = new Random();
@@ -381,7 +388,7 @@ public class UmJogo implements ProbJogos {
     }
 
     //Implementaçao feita para simular bolas fora do campo! Ainda so implementada para quando o guarda redes manda para fora
-    public int simulabolafora(int time,Equipa ataca,Equipa defende) throws InterruptedException {
+    public int simulabolafora(int time,Equipa ataca,Equipa defende) throws InterruptedException, ExcecaoPos {
 
         int minutos = 0;
         Random rand = new Random();
@@ -403,10 +410,11 @@ public class UmJogo implements ProbJogos {
     }
 
     //Metodo retorna o guarda redes que defende
-    public Jogador selecionaguardaredes(Equipa e){
-        Jogador redes = new Jogador();
+    public Jogador selecionaguardaredes(Equipa e) throws ExcecaoPos {
+
+        Jogador redes = new Redes();
         for (Jogador j:e.getEquipatitular()){
-            if(j.getposicaostr().equals(Geral.REDES)){
+            if(j.getPosicao().getposTit().equals(Geral.REDES)){
                 redes=j;
             }
         }
@@ -417,7 +425,7 @@ public class UmJogo implements ProbJogos {
     public Jogador selecionaavancado(Equipa e){
         Random rand = new Random();
         int i = (int) e.getEquipatitular().stream().filter(k->k.getposicaostr().equals(Geral.AVANCADO)).count();
-        ArrayList<Jogador> avancados = e.getEquipatitular().stream().filter(k->k.getposicaostr().equals(Geral.AVANCADO)).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<Jogador> avancados = e.getEquipatitular().stream().filter(k->k.getPosicao().getposTit().equals(Geral.AVANCADO)).collect(Collectors.toCollection(ArrayList::new));
         int selecionado = rand.nextInt(i);
         return avancados.get(selecionado);
     }
@@ -450,10 +458,8 @@ public class UmJogo implements ProbJogos {
             }
         }
         casa.setEquipatitular(jc);
-
         for (int i = 16; i < 19; i++){
             String[] sub = campos[i].split("->");
-            Jogador sai = a.identificaJogadorId(sub[0],casa);
             Jogador entra = a.identificaJogadorId(sub[1],casa);
             sc.put(sub[0],entra.clone());
 
@@ -467,42 +473,36 @@ public class UmJogo implements ProbJogos {
         fora.setEquipatitular(jf);
         for (int i = 30; i < 33; i++){
             String[] sub = campos[i].split("->");
-            Jogador sai = a.identificaJogadorId(sub[0],fora);
             Jogador entra = a.identificaJogadorId(sub[1],fora);
             sf.put(sub[0],entra.clone());;
         }
 
-        return new UmJogo(LocalDate.of(Integer.parseInt(data[0]), Integer.parseInt(data[1]), Integer.parseInt(data[2])),casa,fora,0,0,sc,sf);
+        return new UmJogo(LocalDate.of(Integer.parseInt(data[0]), Integer.parseInt(data[1]), Integer.parseInt(data[2])),casa,fora,Integer.parseInt(campos[2]),Integer.parseInt(campos[3]),sc,sf);
     }
 
 
 
 
     private void fazsubstituicoessemprint(int time,ArrayList<Integer>temposubscasa,ArrayList<Integer>temposubsfora) throws ExcecaoPos {
-
-        Map<String,Jogador> subscasa = new LinkedHashMap<>(this.subscasa);
-        Map<String,Jogador> subsfora = new LinkedHashMap<>(this.subsfora);
-
-        ArrayList<Integer> todostempos = new ArrayList<>();
-        Random rand = new Random();
-
-        todostempos.addAll(temposubscasa);
-        todostempos.addAll(temposubsfora);
         for(Integer p : temposubscasa) {
             if (time==p){
-                Jogador sai = this.casa.identificaJogadorId(subscasa.keySet().stream().findFirst().get());
-                Jogador entra = subscasa.get(sai.getId());
-                this.casa.substitui(entra,sai);
-                subscasa.remove(sai.getId());
+                if(this.subscasa.size() > 0) {
+                    Jogador sai = this.casa.identificaJogadorId(this.subscasa.keySet().stream().findFirst().get());
+                    Jogador entra = this.subscasa.get(sai.getId());
+                    this.casa.substitui(entra, sai);
+                    this.subscasa.remove(sai.getId());
+                }
             }
         }
 
         for(Integer p : temposubsfora){
-            if (time==p){
-                Jogador sai = this.visita.identificaJogadorId(subsfora.keySet().stream().findFirst().get());
-                Jogador entra = subsfora.get(sai.getId());
-                this.visita.substitui(entra,sai);
-                subsfora.remove(sai.getId());
+            if (time==p) {
+                if (this.subsfora.size() > 0) {
+                    Jogador sai = this.visita.identificaJogadorId(this.subsfora.keySet().stream().findFirst().get());
+                    Jogador entra = subsfora.get(sai.getId());
+                    this.visita.substitui(entra, sai);
+                    this.subsfora.remove(sai.getId());
+                }
             }
         }
     }
@@ -511,6 +511,8 @@ public class UmJogo implements ProbJogos {
     //A bola começa na equipa da casa e as habilidades dos medios sao comparadas, caso estas sejam maiores que os da equipa adversaria, entao é feito um ataque
     //Caso contrario, a equipa adversaria faz um ataque
     public void simulajogosemprint() throws ExcecaoPos, InterruptedException {
+        Map<String,Jogador> antescasa = getsubsCasa();
+        Map<String,Jogador> antesfora = getsubsFora();
         int i = 0;
         ArrayList<Integer> temposubscasa = new ArrayList<>();
         ArrayList<Integer> temposubsfora = new ArrayList<>();
@@ -573,6 +575,9 @@ public class UmJogo implements ProbJogos {
                     time++;
                 }
             }
+            this.subsfora = antesfora.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue));
+            this.subscasa = antescasa.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue));
+
         }
         else throw new ExcecaoPos("Numero de jogadores titulares invalido");
     }
@@ -702,4 +707,40 @@ public class UmJogo implements ProbJogos {
         return minutos;
     }
 
+    public void guardajogo() throws IOException {
+        StringBuilder sc = new StringBuilder();
+        int i = 0;
+        int j = 0;
+        for (String s : this.subscasa.keySet()){
+            sc.append(s + "->" + this.subscasa.get(s).getId());
+            i += 1;
+            if(i<this.subscasa.size()) sc.append(",");
+        }
+
+        StringBuilder sf = new StringBuilder();
+        for (String s : this.subsfora.keySet()){
+            sf.append( s + "->" + this.subsfora.get(s).getId());
+            j += 1;
+            if(j<this.subsfora.size()) sf.append(",");
+        }
+
+        StringBuilder jogadorescasa = new StringBuilder();
+        for(Jogador k : this.casa.getEquipatitular()){
+            jogadorescasa.append(k.getId());
+            jogadorescasa.append(",");
+        }
+
+        StringBuilder jogadoresfora = new StringBuilder();
+        for(Jogador y : this.visita.getEquipatitular()){
+            jogadoresfora.append(y.getId());
+            if (!y.equals(this.visita.getEquipatitular().get(this.visita.getEquipatitular().size()-1))) jogadoresfora.append(",");
+        }
+
+        BufferedWriter escritor = new BufferedWriter(new FileWriter("C:\\Users\\Pestana\\Desktop\\POO\\Projeto\\src\\output.txt",true));
+        escritor.write("\nJogo:" + getcasa().getNome() + "," + getVisita().getNome() + "," + getGoloC() + "," + getGoloF() + "," + getData() +"," +
+                jogadorescasa + sc + "," + jogadoresfora + "," + sf
+        );
+        escritor.flush();
+        escritor.close();
+    }
 }

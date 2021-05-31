@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Lateral extends Jogador {
@@ -7,7 +10,7 @@ public class Lateral extends Jogador {
     public Lateral() throws ExcecaoPos {
         super();
         super.setPosicao(new Posicao(Posicao.LATERAL));
-
+        this.cruzamento = 0;
     }
 
     public Lateral(String id,String nome, ArrayList<Equipa> a
@@ -42,9 +45,25 @@ public class Lateral extends Jogador {
                 + 0.15 * c + 0.1 * remate + 0.18 * p + 0.1 * cruza);
     }
 
+    public boolean equals(Lateral e){
+        return super.equals(e);
+    }
+
     public Lateral clone(){
         return new Lateral(this);
     }
+
+    public void guarda() throws IOException {
+        BufferedWriter escritor = new BufferedWriter(new FileWriter("C:\\Users\\Pestana\\Desktop\\POO\\Projeto\\src\\output.txt",true));
+        escritor.write("\nLateral:");
+        escritor.flush();
+        super.guarda();
+        escritor.flush();
+        escritor.write("," + getCruzamento());
+        escritor.flush();
+        escritor.close();
+    }
+
     public static Lateral parse(String input) throws ExcecaoPos {
         String[] campos = input.split(",");
         return new Lateral(campos[1], campos[0],

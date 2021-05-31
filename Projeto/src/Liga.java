@@ -1,3 +1,4 @@
+import java.rmi.MarshalledObject;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -11,6 +12,11 @@ public class Liga {
     public Liga() {
         this.equipas = new LinkedHashMap<>();
         this.jogos = new LinkedHashMap<>();
+    }
+
+    public Liga(Map<String,Equipa> equipas){
+        this.equipas = new LinkedHashMap<>(equipas);
+        this.jogos = outrocalendario();
     }
 
     public Liga(Map<String,Equipa> equipas,Map<LocalDate,UmJogo> jogos){
@@ -45,6 +51,26 @@ public class Liga {
         this.jogos.putIfAbsent(j.getData(),j);
     }
 
+    public Map<LocalDate,UmJogo> outrocalendario(){
+        Map<LocalDate,UmJogo> ret = new LinkedHashMap<>();
+        List<Equipa> eq = this.equipas.values().stream().map(Equipa::clone).collect(Collectors.toList());
+        Collections.shuffle(eq);
+        LocalDate agora = LocalDate.now();
+        for(int i=0;i<eq.size();i++) {
+            Equipa a = eq.get(i);
+            for (int n=0; n<eq.size(); n++) {
+                Equipa b = eq.get(n);
+                if(!a.equals(b)) {
+                    UmJogo jogo = new UmJogo(a, b, 0, 0);
+                    ret.put(agora,jogo);
+                    agora = agora.plusWeeks(1);
+                }
+                agora = agora.plusWeeks(1);
+            }
+        }
+        return ret;
+    }
+
     public void calendario(){
 
         List<Equipa> eq = this.equipas.values().stream().map(Equipa::clone).collect(Collectors.toList());
@@ -69,7 +95,7 @@ public class Liga {
         return eq.stream().sorted(comp).collect(Collectors.toList());
     }
 
-    public String simulaliga() throws ExcecaoPos, InterruptedException {
+    public void simulaliga() throws ExcecaoPos, InterruptedException {
         StringBuilder sb = new StringBuilder();
         Equipa vencedora = new Equipa();
         List<Equipa> eq = new ArrayList<>();
@@ -95,7 +121,7 @@ public class Liga {
                 e.setPontos(0);
             }
 
-            return sb.append("Equipa vencedora da liga: " + vencedora.getNome()).toString();
+            System.out.println("Equipa vencedora da liga: " + vencedora.getNome());
         }
 
     public String toString(){

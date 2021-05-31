@@ -11,6 +11,4 @@ public class Main
         Parser.parse(tudo);
         Menu.menu(tudo);
     }
-
-
 }

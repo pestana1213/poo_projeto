@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Medio extends Jogador {
@@ -43,8 +46,23 @@ public class Medio extends Jogador {
                 + 0.1 * c + 0.09 * remate + 0.21 * p + 0.1 * recuperacao);
     }
 
+    public boolean equals(Medio e){
+        return super.equals(e);
+    }
+
     public Medio clone(){
         return new Medio(this);
+    }
+
+    public void guarda() throws IOException {
+        BufferedWriter escritor = new BufferedWriter(new FileWriter("C:\\Users\\Pestana\\Desktop\\POO\\Projeto\\src\\output.txt",true));
+        escritor.write("\nMedio:");
+        escritor.flush();
+        super.guarda();
+        escritor.flush();
+        escritor.write("," + getRecuperacao());
+        escritor.flush();
+        escritor.close();
     }
 
     public static Medio parse(String input) throws ExcecaoPos {

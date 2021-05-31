@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Redes extends Jogador {
@@ -7,7 +10,6 @@ public class Redes extends Jogador {
     public Redes() throws ExcecaoPos {
         super();
         super.setPosicao(new Posicao(Posicao.REDES));
-
         this.elasticidade = 0;
     }
 
@@ -30,7 +32,6 @@ public class Redes extends Jogador {
     public Redes(Redes e) {
         super(e);
         this.elasticidade = e.getElasticidade();
-
     }
 
     public int calculahabilidade(int v, int r,int d, int i, int c, int remate, int p,int e){
@@ -50,8 +51,25 @@ public class Redes extends Jogador {
         return elasticidade;
     }
 
+    public void setElasticidade(int ela) {this.elasticidade = ela;}
+
     public Redes clone(){
         return new Redes(this);
+    }
+
+    public boolean equals(Redes e){
+        return super.equals(e);
+    }
+
+    public void guarda() throws IOException {
+        BufferedWriter escritor = new BufferedWriter(new FileWriter("C:\\Users\\Pestana\\Desktop\\POO\\Projeto\\src\\output.txt"));
+        escritor.write("\nGuarda-Redes:");
+        escritor.flush();
+        super.guarda();
+        escritor.flush();
+        escritor.write("," + getElasticidade());
+        escritor.flush();
+        escritor.close();
     }
 
     public static Redes parse(String input) throws ExcecaoPos {

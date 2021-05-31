@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Avancado extends Jogador {
@@ -34,6 +37,19 @@ public class Avancado extends Jogador {
     public int calculahabilidade(int v, int r,int d, int i, int c, int remate, int p){
         return (int) (0.15 * v + 0.12 * r + 0.15 * d +  0.13 * i
                 + 0.15 * c + 0.2 * remate + 0.1 * p);
+    }
+
+    public boolean equals(Avancado e){
+        return super.equals(e);
+    }
+
+    public void guarda() throws IOException {
+        BufferedWriter escritor = new BufferedWriter(new FileWriter("C:\\Users\\Pestana\\Desktop\\POO\\Projeto\\src\\output.txt",true));
+        escritor.write("\nAvancado:");
+        escritor.flush();
+        super.guarda();
+        escritor.flush();
+        escritor.close();
     }
 
     public Avancado clone(){

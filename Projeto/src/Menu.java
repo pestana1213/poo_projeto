@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.lang.module.ModuleDescriptor;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,13 +20,14 @@ public class Menu {
         sb.append("5) Fazer transferencia de jogadores entre equipas. \n");
         sb.append("6) Jogos. \n");
         sb.append("7) Nova liga. \n");
+        sb.append("0) Sair. \n");
         sb.append("Nota: PARA A REALIZACAO DA OPCAO 6) E 7) AS EQUIPAS EM QUESTAO JA PRECISAM DE ESTAR REGISTADAS. \n");
         System.out.println(sb.toString());
         Scanner scanner = new Scanner(System.in);
         return scanner.nextInt();
     }
 
-    private static void registarequipa(Faztudo a) throws ExcecaoPos, InterruptedException {
+    private static void registarequipa(Faztudo a) throws ExcecaoPos, InterruptedException, IOException {
         clearWindow();
         Scanner scanner = new Scanner(System.in);
         StringBuilder sb = new StringBuilder("-----------Registar Equipa-----------\n\n");
@@ -34,6 +36,7 @@ public class Menu {
         String nome = scanner.nextLine();
 
         if(!a.jaexistenome(nome))
+
         {
         int codnro = a.newCodeNumberequipa();
         String cod = String.valueOf(codnro);
@@ -50,7 +53,7 @@ public class Menu {
         novo.setEquipatitular(titulares);
 
         a.addEquipa(novo);
-
+        novo.guardaequipa();
         }
         else {
             System.out.println("\nNome de equipa ja existente\n");
@@ -74,6 +77,7 @@ public class Menu {
                     novo.setEquipatitular(titulares);
 
                     a.addEquipa(novo);
+                    novo.guardaequipa();
                     break;
                 case (2):
                     volta(a);
@@ -86,7 +90,7 @@ public class Menu {
         }
     }
 
-    private static void verequipas(Faztudo a) throws ExcecaoPos, InterruptedException {
+    private static void verequipas(Faztudo a) throws ExcecaoPos, InterruptedException, IOException {
         clearWindow();
         Scanner ler = new Scanner(System.in);
         System.out.println("-----------Todas as Equipas-----------\n\n");
@@ -113,7 +117,7 @@ public class Menu {
         }
     }
 
-    private static void acoesequipa(Faztudo a, Equipa equipa) throws ExcecaoPos, InterruptedException {
+    private static void acoesequipa(Faztudo a, Equipa equipa) throws ExcecaoPos, InterruptedException, IOException {
         Scanner scanner = new Scanner(System.in);
         int op = scanner.nextInt();
         switch (op){
@@ -135,13 +139,9 @@ public class Menu {
                         scanner.nextLine();
                         String n = scanner.nextLine();
                         Jogador j = jogadormmnome(a,n);
-                        if(equipa.getJogadores().contains(j)){
-                            equipa.addjogequipatitular(j);
-                            a.update(equipa);
-                        }
-                        else{
-                            System.out.println("Jogador nao pertence a equipa");
-                        }
+                        equipa.addjogequipatitular(j);
+                        a.update(equipa);
+                        System.out.println("\nJogador adicionado a equipa titular com sucesso");
                         facilita(a,equipa);
                         break;
                     default:
@@ -156,7 +156,7 @@ public class Menu {
         }
     }
 
-    private static void facilita(Faztudo a, Equipa equipa) throws ExcecaoPos, InterruptedException {      //previne a repeticao do ciclo na funcao de cima
+    private static void facilita(Faztudo a, Equipa equipa) throws ExcecaoPos, InterruptedException, IOException {      //previne a repeticao do ciclo na funcao de cima
         Scanner scanner = new Scanner(System.in);
         System.out.println("Deseja fazer mais alguma acao na equipa? " + equipa.getNome() + "\n1)Sim\n2)Nao");
         int opcao = scanner.nextInt();
@@ -173,7 +173,7 @@ public class Menu {
     }
 
     private static Jogador selecionajogador(Faztudo a,ArrayList<Jogador> jogs){
-        Jogador res = new Jogador();
+        Jogador res = null;
         Scanner scanner = new Scanner(System.in);
         if(jogs.size()==1){
             res = jogs.get(0);
@@ -223,18 +223,6 @@ public class Menu {
     return res;
     }
 
-    private static Jogador registajogaux(Faztudo a, Jogador jog) throws ExcecaoPos{
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("\nQual a habilidade geral do jogador? \n");
-        int hab = scanner.nextInt();
-        jog.setHabilidade(hab);
-        int cod = a.newCodeNumberjogador();
-        String codi = String.valueOf(cod);
-        jog.setId(codi);
-
-        return jog;
-    }
-
     private static Defesa registaDefesa(Faztudo a) throws ExcecaoPos{
         Scanner scanner = new Scanner(System.in);
         System.out.println("\nDigite o nome do jogador: ");
@@ -243,13 +231,30 @@ public class Menu {
         Defesa jog = new Defesa();
 
         if(!a.jaexitenomejogador(nome)){
-            jog.setNome(nome);
-            System.out.println("\nQual a habilidade geral do jogador? \n");
-            int hab = scanner.nextInt();
-            jog.setHabilidade(hab);
+            System.out.println("\nQuanta resistencia tem o jogador?\n");
+            int resistencia = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta velocidade tem o jogador?\n");
+            int velocidade = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta destreza tem o jogador?\n");
+            int destreza = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta impulsao tem o jogador?\n");
+            int impulssao = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta habilidade para cabecear tem o jogador?\n");
+            int cabeceamento = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta habilidade para rematar tem o jogador?\n");
+            int remate = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta habilidade para passar tem o jogador?\n");
+            int passe = scanner.nextInt();
+            scanner.nextLine();
             int cod = a.newCodeNumberjogador();
             String codi = String.valueOf(cod);
-            jog.setId(codi);
+            jog = new Defesa(codi,nome,velocidade,resistencia,destreza,impulssao,cabeceamento,remate,passe);
         }
         else {
             System.out.println("Nome de jogador ja existente\n\nDeseja continuar?\n1)Sim\n2)Nao");
@@ -257,13 +262,31 @@ public class Menu {
 
             switch (op){
                 case(1):
-                    jog.setNome(nome);
-                    System.out.println("\nQual a habilidade geral do jogador? \n");
-                    int hab = scanner.nextInt();
-                    jog.setHabilidade(hab);
+                    System.out.println("\nQuanta resistencia tem o jogador?\n");
+                    int resistencia = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta velocidade tem o jogador?\n");
+                    int velocidade = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta destreza tem o jogador?\n");
+                    int destreza = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta impulsao tem o jogador?\n");
+                    int impulssao = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta habilidade para cabecear tem o jogador?\n");
+                    int cabeceamento = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta habilidade para rematar tem o jogador?\n");
+                    int remate = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta habilidade para passar tem o jogador?\n");
+                    int passe = scanner.nextInt();
+                    scanner.nextLine();;
                     int cod = a.newCodeNumberjogador();
                     String codi = String.valueOf(cod);
-                    jog.setId(codi);
+                    jog = new Defesa(codi,nome,velocidade,resistencia,destreza,impulssao
+                    ,cabeceamento,remate,passe);
 
                     break;
                 case(2):
@@ -285,13 +308,34 @@ public class Menu {
         Medio jog = new Medio();
 
         if(!a.jaexitenomejogador(nome)){
-            jog.setNome(nome);
-            System.out.println("\nQual a habilidade geral do jogador? \n");
-            int hab = scanner.nextInt();
-            jog.setHabilidade(hab);
+            System.out.println("\nQuanta resistencia tem o jogador?\n");
+            int resistencia = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta velocidade tem o jogador?\n");
+            int velocidade = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta destreza tem o jogador?\n");
+            int destreza = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta impulsao tem o jogador?\n");
+            int impulssao = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta habilidade para cabecear tem o jogador?\n");
+            int cabeceamento = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta habilidade para rematar tem o jogador?\n");
+            int remate = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta habilidade para passar tem o jogador?\n");
+            int passe = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta habilidade para recuperar a bola tem o jogador?\n");
+            int recuperacao = scanner.nextInt();
+            scanner.nextLine();
             int cod = a.newCodeNumberjogador();
             String codi = String.valueOf(cod);
-            jog.setId(codi);
+            jog = new Medio(codi,nome,velocidade,resistencia,destreza,impulssao
+                    ,cabeceamento,remate,passe,recuperacao);
         }
         else {
             System.out.println("Nome de jogador ja existente\n\nDeseja continuar?\n1)Sim\n2)Nao");
@@ -299,14 +343,34 @@ public class Menu {
 
             switch (op){
                 case(1):
-                    jog.setNome(nome);
-                    System.out.println("\nQual a habilidade geral do jogador? \n");
-                    int hab = scanner.nextInt();
-                    jog.setHabilidade(hab);
+                    System.out.println("\nQuanta resistencia tem o jogador?\n");
+                    int resistencia = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta velocidade tem o jogador?\n");
+                    int velocidade = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta destreza tem o jogador?\n");
+                    int destreza = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta impulsao tem o jogador?\n");
+                    int impulssao = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta habilidade para cabecear tem o jogador?\n");
+                    int cabeceamento = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta habilidade para rematar tem o jogador?\n");
+                    int remate = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta habilidade para passar tem o jogador?\n");
+                    int passe = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta habilidade para recuperar a bola tem o jogador?\n");
+                    int recuperacao = scanner.nextInt();
+                    scanner.nextLine();
                     int cod = a.newCodeNumberjogador();
                     String codi = String.valueOf(cod);
-                    jog.setId(codi);
-
+                    jog = new Medio(codi,nome,velocidade,resistencia,destreza,impulssao
+                            ,cabeceamento,remate,passe,recuperacao);
                     break;
                 case(2):
                     registajogador(a);
@@ -327,13 +391,34 @@ public class Menu {
         Lateral jog = new Lateral();
 
         if(!a.jaexitenomejogador(nome)){
-            jog.setNome(nome);
-            System.out.println("\nQual a habilidade geral do jogador? \n");
-            int hab = scanner.nextInt();
-            jog.setHabilidade(hab);
+            System.out.println("\nQuanta resistencia tem o jogador?\n");
+            int resistencia = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta velocidade tem o jogador?\n");
+            int velocidade = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta destreza tem o jogador?\n");
+            int destreza = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta impulsao tem o jogador?\n");
+            int impulssao = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta habilidade para cabecear tem o jogador?\n");
+            int cabeceamento = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta habilidade para rematar tem o jogador?\n");
+            int remate = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta habilidade para passar tem o jogador?\n");
+            int passe = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta habilidade para cruzar a bola tem o jogador?\n");
+            int cruzamento = scanner.nextInt();
+            scanner.nextLine();
             int cod = a.newCodeNumberjogador();
             String codi = String.valueOf(cod);
-            jog.setId(codi);
+            jog = new Lateral(codi,nome,velocidade,resistencia,destreza,impulssao
+                    ,cabeceamento,remate,passe,cruzamento);
         }
         else {
             System.out.println("Nome de jogador ja existente\n\nDeseja continuar?\n1)Sim\n2)Nao");
@@ -341,14 +426,34 @@ public class Menu {
 
             switch (op){
                 case(1):
-                    jog.setNome(nome);
-                    System.out.println("\nQual a habilidade geral do jogador? \n");
-                    int hab = scanner.nextInt();
-                    jog.setHabilidade(hab);
+                    System.out.println("\nQuanta resistencia tem o jogador?\n");
+                    int resistencia = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta velocidade tem o jogador?\n");
+                    int velocidade = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta destreza tem o jogador?\n");
+                    int destreza = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta impulsao tem o jogador?\n");
+                    int impulssao = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta habilidade para cabecear tem o jogador?\n");
+                    int cabeceamento = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta habilidade para rematar tem o jogador?\n");
+                    int remate = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta habilidade para passar tem o jogador?\n");
+                    int passe = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta habilidade para cruzar a bola tem o jogador?\n");
+                    int cruzamento = scanner.nextInt();
+                    scanner.nextLine();
                     int cod = a.newCodeNumberjogador();
                     String codi = String.valueOf(cod);
-                    jog.setId(codi);
-
+                    jog = new Lateral(codi,nome,velocidade,resistencia,destreza,impulssao
+                            ,cabeceamento,remate,passe,cruzamento);
                     break;
                 case(2):
                     registajogador(a);
@@ -369,13 +474,32 @@ public class Menu {
         Avancado jog = new Avancado();
 
         if(!a.jaexitenomejogador(nome)){
-            jog.setNome(nome);
-            System.out.println("\nQual a habilidade geral do jogador? \n");
-            int hab = scanner.nextInt();
-            jog.setHabilidade(hab);
+            System.out.println("\nQuanta resistencia tem o jogador?\n");
+            int resistencia = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta velocidade tem o jogador?\n");
+            int velocidade = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta destreza tem o jogador?\n");
+            int destreza = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta impulsao tem o jogador?\n");
+            int impulssao = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta habilidade para cabecear tem o jogador?\n");
+            int cabeceamento = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta habilidade para rematar tem o jogador?\n");
+            int remate = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta habilidade para passar tem o jogador?\n");
+            int passe = scanner.nextInt();
+            scanner.nextLine();;
             int cod = a.newCodeNumberjogador();
             String codi = String.valueOf(cod);
-            jog.setId(codi);
+            jog = new Avancado(codi,nome,velocidade,resistencia,destreza,impulssao
+                    ,cabeceamento,remate,passe);
+
         }
         else {
             System.out.println("Nome de jogador ja existente\n\nDeseja continuar?\n1)Sim\n2)Nao");
@@ -383,14 +507,31 @@ public class Menu {
 
             switch (op){
                 case(1):
-                    jog.setNome(nome);
-                    System.out.println("\nQual a habilidade geral do jogador? \n");
-                    int hab = scanner.nextInt();
-                    jog.setHabilidade(hab);
+                    System.out.println("\nQuanta resistencia tem o jogador?\n");
+                    int resistencia = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta velocidade tem o jogador?\n");
+                    int velocidade = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta destreza tem o jogador?\n");
+                    int destreza = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta impulsao tem o jogador?\n");
+                    int impulssao = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta habilidade para cabecear tem o jogador?\n");
+                    int cabeceamento = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta habilidade para rematar tem o jogador?\n");
+                    int remate = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta habilidade para passar tem o jogador?\n");
+                    int passe = scanner.nextInt();
+                    scanner.nextLine();;
                     int cod = a.newCodeNumberjogador();
                     String codi = String.valueOf(cod);
-                    jog.setId(codi);
-
+                    jog = new Avancado(codi,nome,velocidade,resistencia,destreza,impulssao
+                            ,cabeceamento,remate,passe);
                     break;
                 case(2):
                     registajogador(a);
@@ -411,13 +552,35 @@ public class Menu {
         Redes jog = new Redes();
 
         if(!a.jaexitenomejogador(nome)){
-            jog.setNome(nome);
-            System.out.println("\nQual a habilidade geral do jogador? \n");
-            int hab = scanner.nextInt();
-            jog.setHabilidade(hab);
+            System.out.println("\nQuanta resistencia tem o jogador?\n");
+            int resistencia = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta velocidade tem o jogador?\n");
+            int velocidade = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta destreza tem o jogador?\n");
+            int destreza = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta impulsao tem o jogador?\n");
+            int impulssao = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta habilidade para cabecear tem o jogador?\n");
+            int cabeceamento = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta habilidade para rematar tem o jogador?\n");
+            int remate = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta habilidade para passar tem o jogador?\n");
+            int passe = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nQuanta elasticidade tem o jogador?\n");
+            int elast = scanner.nextInt();
+            scanner.nextLine();
             int cod = a.newCodeNumberjogador();
             String codi = String.valueOf(cod);
-            jog.setId(codi);
+            jog = new Redes(codi,nome,velocidade,resistencia,destreza,impulssao
+                    ,cabeceamento,remate,passe,elast);
+
         }
         else {
             System.out.println("Nome de jogador ja existente\n\nDeseja continuar?\n1)Sim\n2)Nao");
@@ -425,14 +588,34 @@ public class Menu {
 
             switch (op){
                 case(1):
-                    jog.setNome(nome);
-                    System.out.println("\nQual a habilidade geral do jogador? \n");
-                    int hab = scanner.nextInt();
-                    jog.setHabilidade(hab);
+                    System.out.println("\nQuanta resistencia tem o jogador?\n");
+                    int resistencia = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta velocidade tem o jogador?\n");
+                    int velocidade = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta destreza tem o jogador?\n");
+                    int destreza = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta impulsao tem o jogador?\n");
+                    int impulssao = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta habilidade para cabecear tem o jogador?\n");
+                    int cabeceamento = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta habilidade para rematar tem o jogador?\n");
+                    int remate = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta habilidade para passar tem o jogador?\n");
+                    int passe = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("\nQuanta elasticidade tem o jogador?\n");
+                    int elast = scanner.nextInt();
+                    scanner.nextLine();
                     int cod = a.newCodeNumberjogador();
                     String codi = String.valueOf(cod);
-                    jog.setId(codi);
-
+                    jog = new Redes(codi,nome,velocidade,resistencia,destreza,impulssao
+                            ,cabeceamento,remate,passe,elast);
                     break;
                 case(2):
                     registajogador(a);
@@ -446,7 +629,7 @@ public class Menu {
     }
 
     private static Jogador registajogador(Faztudo a) throws ExcecaoPos {
-        Jogador res = new Jogador();
+        Jogador res = null;
         Scanner scanner = new Scanner(System.in);
         System.out.println("\nDeseja criar:\n1)Defesa\n2)Medio\n3)Lateral\n4)Avancado\n5)Guarda-Redes\n ");
         int op = scanner.nextInt();
@@ -471,7 +654,7 @@ public class Menu {
         }
         return res;
     }
-    private static void todosjogadores(Faztudo a) throws ExcecaoPos, InterruptedException {
+    private static void todosjogadores(Faztudo a) throws ExcecaoPos, InterruptedException, IOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println(a.toStringjogadores());
         System.out.println("\n\nDeseja ver algum jogador em especifico?\n1)Sim\n2)Nao");
@@ -500,7 +683,7 @@ public class Menu {
         }
     }
 
-    private static void faztransferencia(Faztudo a) throws ExcecaoPos, InterruptedException {
+    private static void faztransferencia(Faztudo a) throws ExcecaoPos, InterruptedException, IOException {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("\nA que equipa pertence o jogador a ser transferido");
@@ -528,9 +711,9 @@ public class Menu {
     }
 //^
 //|
-private static Jogador jogadormmnomenaequipa(Faztudo a, String nome,Equipa e) throws ExcecaoPos, InterruptedException{
+private static Jogador jogadormmnomenaequipa(Faztudo a, String nome,Equipa e) throws ExcecaoPos, InterruptedException, IOException {
     Scanner scanner = new Scanner(System.in);
-    Jogador res = new Jogador();
+    Jogador res = null;
     ArrayList<Jogador> jogadoresmmnome = a.jogadoresmmnomenaequipa(nome,e);
 
     if(jogadoresmmnome.size()==1){
@@ -541,7 +724,7 @@ private static Jogador jogadormmnomenaequipa(Faztudo a, String nome,Equipa e) th
             System.out.println("Jogadores com o mesmo nome: ");
             jogadoresmmnome.stream().map(Jogador::toStringcomid).forEach(System.out::println);
 
-            System.out.println("\nA que jogador se refere?\nIdentificar pelo id\n");
+            System.out.println("\nA que jogador se refere?\nIdentificar pelo numero na camisola:\n");
             String id = scanner.nextLine();
             int i =0;
             for (Jogador jo : jogadoresmmnome) {
@@ -566,9 +749,9 @@ private static Jogador jogadormmnomenaequipa(Faztudo a, String nome,Equipa e) th
 }
 
 
-    private static Jogador jogadormmnome(Faztudo a, String nome) throws ExcecaoPos, InterruptedException{
+    private static Jogador jogadormmnome(Faztudo a, String nome) throws ExcecaoPos, InterruptedException, IOException {
         Scanner scanner = new Scanner(System.in);
-        Jogador res = new Jogador();
+        Jogador res = null;
         ArrayList<Jogador> jogadoresmmnome = a.jogadoresmmnome(nome);
 
         if(jogadoresmmnome.size()==1){
@@ -603,7 +786,7 @@ private static Jogador jogadormmnomenaequipa(Faztudo a, String nome,Equipa e) th
         return res;
     }
 
-    private static Equipa equipasmmnome(Faztudo a, String nome) throws ExcecaoPos, InterruptedException {
+    private static Equipa equipasmmnome(Faztudo a, String nome) throws ExcecaoPos, InterruptedException, IOException {
 
         Scanner scanner = new Scanner(System.in);
         Equipa res = new Equipa();
@@ -647,7 +830,9 @@ private static Jogador jogadormmnomenaequipa(Faztudo a, String nome,Equipa e) th
         System.out.println("O jogador pertence a equipa titular?" + j.getNome() +"\n\n1)Sim\n2)Nao");
         int op = scanner.nextInt();
         if(op == 1){
-            titulares.add(j);
+             for(Jogador k:jog){
+                 k.sethabtit(""); titulares.add(j);
+             }
             if(jog.size()>1){
             jog.remove(j);
             titulares.addAll(pertenceequipatitular(jog));
@@ -655,7 +840,9 @@ private static Jogador jogadormmnomenaequipa(Faztudo a, String nome,Equipa e) th
         }
         else {
             if(op == 2){
-
+            for(Jogador k:jog){
+                k.sethabtit("");
+            }
             }
             else{
                 pertenceequipatitular(jog);
@@ -666,10 +853,14 @@ private static Jogador jogadormmnomenaequipa(Faztudo a, String nome,Equipa e) th
         return titulares;
     }
 
-    private static void simularJogoRegistado(Faztudo a) throws ExcecaoPos, InterruptedException {
+    private static void simularJogoRegistado(Faztudo a) throws ExcecaoPos, InterruptedException, IOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Jogos Registados\n\n");
         System.out.println(a.jogosRegistados());
+        if(a.jogosRegistados().equals("Jogos Registados: \n")){
+            System.out.println("Ainda nao ha jogos registados");
+            volta(a);
+        }
         System.out.println("Nome da equipa da equipa da casa: ");
         String casa = scanner.nextLine();
         Equipa dacasa = equipasmmnome(a,casa);
@@ -704,7 +895,7 @@ private static Jogador jogadormmnomenaequipa(Faztudo a, String nome,Equipa e) th
         }
     }
 
-    private static void simulajogo(Faztudo a) throws ExcecaoPos, InterruptedException {
+    private static void simulajogo(Faztudo a) throws ExcecaoPos, InterruptedException, IOException {
         Scanner scanner = new Scanner(System.in);
         clearWindow();
         System.out.println("------------Simular jogo amigavel------------");
@@ -731,7 +922,7 @@ private static Jogador jogadormmnomenaequipa(Faztudo a, String nome,Equipa e) th
     }
 
 
-    private static void volta(Faztudo a) throws ExcecaoPos, InterruptedException {
+    private static void volta(Faztudo a) throws ExcecaoPos, InterruptedException, IOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("\nDeseja voltar ao menu?\n\n1)Sim\n2)Nao");
 
@@ -750,15 +941,103 @@ private static Jogador jogadormmnomenaequipa(Faztudo a, String nome,Equipa e) th
         }
     }
 
-    private static UmJogo registarJogo(Faztudo a) throws ExcecaoPos, InterruptedException {
+    private static ArrayList<Jogador> jogadorestitulares(Faztudo a, Equipa equipa) throws ExcecaoPos, InterruptedException, IOException {
+        ArrayList<Jogador> jogadores = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+        for (int n=0;n<11;n++){
+            System.out.println(equipa.todosJogadores());
+            System.out.println("Nome do jogador: ");
+            String nome = scanner.nextLine();
+            Jogador j = jogadormmnomenaequipa(a,nome,equipa);
+            jogadores.add(j);
+        }
+        return jogadores;
+    }
+
+    private static void equipatitular(Faztudo a, Equipa equipa) throws ExcecaoPos, InterruptedException, IOException {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("\nIdentifique os jogadores que irao jogar na equipa " + equipa.getNome());
+        System.out.println("\nDeseja \n1)Identificar os jogadores\n2)Fazer a escolha automaticamente");
+        int op = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (op){
+            case(1):
+                equipa.setEquipatitular(jogadorestitulares(a,equipa));
+                break;
+            case(2):
+                System.out.println("\nQual tatica pretende utilizar no jogo:\n1)4-3-3\n2)4-4-2\n3)3-5-2");
+                int escolha = scanner.nextInt();
+                scanner.nextLine();
+                switch (escolha){
+                    case(1):
+                        equipa.setequipatittat(4,3,3,equipa.getJogadores());
+                        break;
+                    case(2):
+                        equipa.setequipatittat(4,4,2,equipa.getJogadores());
+                        break;
+                    case(3):
+                        equipa.setequipatittat(3,5,2,equipa.getJogadores());
+                        break;
+                    default:
+                        System.out.println("\nOpcao desconhecida");
+                        menu(a);
+                }
+                break;
+            default:
+                System.out.println("\nOpcao desconhecida");
+                menu(a);
+        }
+    }
+
+    private static Map<String,Jogador> substituicoes(Faztudo a, Equipa equipa) throws ExcecaoPos, InterruptedException, IOException {
+        Scanner scanner = new Scanner(System.in);
+        Map<String,Jogador> ret = new LinkedHashMap<>();
+        System.out.println("\nQuantas substituicoes pretende fazer na equipa " + equipa.getNome() + "\n0)Zero\n1)Uma\n2)Duas\n3)Tres\n(Recomenda-se 3 substituicoes senao vai dar erro no parser)");
+        int op = scanner.nextInt();
+        scanner.nextLine();
+        if(op>=0 && op<=3) {
+            if(op==0){
+                return ret;
+            }
+            for (int n = 0; n < op; n++) {
+                System.out.println("\nIdentifique o nome do jogador a ser substituido: ");
+                String nome = scanner.nextLine();
+                Jogador j = jogadormmnomenaequipa(a, nome, equipa);
+                System.out.println("\nIdentifique o nome do jogador que vai entrar: ");
+                String entra = scanner.nextLine();
+                Jogador e = jogadormmnomenaequipa(a, entra, equipa);
+
+                if(equipa.getEquipatitular().contains(j) && equipa.getJogadores().contains(e)){
+                    ret.put(j.getId(),e);
+                }
+            }
+        }
+        else{
+            System.out.println("\nOpcao desconhecida");
+            menu(a);
+        }
+        return ret;
+    }
+
+    private static UmJogo registarJogo(Faztudo a) throws ExcecaoPos, InterruptedException, IOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("\n\nRegistar Jogo\n\n");
         System.out.println("Nome da equipa da casa: ");
         String nome = scanner.nextLine();
         Equipa casa = equipasmmnome(a,nome);
-        System.out.println("\nNome da equipa da casa: ");
+        equipatitular(a,casa);
+        System.out.println(casa.toStringJogadores());
+        Map<String,Jogador> sc = substituicoes(a,casa);
+
+        System.out.println("\nNome da equipa visitante: ");
+        ArrayList<Jogador> jogadoresfora = new ArrayList<>();
         String outro = scanner.nextLine();
         Equipa fora = equipasmmnome(a,outro);
+        equipatitular(a,fora);
+        System.out.println(fora.toStringJogadores());
+        Map<String,Jogador> sf = substituicoes(a,fora);
+
         System.out.println("\nEm que data se ira realizar o jogo: ");
         System.out.println("\nDia: ");
         int dia = scanner.nextInt();
@@ -770,11 +1049,10 @@ private static Jogador jogadormmnomenaequipa(Faztudo a, String nome,Equipa e) th
         int ano = scanner.nextInt();
         scanner.nextLine();
         LocalDate data = LocalDate.of(ano,mes,dia);
-        Map<String,Jogador> jog = new LinkedHashMap<>();
-
-        return new UmJogo(data,casa,fora,0,0,jog,jog);
+        return new UmJogo(data,casa,fora,0,0,sc,sf);
     }
-    private static void adicionarjogequipa(Faztudo a) throws ExcecaoPos, InterruptedException {
+
+    private static void adicionarjogequipa(Faztudo a) throws ExcecaoPos, InterruptedException, IOException {
         Scanner scanner = new Scanner(System.in);
         Jogador jog = registajogador(a);
         System.out.println("A que equipa deseja associar o jogador " + jog.getNome());
@@ -803,7 +1081,7 @@ private static Jogador jogadormmnomenaequipa(Faztudo a, String nome,Equipa e) th
         }
     }
 
-    private static void addjogequipa(Faztudo a, Equipa equipa) throws ExcecaoPos, InterruptedException {
+    private static void addjogequipa(Faztudo a, Equipa equipa) throws ExcecaoPos, InterruptedException, IOException {
         Scanner scanner = new Scanner(System.in);
         Jogador jog = registajogador(a);
         ArrayList<Jogador> teste = new ArrayList<>();
@@ -829,7 +1107,33 @@ private static Jogador jogadormmnomenaequipa(Faztudo a, String nome,Equipa e) th
         }
     }
 
-    public static void menu(Faztudo a) throws ExcecaoPos, InterruptedException {
+    private static ArrayList<Equipa> liga(Faztudo a) throws ExcecaoPos, InterruptedException, IOException {
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<Equipa> equipas = new ArrayList<>();
+        System.out.println("\nDeseja registar mais equipas?\n1)Sim\n2)Nao");
+        int op = scanner.nextInt();
+        scanner.nextLine();
+        switch (op){
+            case(1):
+                System.out.println("\nIdentifique o nome da equipa: ");
+                String equipa = scanner.nextLine();
+                Equipa e = equipasmmnome(a,equipa);
+                equipas.add(e);
+                liga(a);
+                break;
+            case(2):
+
+                break;
+            default:
+                System.out.println("\nOpcao desconhecida");
+                menu(a);
+
+        }
+        return equipas;
+    }
+
+
+    public static void menu(Faztudo a) throws ExcecaoPos, InterruptedException, IOException {
         int op = menuinicial();
 
         switch (op){
@@ -856,8 +1160,11 @@ private static Jogador jogadormmnomenaequipa(Faztudo a, String nome,Equipa e) th
                 volta(a);
                 break;
             case(7):
-                System.out.println("\nAinda em desenvolvimento :)\n");
+                a.simulaLiga(liga(a));
                 volta(a);
+                break;
+            case(0):
+                System.exit(1);
                 break;
             default:
                 System.out.println("Opcao desconhecida :(");

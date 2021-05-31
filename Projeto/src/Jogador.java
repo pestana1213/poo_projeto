@@ -1,8 +1,11 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
 //Class que herda da classe Geral o nome e o Id
-public class Jogador extends Geral{
+public abstract class Jogador extends Geral{
 
     private Posicao posicao;
     private int velocidade;
@@ -32,34 +35,42 @@ public class Jogador extends Geral{
     }
 
     public Jogador(String id, String nome, Posicao pos,
-                   int v, int r, int d, int i, int c, int remate, int passe, ArrayList<Equipa>a){
+                   int v, int r, int d, int i, int c, int remate, int passe, ArrayList<Equipa>a) throws ExcecaoPos {
         super(nome,id);
-        this.posicao = pos;
-        this.velocidade = v;
-        this.resistencia = r;
-        this.destreza = d;
-        this.impulsao = i;
-        this.cabeca = c;
-        this.remate = remate;
-        this.passe = passe;
-        this.habilidade = 0;
-        this.habilidadeTit = 0;
-        this.historico = new ArrayList<>(a);
+        if(v>=100 || v<=0 || r>=100 || r<=0 || d>=100 || d<=100 || i>=100 || i<=0 || c>100 || c<=0 || remate>100
+        || remate<=0 || passe>100 || passe<=0) throw new ExcecaoPos("Valores invalidos");
+        else {
+            this.posicao = pos;
+            this.velocidade = v;
+            this.resistencia = r;
+            this.destreza = d;
+            this.impulsao = i;
+            this.cabeca = c;
+            this.remate = remate;
+            this.passe = passe;
+            this.habilidade = 0;
+            this.habilidadeTit = 0;
+            this.historico = new ArrayList<>(a);
+        }
     }
     public Jogador(String id, String nome, Posicao pos,
-                   int v, int r, int d, int i, int c, int remate, int passe){
+                   int v, int r, int d, int i, int c, int remate, int passe) throws ExcecaoPos {
         super(nome,id);
-        this.posicao = pos;
-        this.velocidade = v;
-        this.resistencia = r;
-        this.destreza = d;
-        this.impulsao = i;
-        this.cabeca = c;
-        this.remate = remate;
-        this.passe = passe;
-        this.habilidade = 0;
-        this.habilidadeTit = 0;
-        this.historico = new ArrayList<>();
+        if(v>100 || v<0 || r>100 || r<0 || d>100 || d<0 || i>100 || i<0 || c>100 || c<0 || remate>100
+                || remate<0 || passe>100 || passe<0) throw new ExcecaoPos("Valores invalidos");
+        else {
+            this.posicao = pos;
+            this.velocidade = v;
+            this.resistencia = r;
+            this.destreza = d;
+            this.impulsao = i;
+            this.cabeca = c;
+            this.remate = remate;
+            this.passe = passe;
+            this.habilidade = 0;
+            this.habilidadeTit = 0;
+            this.historico = new ArrayList<>();
+        }
     }
 
     public Jogador (Jogador e){
@@ -132,6 +143,7 @@ public class Jogador extends Geral{
     public void sethab(int hab){
         this.habilidade = hab;
     }
+
     public void setCabeca(int cabeca) {
         this.cabeca = cabeca;
     }
@@ -211,7 +223,7 @@ public class Jogador extends Geral{
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Jogador jogador = (Jogador) o;
-        return posicao.equals(jogador.posicao) && historico.equals(jogador.historico);
+        return true;
     }
 
     public int hashCode() {
@@ -224,6 +236,7 @@ public class Jogador extends Geral{
         sb.append("\nJogador: ").append(super.toString());
         sb.append(this.posicao.toString());
         sb.append("\nHabilidade geral: ").append(this.habilidade);
+        sb.append("\nNumero da camisola: ").append(this.getId());
         if (!this.posicao.getposTit().equals("")){
         sb.append("\nHabilidade na posicao titular: ").append(this.habilidadeTit);}
         sb.append("\nHistorico: ");
@@ -237,7 +250,7 @@ public class Jogador extends Geral{
         StringBuilder sb = new StringBuilder();
 
         sb.append("\nJogador: ").append(super.toString());
-        sb.append("\nId: ").append(super.getId());
+        sb.append("\nNumero da camisola: ").append(super.getId());
         sb.append(this.posicao.toString());
         sb.append("\nHabilidade geral: ").append(this.habilidade);
         if (!this.posicao.getposTit().equals("")){
@@ -253,7 +266,7 @@ public class Jogador extends Geral{
         StringBuilder sb = new StringBuilder();
 
         sb.append("\nJogador: ").append(super.toString());
-        sb.append("\nId: ").append(super.getId());
+        sb.append("\nNumero da camisola: ").append(super.getId());
         sb.append(this.posicao.toString());
         sb.append("\nHabilidade geral: ").append(this.habilidade);
         if (!this.posicao.getposTit().equals("")){
@@ -278,7 +291,7 @@ public class Jogador extends Geral{
         this.posicao.setposTit(pos);
         String posicao = this.posicao.getpos();
 
-        if (pos.equals(posicao)){
+        if (pos.equalsIgnoreCase(posicao)){
             this.habilidadeTit = this.getHabilidade();
         }
 
@@ -356,8 +369,17 @@ public class Jogador extends Geral{
         }
     }
 
+    public void guarda() throws IOException {
+        BufferedWriter escritor = new BufferedWriter(new FileWriter("C:\\Users\\Pestana\\Desktop\\POO\\Projeto\\src\\output.txt",true));
+        escritor.write(getNome() + "," + getId() + "," + getVelocidade() + "," + getResistencia() + "," + getDestreza()
+        + "," + getImpulsao() + "," + getCabeca() +"," + getRemate() + "," + getPasse());
+
+        escritor.flush();
+        escritor.close();
+    }
+
     public Jogador clone(){
-        return new Jogador(this);
+        return null;
     }
 
 }

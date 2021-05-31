@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -65,7 +66,7 @@ public class Faztudo {
         }
     }
 
-    private void addJogoRealizado(UmJogo e){
+    public void addJogoRealizado(UmJogo e){
         this.jogosrealizados.add(e);
     }
 
@@ -79,6 +80,7 @@ public class Faztudo {
 
         for(Equipa a : this.equipas.values()){
             if(sai.equals(a)){
+                jogador.sethabtit("");
                 sai.removeJogador(jogador);
             }
             if(entra.equals(a)){
@@ -155,7 +157,7 @@ public class Faztudo {
         StringBuilder sb = new StringBuilder();
 
         for(Equipa e : this.equipas.values()){
-            sb.append("\n" + e.toString());
+            sb.append("\n" + e.toStringSimples());
         }
         return sb.toString();
     }
@@ -198,7 +200,7 @@ public class Faztudo {
         if (this.jogosrealizados.size() > 0) {
             sb.append("Historico de Jogos: \n");
             for (UmJogo jogo : this.jogosrealizados) {
-                sb.append("\nDia: " + jogo.getData() + "\nJogo: \n" + jogo.getcasa().getNome() + " Vs " + jogo.getVisita().getNome() +  "\nResultado: " + jogo.getGoloC() + "-" + jogo.getGoloC() + "\n\n");
+                sb.append("\nDia: " + jogo.getData() + "\nJogo: \n" + jogo.getcasa().getNome() + " Vs " + jogo.getVisita().getNome() +  "\nResultado: " + jogo.getGoloC() + "-" + jogo.getGoloF() + "\n\n");
             }
         } else {
             sb.append("\n\nAinda nao foram feitos jogos\n\n");
@@ -207,7 +209,7 @@ public class Faztudo {
         return sb.toString();
     }
 
-    public void simulaJogoEspecifico(Equipa casa,Equipa fora, LocalDate data) throws ExcecaoPos, InterruptedException {
+    public void simulaJogoEspecifico(Equipa casa,Equipa fora, LocalDate data) throws ExcecaoPos, InterruptedException, IOException {
         int j = 0;
         UmJogo aux = new UmJogo();
         for (UmJogo jogo : this.jogos){
@@ -215,7 +217,7 @@ public class Faztudo {
                 jogo.simulajogo();
                 addJogoRealizado(jogo);
                 aux = jogo;
-
+                jogo.guardajogo();
                 j += 1;
             }
         }
@@ -225,7 +227,7 @@ public class Faztudo {
         this.jogos.remove(aux);
     }
 
-    public void simulaJogoEspecificosemprint(Equipa casa,Equipa fora, LocalDate data) throws ExcecaoPos, InterruptedException {
+    public void simulaJogoEspecificosemprint(Equipa casa,Equipa fora, LocalDate data) throws ExcecaoPos, InterruptedException, IOException {
         int j = 0;
         UmJogo aux = new UmJogo();
         for (UmJogo jogo : this.jogos){
@@ -233,6 +235,7 @@ public class Faztudo {
                 jogo.simulajogosemprint();
                 addJogoRealizado(jogo);
                 aux=jogo;
+                jogo.guardajogo();
                 j = 1;
             }
         }
@@ -334,5 +337,10 @@ public class Faztudo {
         return this.equipas.values().stream().sorted(comp).collect(Collectors.toList());
     }
 
+    public void simulaLiga(ArrayList<Equipa> equipas) throws ExcecaoPos, InterruptedException {
+        Map<String,Equipa> equip = equipas.stream().collect(Collectors.toMap(e->e.getId(),e->e.clone()));
+        Liga liga = new Liga(equip);
+        liga.simulaliga();
+    }
 
 }

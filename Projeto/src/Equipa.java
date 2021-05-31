@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -23,6 +26,7 @@ public class Equipa extends Geral implements Pontuacao{
         super(nome,id);
         this.jogadores = new ArrayList<>();
         this.equipatitular = new ArrayList<>();
+        this.pontos = 0;
     }
 
     public Equipa(String nome, String id, ArrayList<Jogador> a, ArrayList<Jogador> b) {
@@ -68,20 +72,29 @@ public class Equipa extends Geral implements Pontuacao{
 
     //setEquipatitular ainda precisa de um update para por os jogadores com uma tatica
     public void setEquipatitular(ArrayList<Jogador> titular) throws ExcecaoPos {
+
+        int defs = (int) this.jogadores.stream().filter(e -> e.getposicaostr().equals(DEFESA)).count();
+        int lats = (int) this.jogadores.stream().filter(e -> e.getposicaostr().equals(LATERAL)).count();
+        int meds = (int) this.jogadores.stream().filter(e -> e.getposicaostr().equals(MEDIO)).count();
+        int avn = (int) this.jogadores.stream().filter(e -> e.getposicaostr().equals(AVANCADO)).count();
+
         ArrayList<Jogador> jogadores = new ArrayList<>();
-        if (titular.size() <= 11) {
-            for (Jogador f : titular) {
-                if (this.jogadores.contains(f)) {
-                    f.sethabtit(f.getposicaostr());
-                    jogadores.add(f.clone());
-                } else {
-                    throw new ExcecaoPos("Jogador nao pertence a equipa");
-                }
+        if (titular.size() == 11){
+            if(taticavalida(defs+lats,meds,avn)) {
+                setequipatittat(defs + lats, meds, avn, titular);
+                hist();
             }
-            this.equipatitular = jogadores;
-            hist();
-        } else {
-            throw new ExcecaoPos("Equipa titular com demasiados elementos");
+            else{
+                setequipatittat(4,3,3,titular);
+            }
+            }
+        else {
+            if(titular.size()>11){
+                throw new ExcecaoPos("Demasiados elementos");
+            }
+            else{
+                this.equipatitular = titular.stream().collect(Collectors.toCollection(ArrayList::new));
+            }
         }
     }
 
@@ -105,8 +118,14 @@ public class Equipa extends Geral implements Pontuacao{
         this.equipatitular.remove(a);
     }
 
-    public void removeJogadorTitular(Jogador a) {
-        this.equipatitular.remove(a);
+    public void removeJogadorTitular(Jogador a) throws ExcecaoPos {
+        if(this.equipatitular.contains(a)){
+            a.sethabtit("");
+            this.equipatitular.remove(a);
+        }
+        else{
+            throw new ExcecaoPos("Jogador nao pertence a equipa titular");
+        }
     }
 
     public void addjogequipatitular(Jogador a) throws ExcecaoPos {
@@ -115,23 +134,32 @@ public class Equipa extends Geral implements Pontuacao{
                 throw new ExcecaoPos("Jogador ja esta na equipa titular");
             }
         }
+        a.sethabtit(a.getposicaostr());
         this.equipatitular.add(a.clone());
     }
 
     //Faz uma substituiçao entre jogadores que nao estao na equipa titular por jogadores que estao na equipa titular! Ainda falta implementar o metodo no jogo
     public void substitui(Jogador entra, Jogador sai) throws ExcecaoPos {
+        String titular = new String();
+        if (this.equipatitular.contains(sai)) {
+            if (this.jogadores.contains(entra)) {
+                for(Jogador j : this.equipatitular) {
+                    if (j.equals(sai)) {
+                        titular = j.getPosicao().getposTit();
+                        j.sethabtit("");
+                    }
+                }
 
-        if (this.equipatitular.stream().anyMatch(e -> e.getNome().equalsIgnoreCase(sai.getNome()))) {
-            if (this.jogadores.stream().anyMatch(e -> e.getNome().equalsIgnoreCase(entra.getNome()))) {
                 this.equipatitular.remove(sai);
+                entra.sethabtit(titular);
                 this.equipatitular.add(entra);
             }
             else{
-                throw new ExcecaoPos("Erro");
+                throw new ExcecaoPos("O jogador " + sai.getNome() + " nao pertence a equipa de: " + getNome());
             }
         }
         else{
-            throw new ExcecaoPos("Erro");
+            throw new ExcecaoPos("O jogador " + sai.getNome() + " nao pertence a equipa titular de: " + getNome());
         }
     }
 
@@ -164,10 +192,19 @@ public class Equipa extends Geral implements Pontuacao{
     }
 
     public int habgeral() {
-        if (this.jogadores.size() > 0)
-            return (habdefesa() + habfrente() + hablateral() + habmedio() + habredes()) / 5;
-        else return 0;
-    }
+        int redes = (int) (this.jogadores.stream().filter(a -> a.getPosicao().equals(REDES)).mapToDouble(Jogador::getHabilidade).sum() /
+                this.jogadores.stream().filter(a -> a.getPosicao().equals(REDES)).count());
+        int defesa = (int) (this.jogadores.stream().filter(a -> a.getPosicao().equals(DEFESA)).mapToDouble(Jogador::getHabilidade).sum() /
+                this.jogadores.stream().filter(a -> a.getPosicao().getposTit().equals(DEFESA)).count());
+        int medio = (int) (this.jogadores.stream().filter(a -> a.getPosicao().equals(MEDIO)).mapToDouble(Jogador::getHabilidade).sum() /
+                this.jogadores.stream().filter(a -> a.getPosicao().equals(MEDIO)).count());
+        int lateral = (int) (this.jogadores.stream().filter(a -> a.getPosicao().equals(LATERAL)).mapToDouble(Jogador::getHabilidade).sum() /
+                this.jogadores.stream().filter(a -> a.getPosicao().equals(LATERAL)).count());
+        int avancado = (int) (this.equipatitular.stream().filter(a -> a.getPosicao().equals(AVANCADO)).mapToDouble(Jogador::getHabilidade).sum() /
+                this.equipatitular.stream().filter(a -> a.getPosicao().equals(AVANCADO)).count());
+
+        return (defesa + avancado + lateral + medio + redes) / 5;
+}
 
     @Override
     public boolean equals(Object o) {
@@ -181,6 +218,37 @@ public class Equipa extends Geral implements Pontuacao{
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), jogadores, equipatitular);
+    }
+
+    public String toStringJogadores(){
+        StringBuffer sb = new StringBuffer();
+        sb.append("\nEquipa Titular");
+        for(Jogador j : this.equipatitular){
+            sb.append("\n" + j.toString());
+        }
+        sb.append("\n\nJogadores Substitutos");
+        for(Jogador i : this.jogadores){
+            if(!this.equipatitular.contains(i)){
+                sb.append("\n" + i.toString());
+            }
+        }
+        return sb.toString();
+    }
+
+    public String todosJogadores(){
+        StringBuffer sb = new StringBuffer();
+        sb.append("\n\nJogadores");
+        for(Jogador j : this.jogadores){
+            sb.append("\n" + j.toString());
+        }
+        return sb.toString();
+    }
+    public String toStringSimples(){
+        StringBuffer sb = new StringBuffer();
+        sb.append("-----------Equipa-----------\n\n");
+        sb.append("Nome da equipa: " + super.getNome());
+        sb.append("\nId: " + super.getId());
+        return sb.toString();
     }
 
     @Override
@@ -228,7 +296,7 @@ public class Equipa extends Geral implements Pontuacao{
     }
 
     public Jogador identificaJogadorId(String id){
-        Jogador ret = new Jogador();
+        Jogador ret = null;
         for (Jogador j : this.jogadores){
             if (j.getId().equals(id)) ret = j;
         }
@@ -271,92 +339,77 @@ public class Equipa extends Geral implements Pontuacao{
         return this.jogadores.stream().filter(e -> e.getPosicao().equals(pos)).sorted(comp).collect(Collectors.toList());
     }
 
+    public List<Jogador> ordenajogposjogadores(Posicao pos,ArrayList<Jogador> jogadores) {
+        Comparator<Jogador> comp = (e1, e2) -> (int) e2.getHabilidade() - e1.getHabilidade();
+        return jogadores.stream().filter(e -> e.getPosicao().equals(pos)).sorted(comp).collect(Collectors.toList());
+    }
+
+    public List<Jogador> ordena(ArrayList<Jogador> jogadores){
+        ArrayList<Jogador> clones = jogadores.stream().map(Jogador::clone).collect(Collectors.toCollection(ArrayList::new));
+        Comparator<Jogador> comp = (e1,e2) -> (int) e2.getHabilidadeTit() - e1.getHabilidadeTit();
+        return clones.stream().sorted(comp).collect(Collectors.toList());
+    }
+
     //Metodo ainda em desenvolvimento!
     //Objetivo? Pegar nos jogadores e definir as suas posiçoes em funçao da tatica. Caso nao existam jogadores com a posiçao "favorita" suficientes
     //Para satisfazer os jogadores necessarios para essa posiçao na tatica, entao vai buscar jogadores de outras posiçoes!
-    public void setequipatittat(int nrdefesas, int nrmedios, int nravancados) throws ExcecaoPos {
-        this.equipatitular = new ArrayList<>();
-        ArrayList<Jogador> eqtitular = new ArrayList<>();
-        List<Jogador> defesas = ordenajogpos(new Posicao(DEFESA));
-        List<Jogador> laterais = ordenajogpos(new Posicao(LATERAL));
-        List<Jogador> medios = ordenajogpos(new Posicao(MEDIO));
-        List<Jogador> avancados = ordenajogpos(new Posicao(AVANCADO));
-        List<Jogador> guardaredes = ordenajogpos(new Posicao(REDES));
-        int defs = (int) this.jogadores.stream().filter(e -> e.getposicaostr().equals(DEFESA)).count();
-        int lats = (int) this.jogadores.stream().filter(e -> e.getposicaostr().equals(LATERAL)).count();
-        int meds = (int) this.jogadores.stream().filter(e -> e.getposicaostr().equals(MEDIO)).count();
-        int avn = (int) this.jogadores.stream().filter(e -> e.getposicaostr().equals(AVANCADO)).count();
-
-        if (taticavalida(nrdefesas, nrmedios, nravancados)) {
-            if (defs <= nrdefesas-2 && lats <=2) {
-                for (int n = 0; n < 2; n++) {
-                    List<Jogador> aux = new ArrayList<>();
-                    aux.add(laterais.get(n));
-                    for(Jogador j : aux){
-                        j.sethabtit(Geral.LATERAL);
-                    }
-                    eqtitular.add(laterais.get(n));
-                }
-                for (int n = 0; n < nrdefesas - 2; n++) {
-                    List<Jogador> aux = new ArrayList<>();
-                    aux.add(defesas.get(n));
-                    for(Jogador j : aux){
-                        j.sethabtit(Geral.DEFESA);
-                    }
-                    eqtitular.add(defesas.get(n));
-                }
+    public void setequipatittat(int nrdefesas, int nrmedios, int nravancados,ArrayList<Jogador> jogadores) throws ExcecaoPos {
+        for(Jogador o : jogadores){
+            if (!this.jogadores.contains(o)){
+                throw new ExcecaoPos("Jogador nao esta na equipa");
             }
-            else{
-                if(defs == 0){
-                    if(lats<=nrdefesas){
-                        for (int n = 0; n < nrdefesas; n++) {
-                            int k=0;
-                            List<Jogador> aux = new ArrayList<>();
-                            aux.add(laterais.get(n));
-                            for(Jogador j : aux){
-                                if (k<2){
-                                    j.sethabtit(Geral.LATERAL);
-                                    k++;
-                                }
-                                j.sethabtit(Geral.DEFESA);
-                            }
-                            eqtitular.add(laterais.get(n));
-                            //tirar alguma habilidade por terem mudado de posicao menos em dois porque esses vao jogar na posicao que é suposto
-                        }
-                        }
-                    else{
-                        if(meds-nrmedios<=0){
+        }
 
-                        }
-                    }
-                }
-                int defesasquefaltam = defs - nrdefesas;
+        ArrayList<Jogador> aux = jogadores.stream().map(Jogador::clone).collect(Collectors.toCollection(ArrayList::new));
+        if(taticavalida(nrdefesas,nrmedios,nravancados)){
 
+        for(Jogador j : aux){
+            j.sethabtit(Geral.DEFESA);
+        }
+        List<Jogador> defesas = ordena(aux);
+        for(int n=0;n<nrdefesas-2;n++){
+            this.equipatitular.add(defesas.get(n).clone());
+            aux.remove(defesas.get(n));
 
-            }
-            if (meds <= nrmedios) {
-                for (int n = 0; n < nrmedios; n++) {
-                    List<Jogador> aux = new ArrayList<>();
-                    aux.add(medios.get(n));
-                    for(Jogador j : aux){
-                        j.sethabtit(Geral.MEDIO);
-                    }
-                    eqtitular.add(medios.get(n));
-                }
-            }
-            if (avn <= nravancados) {
-                for (int n = 0; n < nravancados; n++) {
-                    List<Jogador> aux = new ArrayList<>();
-                    aux.add(avancados.get(n));
-                    for(Jogador j : aux){
-                        j.sethabtit(Geral.AVANCADO);
-                    }
-                    eqtitular.add(avancados.get(n));
-                }
-            }
-            guardaredes.get(0).sethabtit(Geral.REDES);
-            eqtitular.add(guardaredes.get(0));
-            setEquipatitular(eqtitular);
+        }
+
+        for(Jogador j : aux){
+            j.sethabtit(Geral.MEDIO);
+        }
+
+        List<Jogador> medios = ordena(aux);
+
+        for(int n=0;n<nrmedios;n++){
+            this.equipatitular.add(medios.get(n).clone());
+            aux.remove(medios.get(n));
+        }
+
+        for(Jogador j : aux){
+            j.sethabtit(Geral.LATERAL);
+        }
+        List<Jogador> laterais = ordena(aux);
+
+        for(int n=0;n<2;n++){
+            this.equipatitular.add(laterais.get(n).clone());
+            aux.remove(laterais.get(n));
+        }
+
+        for(Jogador j : aux){
+            j.sethabtit(Geral.AVANCADO);
+        }
+        List<Jogador> avancados = ordena(aux);
+
+        for(int n=0;n<nravancados;n++){
+            this.equipatitular.add(avancados.get(n).clone());
+            aux.remove(avancados.get(n));
+        }
+
+        for(Jogador j : aux){
+            j.sethabtit(Geral.REDES);
+        }
+        List<Jogador> redes = ordena(aux);
+        this.equipatitular.add(redes.get(0));
+        aux.remove(redes.get(0));
         }
     }
     public void pontos(int pontos) {
@@ -369,6 +422,18 @@ public class Equipa extends Geral implements Pontuacao{
 
     public void setPontos(int k){
         this.pontos = k;
+    }
+
+    public void guardaequipa() throws IOException {
+        BufferedWriter escritor = new BufferedWriter(new FileWriter("C:\\Users\\Pestana\\Desktop\\POO\\Projeto\\src\\output.txt",true));
+        escritor.write("Equipa:"+ getNome());
+        escritor.flush();
+        for(Jogador j : this.jogadores){
+            j.guarda();
+            escritor.flush();
+        }
+        escritor.flush();
+        escritor.close();
     }
 
     public static Equipa parse(String input,String id){
