@@ -9,7 +9,6 @@ import java.util.Scanner;
 public class Menu {
 
     private static int menuinicial() {
-
         clearWindow();
         StringBuilder sb = new StringBuilder("-----------Futebol Manager-----------\n\n");
         //load a partir de ficheiro
@@ -895,6 +894,43 @@ private static Jogador jogadormmnomenaequipa(Faztudo a, String nome,Equipa e) th
         }
     }
 
+    private static void simulajogoagora(Faztudo a) throws ExcecaoPos, IOException, InterruptedException {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Nome da equipa da equipa da casa: ");
+        String casa = scanner.nextLine();
+        Equipa dacasa = equipasmmnome(a,casa);
+        equipatitular(a,dacasa);
+        System.out.println(dacasa.toStringJogadores());
+        Map<String,Jogador> sc = substituicoes(a,dacasa);
+        System.out.println("\nNome da equipa da equipa visitante: ");
+        String visita = scanner.nextLine();
+        Equipa fora = equipasmmnome(a,visita);
+        equipatitular(a,fora);
+        System.out.println(fora.toStringJogadores());
+        Map<String,Jogador> sf = substituicoes(a,fora);
+        LocalDate data = LocalDate.now();
+
+        System.out.println("\nDeseja ver a simulacao?\n1)Sim\n2)Nao");
+        int op = scanner.nextInt();
+        scanner.nextLine();
+        UmJogo jogo = new UmJogo(data,dacasa,fora,0,0,sc,sf);
+        a.addJogo(jogo);
+        switch (op){
+            case(1):
+                a.simulaJogoEspecifico(dacasa,fora,data);
+                break;
+            case(2):
+                a.simulaJogoEspecificosemprint(dacasa,fora,data);
+                System.out.println(a.resultadojogorealizado(dacasa,fora,data));
+                break;
+            default:
+                menu(a);
+        }
+
+    }
+
+
     private static void simulajogo(Faztudo a) throws ExcecaoPos, InterruptedException, IOException {
         Scanner scanner = new Scanner(System.in);
         clearWindow();
@@ -902,6 +938,7 @@ private static Jogador jogadormmnomenaequipa(Faztudo a, String nome,Equipa e) th
         System.out.println("\n1)Registar um jogo");
         System.out.println("\n2)Realizar um jogo ja registado");
         System.out.println("\n3)Historico de jogos realizados");
+        System.out.println("\n4)Realizar um jogo amigavel agora");
         int op = scanner.nextInt();
         switch (op){
             case(1):
@@ -914,6 +951,11 @@ private static Jogador jogadormmnomenaequipa(Faztudo a, String nome,Equipa e) th
                 clearWindow();
                 System.out.println(a.historicoJogos());
                 volta(a);
+                break;
+            case(4):
+                clearWindow();
+                simulajogoagora(a);
+                break;
             default:
                 menu(a);
                 break;
@@ -1010,6 +1052,9 @@ private static Jogador jogadormmnomenaequipa(Faztudo a, String nome,Equipa e) th
 
                 if(equipa.getEquipatitular().contains(j) && equipa.getJogadores().contains(e)){
                     ret.put(j.getId(),e);
+                }
+                else{
+                    throw new ExcecaoPos("Substituicao impossivel");
                 }
             }
         }

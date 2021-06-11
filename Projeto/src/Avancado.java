@@ -67,5 +67,4 @@ public class Avancado extends Jogador {
                 Integer.parseInt(campos[7]),
                 Integer.parseInt(campos[8]));
     }
-
 }

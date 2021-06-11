@@ -79,12 +79,20 @@ public class Faztudo {
     public void tranfere(Jogador jogador, Equipa sai, Equipa entra) throws ExcecaoPos{
 
         for(Equipa a : this.equipas.values()){
+            ArrayList<String> numeroscamisola = entra.getJogadores().stream().map(Jogador::getId).collect(Collectors.toCollection(ArrayList::new));
             if(sai.equals(a)){
                 jogador.sethabtit("");
                 sai.removeJogador(jogador);
             }
             if(entra.equals(a)){
-                entra.addJogador(jogador);
+                if (numeroscamisola.contains(jogador.getId())){
+                    String novoId = String.valueOf(newCodeNumberjogadoreq(entra));
+                    jogador.setId(novoId);
+                    entra.addJogador(jogador);
+                }
+                else {
+                    entra.addJogador(jogador);
+                }
             }
         }
     }
@@ -93,7 +101,8 @@ public class Faztudo {
         return this.equipas.keySet().stream().anyMatch(a -> a.equals(e.getId()));
     }
 
-    public void simulaumjogo(Equipa casa, Equipa visita) throws ExcecaoPos, InterruptedException {
+    //Um jogo vai ser realizado e depois vai ser adicionado ao historico de jogos e vai guarda-lo no ficheiro
+    public void simulaumjogo(Equipa casa, Equipa visita) throws ExcecaoPos, InterruptedException, IOException {
 
         if (contida(casa) && contida(visita)) {
             UmJogo jogo = new UmJogo(casa,visita,0,0);
@@ -102,6 +111,7 @@ public class Faztudo {
             }
             jogo.simulajogo();
             addJogoRealizado(jogo);
+            jogo.guardajogo();
         }
         else throw new ExcecaoPos("Equipa nao registada");
     }
@@ -125,16 +135,36 @@ public class Faztudo {
         }
     }
 
-    //Gera um codigo novo para um jogador! Cada jogador tem um id diferente, nao ha jogadores com o mesmo id
+    //Gera um numero de camisola novo para um jogador! Cada jogador tem um numero diferente, nao ha jogadores com o mesmo numero numa equipa
     //Pomos todos os ids dos jogadores numa lista e ordenamos essa lista! Pegamos no ultimo valor da lista e adicionamos 1! Esse valor vai ser o novo id
+    public int newCodeNumberjogadoreq(Equipa e){
+        ArrayList<Jogador> todosjogadores = new ArrayList<>();
+
+        ArrayList<Jogador> jequipa = e.getJogadores();
+        todosjogadores.addAll(jequipa);
+
+
+        List<String> mapjog = todosjogadores.stream().map(Jogador::getId).collect(Collectors.toList());
+
+        List<Integer> l = mapjog.stream()
+                .map(Integer::valueOf)
+                .sorted()
+                .collect(Collectors.toList());
+        if (l.isEmpty()) return 1;
+        Integer i = l.get(0);
+        int aux = i+1;
+        while (l.contains(aux)) aux++;
+        return aux;
+    }
+
     public int newCodeNumberjogador(){
         ArrayList<Jogador> todosjogadores = new ArrayList<>();
 
-        for(Equipa e : this.equipas.values()){
+        for(Equipa e : this.equipas.values()) {
             ArrayList<Jogador> jequipa = e.getJogadores();
             todosjogadores.addAll(jequipa);
-
         }
+
 
         List<String> mapjog = todosjogadores.stream().map(Jogador::getId).collect(Collectors.toList());
 
@@ -333,7 +363,7 @@ public class Faztudo {
 
     //Ordena as equipas por habilidade, das que tem mais habilidade para a que tem menos
     public List<Equipa> ordenaporhabilidade(){
-        Comparator<Equipa> comp = (e1,e2) -> (int) e2.habgeral()-e1.habgeral();
+        Comparator<Equipa> comp = (e1,e2) -> (int) e2.habgeral(e2.getJogadores())-e1.habgeral(e1.getJogadores());
         return this.equipas.values().stream().sorted(comp).collect(Collectors.toList());
     }
 

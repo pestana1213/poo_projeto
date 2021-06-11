@@ -70,7 +70,7 @@ public class Equipa extends Geral implements Pontuacao{
         super.setId(id);
     }
 
-    //setEquipatitular ainda precisa de um update para por os jogadores com uma tatica
+    //Poe jogadores na equipa titular organizados por uma tatica
     public void setEquipatitular(ArrayList<Jogador> titular) throws ExcecaoPos {
 
         int defs = (int) this.jogadores.stream().filter(e -> e.getposicaostr().equals(DEFESA)).count();
@@ -191,20 +191,10 @@ public class Equipa extends Geral implements Pontuacao{
                 this.equipatitular.stream().filter(a -> a.getPosicao().getposTit().equals(REDES)).count());
     }
 
-    public int habgeral() {
-        int redes = (int) (this.jogadores.stream().filter(a -> a.getPosicao().equals(REDES)).mapToDouble(Jogador::getHabilidade).sum() /
-                this.jogadores.stream().filter(a -> a.getPosicao().equals(REDES)).count());
-        int defesa = (int) (this.jogadores.stream().filter(a -> a.getPosicao().equals(DEFESA)).mapToDouble(Jogador::getHabilidade).sum() /
-                this.jogadores.stream().filter(a -> a.getPosicao().getposTit().equals(DEFESA)).count());
-        int medio = (int) (this.jogadores.stream().filter(a -> a.getPosicao().equals(MEDIO)).mapToDouble(Jogador::getHabilidade).sum() /
-                this.jogadores.stream().filter(a -> a.getPosicao().equals(MEDIO)).count());
-        int lateral = (int) (this.jogadores.stream().filter(a -> a.getPosicao().equals(LATERAL)).mapToDouble(Jogador::getHabilidade).sum() /
-                this.jogadores.stream().filter(a -> a.getPosicao().equals(LATERAL)).count());
-        int avancado = (int) (this.equipatitular.stream().filter(a -> a.getPosicao().equals(AVANCADO)).mapToDouble(Jogador::getHabilidade).sum() /
-                this.equipatitular.stream().filter(a -> a.getPosicao().equals(AVANCADO)).count());
-
-        return (defesa + avancado + lateral + medio + redes) / 5;
-}
+    public int habgeral(ArrayList<Jogador> jogadores) {
+    if(jogadores.size()==0){return 0;}
+    return (int) (jogadores.stream().mapToInt(Jogador::getHabilidade).sum() / (jogadores.stream().count()));
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -247,6 +237,7 @@ public class Equipa extends Geral implements Pontuacao{
         StringBuffer sb = new StringBuffer();
         sb.append("-----------Equipa-----------\n\n");
         sb.append("Nome da equipa: " + super.getNome());
+        sb.append("\nHabilidade geral: ").append(habgeral(this.jogadores));
         sb.append("\nId: " + super.getId());
         return sb.toString();
     }
@@ -257,7 +248,7 @@ public class Equipa extends Geral implements Pontuacao{
         sb.append("-----------Equipa-----------\n\n");
         sb.append("Nome da equipa: " + super.getNome());
         sb.append("\nId: " + super.getId());
-        sb.append("\nHabilidade geral: " + habgeral());
+        sb.append("\nHabilidade geral: " + habgeral(this.jogadores));
         sb.append("\n-----------Jogadores-----------\n\n");
         for (Jogador e : this.jogadores) {
             sb.append("\n----------------------\n\n");
@@ -339,18 +330,19 @@ public class Equipa extends Geral implements Pontuacao{
         return this.jogadores.stream().filter(e -> e.getPosicao().equals(pos)).sorted(comp).collect(Collectors.toList());
     }
 
+    //ordena um conjunto de jogadores em funçao da sua habilidade numa posicao
     public List<Jogador> ordenajogposjogadores(Posicao pos,ArrayList<Jogador> jogadores) {
         Comparator<Jogador> comp = (e1, e2) -> (int) e2.getHabilidade() - e1.getHabilidade();
         return jogadores.stream().filter(e -> e.getPosicao().equals(pos)).sorted(comp).collect(Collectors.toList());
     }
 
+    //ordena um conjunto de jogadores em funçao da sua habilidade na posicao titular
     public List<Jogador> ordena(ArrayList<Jogador> jogadores){
         ArrayList<Jogador> clones = jogadores.stream().map(Jogador::clone).collect(Collectors.toCollection(ArrayList::new));
         Comparator<Jogador> comp = (e1,e2) -> (int) e2.getHabilidadeTit() - e1.getHabilidadeTit();
         return clones.stream().sorted(comp).collect(Collectors.toList());
     }
 
-    //Metodo ainda em desenvolvimento!
     //Objetivo? Pegar nos jogadores e definir as suas posiçoes em funçao da tatica. Caso nao existam jogadores com a posiçao "favorita" suficientes
     //Para satisfazer os jogadores necessarios para essa posiçao na tatica, entao vai buscar jogadores de outras posiçoes!
     public void setequipatittat(int nrdefesas, int nrmedios, int nravancados,ArrayList<Jogador> jogadores) throws ExcecaoPos {
@@ -412,6 +404,8 @@ public class Equipa extends Geral implements Pontuacao{
         aux.remove(redes.get(0));
         }
     }
+
+    //metodos uteis para a liga
     public void pontos(int pontos) {
         this.pontos += pontos;
     }
@@ -426,7 +420,7 @@ public class Equipa extends Geral implements Pontuacao{
 
     public void guardaequipa() throws IOException {
         BufferedWriter escritor = new BufferedWriter(new FileWriter("C:\\Users\\Pestana\\Desktop\\POO\\Projeto\\src\\output.txt",true));
-        escritor.write("Equipa:"+ getNome());
+        escritor.write("\nEquipa:"+ getNome());
         escritor.flush();
         for(Jogador j : this.jogadores){
             j.guarda();
